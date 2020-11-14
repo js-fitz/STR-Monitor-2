@@ -13,7 +13,7 @@ from tqdm.notebook import tqdm
 from sklearn.cluster import dbscan
 from geopy.distance import geodesic
 from geopy.geocoders import Nominatim
-geolocator = Nominatim(user_agent="••••••••@gmail.com")
+geolocator = Nominatim(user_agent="••••••••••••")
 
 
 
