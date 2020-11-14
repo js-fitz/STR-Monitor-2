@@ -31,28 +31,33 @@ config.save_dir = 'listings_clean/'
 # (multiple accounts used by the same corporation)
 def id_corp_groups(listings):
     print(' ', '—'*30)
-    decoder = pd.read_csv(f'{config.data_dir}STR Host Decoder - Sheet1.csv') # custom host alias decoder
-    decoder.drop(columns=['All Boston'], inplace=True)
-    decoder.columns = decoder.loc[0].copy()
-    decoder = decoder.loc[1:len(decoder)-2]
-    decoder['Corp'] = decoder['Corp'].fillna(method='ffill')
-    decoder = decoder[['Corp', 'host_id', 'host_name']]
-    decoder.host_id = decoder.host_id.astype(int)
-    found = [h_id for h_id in decoder.host_id.unique() if h_id in list(listings.host_id)]
-    print('  > Searching listings data for alias host accounts...')
-
     
-    # compile host corp group map
+    # load & breifly clean decoder data
+    decoder = pd.read_csv(f'{config.data_dir}STR Host Decoder - Sheet1.csv') # custom host alias decoder
+    decoder.columns = decoder.loc[0].copy() # correct index
+    decoder = decoder.loc[1:len(decoder)-2] # fix header row location
+    decoder['Corp'] = decoder['Corp'].fillna(method='ffill')
+    decoder = decoder[['Corp', 'host_id', 'host_name']] # drop unneeded columns
+    decoder.host_id = decoder.host_id.astype(int) # numerify
+    print('  > Searching listings data for alias host accounts...')
+    
+    # list matching account between the decoder & the actual airbnb data 
+    found = [h_id for h_id in decoder.host_id.unique()
+             if h_id in list(listings.host_id)]
+    
+    # compile the host account-corporpation identity map (alias account groups)
     host_group = {}
-    group_idx = 0
-    for corp in decoder.Corp.unique():
+    group_idx = 0 # init
+    for corp in decoder.Corp.unique(): # iterate known corporations
         corp_data = decoder[decoder.Corp==corp]
-        hosts = list(corp_data.host_id.unique())
+        hosts = list(corp_data.host_id.unique()) # list known alias accounts for this corporation 
         host_names = list(corp_data.host_name.unique())
         if len(hosts)>0:
-            group_idx +=1
-            corp = re.sub('[A-Z]- ?', '', corp)
+            group_idx +=1 # iterate index to name this corporation corp_group_n
+            corp = re.sub('[A-Z]- ?', '', corp) # remove extraneous characters
             h_idx = f'CorpGroup{group_idx}'
+            
+            # save the match corporation index data for this host account 
             for host in hosts:
                 host_group[host] = {'host_name': corp,
                                     'host_id': h_idx,
@@ -60,40 +65,50 @@ def id_corp_groups(listings):
                                    }
     print(f'    > Found {len(found)}/{decoder.host_id.nunique()} active alias host accounts...')
 
-    # isolate listings data
-    for row in listings.index:
+    # reassign findings to listings data...
+    for row in listings.index: # iterate all listings
         row_data = listings.loc[row]
-        if row_data.host_id in host_group.keys():
+        if row_data.host_id in host_group.keys(): # only affect listing with a matching corporation found:
+            
+            # save given host_name and host_id as "alias" versions:
             listings.loc[row, 'host_alias'] = listings.loc[row, 'host_name']
             listings.loc[row, 'alias_id'] = listings.loc[row, 'host_id']
-            listings.loc[row, 'host_name'] = host_group[row_data.host_id]['host_name']
             
+            # overwrite given host_name and host_id with corporation group data:
             listings.loc[row, 'host_name'] = host_group[row_data.host_id]['host_name']
             listings.loc[row, 'host_id'] = host_group[row_data.host_id]['host_id']
     
     print(f"  >>> Generated {group_idx} new CorpGroup host IDs")
     return listings
+    # done identifying corporate alias account groups.
 
 
-# as named
-def load_parsed_listings(file='listings.csv', sample_test=False):
+
+# as named - loads raw listings data & parses license numbers
+# (verifies licenses against ISD data)
+def load_parsed_listings(sample_test=False): # for testing 
+    
+    # load either new or old scrape, depending on config setting
     if config.old: file = 'listings_old.csv'
+    else: file = 'listings.csv'
+
     print('—'*60)
     print(f"Loading & parsing listings data")
     print('—'*60)
     listings = pd.read_csv(f'{config.data_dir}{file}')
-    if sample_test: listings = listings.sample(2600, random_state=3)
+    # random slice for efficiency if testing:
+    if sample_test: listings = listings.sample(2500, random_state=3)
     print(f"  > '{file}' loaded")
-    # check global config
-    listings = id_corp_groups(listings)
     
+    # for SEPTEMBER 2018: new data has a different price format
+    if not config.old:
+        listings.price = listings.price.apply(lambda x: float(''.join(x.replace(',', '').split('$')[1])))
+    
+    # convert host names and ids to corporation groups with function
+    listings = id_corp_groups(listings)
     
     # Parse & verify license numbers...
     print(f"  > Parsing license numbers")
-    
-    # SEPTEMBER 2018: new data has a different price format
-    if not config.old:
-        listings.price = listings.price.apply(lambda x: float(''.join(x.replace(',', '').split('$')[1])))
     
     # encode claimed licenses (using keyword indicators)
     def parse_str_num(l): # from listings data
@@ -117,7 +132,7 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
         else: return 'Missing' # none claimed  
     listings.license = listings.license.apply(parse_str_num)
     
-    # log
+    # log initial status
     print(f"    > Imported + licenses parsed")
     print(' ', '—'*30)
     print("  > Importing ISD registry data...")
@@ -130,12 +145,14 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
     print("    > Imported + licenses parsed")
     
    
-    # sort ISD data for most recent results first (by indexing .values[0] inside the loop)
-    # so if a license has multiple entries, we take the latest
+    # sort ISD data for most recent results (by indexing .values[0] inside the loop)
+    # -- so if one license has multiple entries, we get the latest
     isd['issued'] = pd.to_datetime(isd['Issued Date'].fillna('2019-01-01'))
     isd.sort_values('issued', ascending=False)
     
     # define legal details for each license type category with standard LT abbreviations
+    # based on the official city ordinance from boston.gov
+
     license_cat_dict = {
     'HS':{'name':'Home Share Unit',
           'maxbeds':5,
@@ -161,16 +178,18 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
           'maxguests':999},
     }
     
-    # LONG LOOP: for a given license claimed in the airbnb data, define the license status...
+    # BEGIN LONG LOOP
+    # for a given license claimed in the airbnb data, define the license status...
     print(' ', '—'*30)
     print('  > Parsing license statuses...')
-    config.isd = isd # make global
-    for license in tqdm(listings.license.unique()): # iterate claimed licenses
+    
+    config.isd = isd # work with the global ISD data
+    for license in tqdm(listings.license.unique()): # ITERATE EACH UNIQUE CLAIMED LICENSES
         
         listings_license_data = listings[listings.license==license].copy()
         full_status, simple_status = False, False # these MAY get overwritten during the loop
         
-        # NO LICENSE CLAIMED, EXEMPT, OR MISSING
+        # license NOT CLAIMED, EXEMPT OR MISSING
         if 'STR' in license or 'Missing' in license:
             ISD_address = np.nan
             ISD_status = np.nan
@@ -184,28 +203,27 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
                 ISD_category = np.nan
                 status = 'No license claimed' 
 
-        # license number CLAIMED in airbnb listing
+        # license number CLAIMED in airbnb listing (non-exempt & non-missing)
         else:    
             count_listings = len(listings_license_data)
             
-            # license number FOUND in ISD DATA:
+            # claimed license FOUND in ISD DATA: (MATCH)
             if license in isd['license_num'].values:  
                 isd_license_data = isd[isd.license_num==license]
                 
-                # get license info from ISD
+                # define given license details from ISD match
                 found_status = isd_license_data['Status'].values[0]
                 address = isd_license_data['Address'].values[0]
                 cat = isd_license_data['Category'].values[0]
                 category_dict = license_cat_dict[cat]
                 ISD_category = category_dict['name']
       
-                # CHECK FOR EXCEEDED LIMIT OF LISTINGS OR ACCOMMODATIONS:
-                # based on license type and the number of accoms/listings using this license
-                
-                # from the City Ordinance:
+                # CHECK FOR EXCEEDED LIMIT OF LISTINGS OR ACCOMMODATIONS....
+                # (based on license type and the number of accoms/listings using this license)
+                # From the City Ordinance:
                 #   "Occupancy shall be limited to five bedrooms or ten
-                #           guests in a Home Share Unit,
-                #                WICHEVER IS LESS."
+                #    guests in a Home Share Unit, WICHEVER IS LESS."
+                
                 # so check if the lesser of accomms or n_listings exceeds the license limit:
                 count_accomms = listings_license_data.accommodates.sum()
                 license_cat_max_exceed = np.nan
@@ -219,7 +237,7 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
                         license_cat_max_exceed = 'guest'
                 
                 
-                # [still on 'ISD FOUND'] — define full details of license status
+                # define full details of license status (FULL version and SIMPLE version of STATUS)
                 if 'Active' in found_status:   
                     ISD_status = found_status
                     ISD_address = address
@@ -231,12 +249,11 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
                     else: status = 'Active'
                 
                 else:
-                    status = 'Expired/Void/Revoked' # group these for simple version
-                    full_status = found_status
-                    ISD_status = found_status
+                    status = 'Expired/Void/Revoked' # group these for SIMPLE version
+                    ISD_status = full_status = found_status # use exact non-active type for FULL version
                     ISD_address = np.nan
                     
-            # NO MATCH FOUND IN ISD FOR CLAIMED LICENSE NUMBER:
+            # NO MATCH FOUND IN ISD FOR THIS CLAIMED LICENSE:
             else: 
                 status = 'Not found (fabricated)' 
                 ISD_status = status
@@ -246,7 +263,7 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
                 
     # ----- (still iterating through this license...)
         
-        # assign custom-defined license details back to all listings using this license
+        # assign the new custom-defined license details back to all listings that use this license
         listings.loc[listings_license_data.index, 'status'] = status
         listings.loc[listings_license_data.index, 'ISD_status'] = ISD_status
         listings.loc[listings_license_data.index, 'ISD_address'] = ISD_address
@@ -254,7 +271,8 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
         listings.loc[listings_license_data.index, 'license_listing_count'] = count_listings
         listings.loc[listings_license_data.index, 'license_cat_max_exceed'] = license_cat_max_exceed
 
-        # define multiple versions of "status" to display in different parts of the site (simple vs. full)
+        # assign multiple versions of "status" (SIMPLE and FULL)
+        # for displaying levels of detail in different parts of the site
         if simple_status:
             listings.loc[listings_license_data.index, 'simple_status'] = simple_status
         else: simple_status = status
@@ -264,17 +282,17 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
 
     #——————— END LOOP OVER THIS LICENSE
     
-    # use simple status where no full status was found:
+    # use SIMPLE status for licenses where no FULL status was found
     listings.full_status = listings.full_status.fillna(listings.simple_status)
     print(f"    > Matched {listings.ISD_address.notna().sum()} to ISD data")
 
-    # log active licensed listings percent:
+    # log percentage of active-licensed listings:
     pct_active = round(listings.status.value_counts(normalize=True)['Active']*100)
     print(f"  >>> {int(pct_active)}% of total listings have an Active license")
     print(' ', '—'*30)
     
     # check if license numbers are used by multiple hosts
-    # this function has a lot of redundancy but still finished fairly quickly 
+    # this function has unecessary redundancy... but still finishes quickly enough 
     print("  > Searching for license details of listings in ISD data...")  
     def find_shared_licenses(listings):
         for host in tqdm(set(listings.host_id)): # isolate data for each host 
@@ -292,9 +310,11 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
     print('  > Defining licenses used by multiple hosts ')
     listings = find_shared_licenses(listings)
     
-    # establish a common index for the airbnb data and the ISD data:
+    
+    # define a common index for the airbnb data and the ISD data (for future reference back to ISD matches)
+    # not currently needed / used, but may be useful in the future
     def get_isd_index(listings):
-        print('Mapping exact index back to listings dataframe...') # not currently needed / used, but interesting
+        print('Mapping exact index back to listings dataframe...') 
         isd_match_idx = {}
         for license in listings.license.unique(): # save time   
             list_idx = listings[listings.license==license].index
@@ -335,27 +355,43 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
 
 # # # # # # # #  CLUSTER  # # # # # # # #
 
+# In THREE main phases (all the code for the rest of this file) the listings are clustered:
+#   1. Start by grouping listings by host, then grouping the listings for each host by the claimed license.
+#        - Many hosts use one license across all listings in one given building
+#        - But sometimes, a license is used in multiple buildings. So we need search for sub-clusters within these groups
+#      ——> FIND CLUSTERS for each HOST-LICENSE group
+#   2.  Identify overlapping clusters from phase one
+#        - Two high-density clusters, each with many listings, probably represent two distinct buildings.
+#        - On the other hand, 4 or 5 low-density, low-volume clusters by the same host may represent one very anonymized building.
+#      ——> FIND PARENT CLUSTERS for host ALL SUB-CLUSTERS for the host
+#   3.  Identify POSSIBLE sub-clusters
+#        - In RARE cases, a high-volume parent cluster may still actually represent multiple buildings. AKA the initital two phases failed
+#        - So we check for strong indications of sub-clustering. If any high-confidence sub-clusters are present,
+#                                                                save them, but don't alter the original centroid.
+#      ——> CHECK FOR POSSIBLE SUB-CLUSTERS for each CLUSTER group
 
-# convert DBSCAN epsilon value from feet to lat/long (approximately) 
-# used for setting a dynamic DBSCAN epsilon value
+# After the first two phases of clustering, we will have CENTROIDS - a dataframe of parent clusters and their radial statistics
+# After the third phase of clustering, we willl get SUB_CENTROIDS - a dataframe of possible sub-clusters and their radial statistics
+# ... plus the final LISTINGS dataframe, with index numbers for each listing indicating the centroid (and sub_centroid when present)
+
+# convert a distance from FT to (approximately) lat/long — for setting a dynamic epsilon value in DBSCAN 
+# messy but necessary because DBSCAN requires the same unit input as it scans over (coordinates in this case)
+    # (epsilon will shift as the target location shifts laterally. but only barely!)
 def eps_calc(desired_ft):
-    # (epsilon will shift slightly from geodesic distances)
+    # these values custom-defined for 500ft using Google Maps measuring tape tool in the Boston public garden
+
     cal = [ (42.354304, -71.069223),  # 500 ft calibration
             (42.353843, -71.070958) ]
-    # these values custom-defined for 500ft using Google Maps measuring tape tool in the Boston public garden
-    
     # using calibration, calculate foot-factor
     x_diff = (cal[0][0] - cal[1][0])**2
     y_diff = (cal[0][1] - cal[1][1])**2
     ft_factor = np.sqrt(x_diff + y_diff) / 500 # calibration
-    
     epsilon = round(desired_ft*ft_factor, 8)  # convert using calculated foot-conversion factor
-    
     return epsilon
 
 
 # explode the initial listings into sub-clusters, separated by host and claimed license
-# AKA find listing sub-clusters within host-license groups
+# AKA find listing sub-clusters within host-license groups, or multiple buildings using the same license
 
 def create_sub_layer(listings, epsilon, min_samples, feature, sub_feature, epsilon2=False, min_samples2=False, verb=False):
     
@@ -447,7 +483,7 @@ def create_sub_layer(listings, epsilon, min_samples, feature, sub_feature, epsil
                         ] = listings.loc[parent_group.index, sub_feature+'_found']
             
             
-            # quick check for distance between classes (group multi-license centroids)
+            # check for distances between classes (group multi-license centroids) to join overlapping groups
             parent_group = listings[listings[feature]==unique_parent] # re-define
             found_groups = parent_group[sub_feature+'_found'].unique()
             found_host_centers = {}
@@ -463,47 +499,57 @@ def create_sub_layer(listings, epsilon, min_samples, feature, sub_feature, epsil
                 fg_cc_br = (fg_data.latitude.min(),  fg_data.longitude.min())
                 fg_max_range = geodesic(fg_cc_tl, fg_cc_br).feet*.5
                 
-                
+                # check if centroid overlaps with other centroids
                 overlap_class = False
                 for af_class, af_center in found_host_centers.items():
                     distance = geodesic(found_center, af_center).feet
-                    if distance < fg_max_range: # new center is within existing bounding box
-                        this_class = overlap_class = af_class
+                    
+                    # this centroid is within the bounding box of an already-found centroid
+                    if distance < fg_max_range: 
+                        this_class = overlap_class = af_class # so just join them 
                         break
                 
+                # unique new group
                 if not overlap_class:
                     this_class = centroid_num
                     found_host_centers[this_class] = found_center
                     centroid_num += 1
 
                     
-                listings.loc[fg_data.index, sub_feature] = f"{static_index}_{int(this_class)}" #host-centroid-found
+                 # assign, host-centroid was found 
+                listings.loc[fg_data.index, sub_feature] = f"{static_index}_{int(this_class)}"
             
             listings.drop(columns=[sub_feature+'_found'], inplace=True) # dont need this anymore
             
             
-            # CHECK FOR ALREADY-RECOGNIZED CENTROIDS
+        # CHECK FOR ALREADY-RECOGNIZED CENTROIDS to establish centroid names...
+            # search for new centroids, and use the EXISTING NAME from centroids in the PREVIOUS SCRAPE
+            # IF a centroid is within a minimum distance and within a minimum size ratio of the old one
+            # ELSE (no matching centroid found or too much change from old scrape) --> create new centroid name
+
             if 'centroids' not in list(feat_index[str(unique_parent)].keys()):
-                feat_index[str(unique_parent)]['centroids'] = {}
+                feat_index[str(unique_parent)]['centroids'] = {} 
                 
-            # list available centroid numbers (not already used by pre-centroid)
+            # list available centroid numbers for this host (not already used by pre-centroid)
             centroids_avail = list(range(1, 100))
             for p_cen in list(feat_index[str(unique_parent)]['centroids'].keys()):
                 centroids_avail.remove(int(p_cen)) # labels already taken in from scrape
             
-            parent_group = listings[listings[feature]==unique_parent] # re-define
+            # re-define group data to get existing centroid names found
+            parent_group = listings[listings[feature]==unique_parent]
             existing_groups = parent_group[sub_feature].value_counts().index # centroids sorted by size   
             non_outlier_groups = [g for g in existing_groups if '-1' not in str(g)]
             if verb and len(non_outlier_groups):
                 print('\n', '—'*60)
                 print(unique_parent)
             
+            # these statistical variables will be used to determine whether a centroid is new or recognized
             n_listings_change = {} # to store amount change in listings for each centroid
             feat_index_temp = {} # for temporarily storing data on new centroids
-            for e_group in existing_groups: # iterate classes checking each for existing match
+            
+            for e_group in existing_groups: # ITERATE NEWLY FOUND CENTROIDS GROUPS
                 if '-1' in str(e_group): continue
 
-                
                 e_data = parent_group[parent_group[sub_feature]==e_group]
                 e_center = (e_data.latitude.mean(), e_data.longitude.mean())
                 e_cc_tl = (fg_data.latitude.max(),  fg_data.longitude.max())
@@ -513,22 +559,30 @@ def create_sub_layer(listings, epsilon, min_samples, feature, sub_feature, epsil
                 
                 if verb: print(f'\n> {e_group} ({e_n_listings}):  {e_center}')
                 
-                recognized = False # check all existing host centroids for existing centroid...
+                 # check all OLD host centroids for matches to this NEW centroid...
+                recognized = False
                 for pre_centroid in feat_index[str(unique_parent)]['centroids'].keys():
+                    
+                    # same as above, define statistics for existing centroid against pre-cached centroid
                     p_center = feat_index[str(unique_parent)]['centroids'][pre_centroid]['center']
                     p_n_listings = feat_index[str(unique_parent)]['centroids'][pre_centroid]['n_listings']
                     p_max_range = feat_index[str(unique_parent)]['centroids'][pre_centroid]['max_range']
-                    # similarily statistics between exeisting centroid and pre-cached centroid
                     dist_diff = geodesic(e_center, p_center).feet        
                     n_listings_diff = p_n_listings-e_n_listings
                     n_listings_pct_diff = (n_listings_diff/e_n_listings)
-                    feat_index_temp[pre_centroid] = {
+                    
+                    feat_index_temp[pre_centroid] = { # store newfound centroid data stats
                         'n_listings': p_n_listings,
                         'center': p_center,
                         'max_range':p_max_range,
                     }
-                    if dist_diff <= max(e_max_range, p_max_range): # check biggest bounding box of both
-                        if abs(n_listings_pct_diff) < .75: # w.in 75% pythagorean difference in listing count
+                    
+                    # overlapping bounding box locations
+                    if dist_diff <= max(e_max_range, p_max_range): # check the bigger of both bounding boxs
+                        
+                        # w.in 75% difference in listing count
+                        if abs(n_listings_pct_diff) < .75:
+                            
                             recognized = True
                             recognized_centroids += 1
                             this_class = pre_centroid  # assign existing number for centroid
@@ -540,28 +594,27 @@ def create_sub_layer(listings, epsilon, min_samples, feature, sub_feature, epsil
                                 print('    > DISTANCE:', dist_diff)
                             break # stop searching, assumed found (possible errors here...)**
 
-                if not recognized: # none found from pre-existings centroids
+                if not recognized: # no matched found from pre-existings centroids
                     new_centroids += 1
                     this_class = str(centroids_avail[0]) # assign new number for centroid
                     centroids_avail = centroids_avail[1:]
                     if verb:
                         print('  > NOT RECOGNIZED', e_group, '——>', this_class)
                         
-                # save new centroid data to temp cache store with c_number overwrite
+                # save new matching centroid number to temporary cache (over old centroid number)
                 feat_index_temp[this_class] = {
                     'n_listings': e_n_listings,
                     'center': e_center,
-                    'max_range': e_max_range,
-                }
+                    'max_range': e_max_range, }
                 if verb: print(f'    > {static_index}_{int(this_class)} data saved to static index')
                     
                 # assign final centroid labels for this host:
                 listings.loc[e_data.index, sub_feature] = f"{static_index}_{int(this_class)}"
                 # bool for recognized vs. new centroid:
                 listings.loc[e_data.index, sub_feature+'_recognized'] = recognized
-               
-            # —————
-            # finished with all hosts 
+            
+            # ———————————————
+            # finished with ALL HOSTS hosts  (all clustering done for top-level centroids)
             # overwrite permanent cache with new data for recognized centroids
             # for old centroids not seen, keep old data & label in case of re-appearance.
             
