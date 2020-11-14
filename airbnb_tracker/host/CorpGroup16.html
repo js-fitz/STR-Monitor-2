@@ -1,0 +1,3786 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>STARS - Host Overview</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+    
+    
+/* Tooltip container */
+.tooltip {
+  opacity: 1;
+  position: relative;
+  display: inline-block;
+  font-family: "Helvetica", Arial, sans-serif;
+}
+
+.tooltiptext-2 {
+    margin-top: 25px !important;
+}
+
+.tooltiptext-3 {
+    margin-top: 46px !important;
+}
+
+/* Tooltip text */
+.tooltiptext {
+  visibility: hidden;
+  width: auto;
+  color: #fff;
+  text-align: right;
+  white-space: nowrap;
+  padding: 3px 8px;
+  border-radius: 5px;
+  background-color : #424242;
+  /* Position the tooltip text */
+  margin: 3px 0 0 0 ;
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  right: 105%;
+
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.info-tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+    
+    html {
+      scroll-behavior: smooth;
+        height: -webkit-fill-available;
+
+    }
+    
+    body {
+        font-family: "Helvetica", Arial, sans-serif;
+        padding:0;
+        margin:0;
+        height:100vh;
+        max-height: -webkit-fill-available;
+        overflow: auto;
+        color: white;
+    }
+    
+    .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+        background-color:#448AFF !important;
+        }
+        
+    .leaflet-popup-close-button {
+        display: none !important
+    }
+    
+    
+        .leaflet-pane .leaflet-interactive {
+            transition: fill-opacity .1s ease-in-out;
+            transition: stroke .1s ease-in-out;
+
+        }
+
+        .leaflet-pane .leaflet-interactive:hover {
+            fill-opacity:.8 !important;
+            stroke:white !important;
+        }
+        
+    .centroid-link-btn {
+        color:white !important;
+        font-size:18px;
+        padding:15px 0;
+        line-height:1.2em
+        }
+        
+
+
+    body a {
+        color: #E3F2FD;
+        text-decoration:none;
+        transition:.1s;
+    }
+    body a:hover {
+        color: #448AFF;
+        text-decoration: underline
+    }
+    
+    body a:active {
+        color: #D4D4D4;
+    }
+
+    body h1 {
+         color: white;
+         font-size:24px;
+         margin-top:0;
+    }
+
+    body h2 {
+        color:#448AFF;
+        font-size:22px;
+        line-height:1.4em;
+        font-weight:400px;
+        margin: 8px 0 8px;
+        font-weight:bold;
+    }
+
+    body h3 {
+        color:white;
+        font-size:18px;
+        margin: 0 0 8px;
+        font-weight:400px;
+        font-weight:500px;
+    }
+
+    body h4 {
+        font-size:16px;
+        color:white;
+        margin: 0 0 10px;
+        font-weight:500px;
+    }
+
+    body p {
+        font-size:16px;
+        line-height:1.4em;
+        color:white;
+        margin: 0 0 8px;
+    }
+
+    body .text-lite {
+        color:#E0E0E0;
+        font-size: .92 em;
+    }
+
+    hr {
+        border: .6px solid white;
+        margin: 15px 0
+        style='margin:20px'
+    }
+    
+    .hr-lite {
+        border-color: #9c9c9c;
+    }
+
+
+    #page-container {
+        padding: 0;
+        display:block;
+        height: 100%;
+        width: 100vw;
+        box-sizing: border-box;
+    }
+
+    #sidebar-container {
+        position:fixed;
+        display: block;
+        height: 100vh;
+        height: -webkit-fill-available;
+        width:400px;
+        overflow:auto;
+        transition:.2s;
+        z-index: 9999;
+    }
+
+    #nav-banner {
+        position:fixed;
+        top:0;
+        left:0;
+        z-index:9;
+        margin:0;
+        width:400px;
+        background-color:#191919;
+        overflow:auto;
+        z-index: 10000;
+    }
+
+    #sidebar {
+        width:400px;
+        top: 25px;
+        position:fixed;
+        height:calc(100vh - 25px);
+          max-height: -webkit-fill-available;
+
+        display:block;
+        background-color: #2b2b2b;
+        #border: 5px solid #4a4a4a;
+        box-sizing: border-box;
+        overflow-y: auto;
+        padding:30px;
+        transition:.15s;
+    }
+    
+    #open-menu-icon {
+        visibility:hidden;
+        display:block;
+        position:fixed;
+        left:0;
+        top:48vh;
+        color:white;
+        padding:10px;
+        font-size: 1.5em;
+    }
+    
+    
+    #mobile-switcher {
+        visibility:hidden;
+        position: absolute;
+        right: 0;
+        top: 0;
+        display:inline-block;
+        padding: 5px;
+        background-color: #191919;
+        margin:0;
+        pointer:cursor;
+    }
+    
+
+    # mobile-switch-label {
+        margin: 2px 0 0;
+    }
+    
+    #mobile-switch-link {
+        display:block;
+        position:fixed;
+        top:40px;
+        right:0;
+        width:30px;
+        height: calc(100vh - 40px);
+  max-height: -webkit-fill-available;
+        z-index:99999;
+        visibility:hidden;
+        pointer:cursor;
+    }
+    
+    @media screen and (max-width: 850px){
+    
+            .modal {
+            padding:0 !important;
+
+        }
+    
+        #mobile-switcher {
+            visibility: visible;
+        }
+        #mobile-switch-link {
+            visibility: visible;
+        }
+        #nav-banner {
+            width: 100vw;
+            padding:5px;
+        }
+        #sidebar-container {
+            width:calc(100vw - 30px);
+        }
+        #sidebar-container {
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+        #sidebar {
+            width:calc(100vw - 30px);
+        }
+
+        #map-container, iframe {
+            top:40px !important;
+            height:calc(100vh - 40px)  !important;
+              max-height: -webkit-fill-available;
+
+            z-index: 9995;
+            width:calc(100vw - 30px) !important;
+        }       
+    }
+    
+    
+    @media screen and (max-width: 720px){
+
+        .leaflet-control-layers {
+            display:none;
+        }
+    
+    }
+    
+    #mobile-menu-circle {
+      height: 65px;
+      width: 65px;
+      background-color: #2b2b2b;
+      border-radius: 50%;
+      display: inline-block;
+      position: fixed;
+      text-align: right;
+      left: -100px;
+      padding: 15px 3px;
+      transition:.2s
+    }
+    
+    .mobile-menu-circle i {
+        display: table-cell;
+        width: 65px;
+        height: 65px;
+        padding: 5px;
+        border: none;
+        vertical-align: middle;
+        
+    }
+    
+    
+    #nav-banner p {
+        margin:4px 8px;
+        width:max-content;
+        padding
+    }
+
+    .listings-status-legend {
+        margin-bottom:12px;
+        padding: 0 15px
+    }
+    .listings-status-legend p {
+        margin:0;
+    }
+    .listings-status-legend td {
+        padding: 10px 5px 0;
+    }
+    
+    .listings-status-legend th {
+        font-size:1.2em;
+        padding: 10px 5px 0;
+        color: white !important
+    }
+
+    #status-icon {
+        height:15px;
+        width:15px;
+        display:inline-block;
+        border: 1.5px solid white;
+        border-radius:50%;
+        margin: 0 5px;
+    }
+
+    #map-container {
+        position:fixed;
+        top:0;
+        right:0;
+        display: block;
+        height:100vh;
+          max-height: -webkit-fill-available;
+        width: calc(100% - 400px);
+        transition:.15s;
+    }
+
+    iframe {
+        position:fixed;
+        border:none;
+        right:0;
+        top:0;
+        height:100%;
+        width: calc(100% - 400px)
+    }
+
+    #search-container {
+        height: auto;
+        margin:0 0 10px;
+        width:100%;
+        padding:0;
+        transition: .2s ease-in-out;    
+        }
+
+
+    #search-list{
+        width: 100%
+    }
+
+    #searchbar {
+            background-color:#424242;
+            width: calc(100%) !important; 
+            border-radius: 5px;
+            border: 1.5px solid #448AFF !important;
+            padding:10px;
+            margin:0;
+            font-size:18px;
+            color:white;
+        } 
+
+
+    ::placeholder {
+            font-size:18px;
+            font-weight: bold;
+            color:#82B1FF;
+            opacity: 1 !important; 
+            margin:0
+        }
+
+    #search-message-container{
+    max-width:265;
+    }
+
+    #search-list{ 
+        display:block;
+        width: 100%;
+        margin:0;
+        font-size: 16px;
+        max-height:250px;
+        list-style-type: none;
+        padding: 0 15px;
+        overflow:auto;
+        transition: .2s ease-in-out;
+       }
+
+    .search-items { 
+       display: none;
+       padding:12px 0 12px 8px;
+       cursor: pointer;
+       border-top: 1px solid white;
+       transition:.2s;
+      } 
+
+    .search-items:hover {
+        background-color: #424242 !important;
+    }
+
+    .search-items p {
+        margin-bottom:2px
+    }
+
+    #search-prompt {
+        display: block;
+        overflow: hidden;
+        max-height: 150px;
+        margin: 0px 0px 5px;
+        max-height: 150px;
+        
+        transition: .2s;
+        font-size: 0.95em;
+      }
+
+    #search-instruct {
+        overflow: hidden;
+        max-height: 0;
+        transition: .2s;
+        padding: 0 8px;
+        margin:0;
+
+      }
+    #search-alert {
+        overflow: hidden;
+        max-height: 0;
+        transition: .2s;
+        padding: 0 8px;
+        margin:0;
+
+      }
+    #search-init {
+        overflow: hidden;
+        max-height: 0;
+        transition: .2s;
+        padding: 0 8px;
+        margin:0;
+      }
+
+
+    .isd-indicator-search {
+        display:block;
+        position: relative;
+        top:0;
+        right:10px;
+        float:right;
+        color:#E0E0E0;
+    }
+
+
+
+    #how-collapse-btn {
+      background-color: transparent;
+      color: white;
+      cursor: pointer;
+      padding: 8px 0;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;  
+    }
+
+    #how-collapsed {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;
+    }
+    
+    #license-collapse-btn {
+      background-color: transparent;
+      color: white;
+      cursor: pointer;
+      padding: 12px 0;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;  
+    }
+
+    #license-collapsed {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;
+    }
+    
+    #listings-collapse-btn {
+      background-color: transparent;
+      color: white;
+      cursor: pointer;
+      padding: 12px 0;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;  
+    }
+
+    #listings-collapsed {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;
+    }
+    
+    
+    .centroid-list-item {
+        background-color: #424242;
+        margin: 10px 0;
+        border-radius:8px;
+        padding:10px;
+        cursor:pointer;
+        transition:.2s;
+        border: 1.5px solid #424242;
+
+    }
+    
+    .centroid-list-item:hover {
+        border-color: #448AFF;
+        background-color: #333333;
+    }
+    
+    .centroid-list-item b {
+        color: #448AFF;
+        margin-bottom:2px;
+    }
+    
+    .centroid-list-item p {
+        font-size: .98em;
+        margin-bottom:2px;
+    }
+    .centroid-list-item a {
+        font-size: .96em;
+        text-decoration:none !important;
+    }
+    
+    .centroid-list-item a:hover {
+    }
+    
+    .high-conf-btn {
+        background-color: #424242;
+        margin: 15px 0;
+        border-radius:8px;
+        padding:8px 15px;
+        cursor:pointer;
+        transition:.15s;
+        border: 1.5px solid #424242;
+    }
+    
+    .high-conf-btn:hover {
+        background-color: #448AFF;
+    }
+    .high-conf-btn a:hover {
+        color: white !important;
+    }
+
+    
+
+    .host-info-link {
+        color:#C5B358;
+    }
+    
+    
+    .host-info-link:hover {
+        color:#a3923e;
+    }
+    
+    .centroid-list-item a {
+        text-decoration:none !important;
+        }
+        
+        
+    .license-claim-container ul {
+        padding-left:18px; 
+        list-style: disc;
+        color: white !important;
+    }
+
+    
+    .host-license-warning ul {
+        padding-left:18px; 
+        list-style: disc;
+        font-size:14px !important;
+        color: white !important 
+    }
+    
+    .host-license-warning ul li::before {
+      content: "2";
+      color: white; 
+      font-weight: bold; 
+    }
+    
+    
+    
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 10000; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100vw; /* Full width */
+      height: 100vh; /* Full height */
+        min-height: -webkit-fill-available;
+
+      padding:40px;
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+    }
+
+    /* Modal Content/Box */
+    .modal-content {
+      background-color: #2b2b2b !important;
+      z-index: 10000; /* Sit on top */
+      padding: 0;
+      height: calc(100vh - 80px);
+        max-height: -webkit-fill-available;
+
+      width: calc(100vw - 80px);
+    }
+    .modal-inner {
+      padding: 40px;
+      box-shadow: inset -12px -12px 10px rgba(0,0,0,0.25);
+      z-index: 100001; /* Sit on top */
+      overflow:auto;
+      width: 100%;
+      height: 100%;
+      background-color:#2b2b2b !important;
+    }
+
+    /* The Close Button */
+    .close {
+      position:fixed;
+      color: white !important;
+      float: right;
+      font-size: 30px;
+      font-weight: bold;
+      opacity: 1 !important;
+      margin-top: -15px;
+      
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .dataframe {
+        border-color: #d4d4d4;
+    }
+
+    .dataframe td {
+        white-space: pre;
+        max-width:120px;
+        padding: 3px;
+        overflow:auto;
+        color:white !important;
+    }
+
+    .dataframe th {
+        max-width:120px;
+        padding: 3px;
+        color:white !important;
+    }
+
+    </style>
+
+    </head>
+    <body>
+
+        <div id='page-container'>
+            <div id='sidebar-container'>
+                    
+                    <div id='nav-banner'>
+                        <p>
+                            <a href='/'>Home</a> &#62;
+                            Hosts &#62;
+                            <span style='color:#448AFF'>STARS</span>
+                        </p>
+                        
+                        <div id='mobile-switch-link'></div>
+                        <div id='mobile-switcher'>
+                            <p id='mobile-switch-label'>
+                            <b>Map </b><i class="fa fa-map" aria-hidden="true"></i> 
+                            </p>
+                        </div>
+                        
+                        <div id='open-menu-icon'>
+                            <span id="mobile-menu-circle">
+                                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        
+                    </div>
+                    
+                <div id='sidebar'>
+                    
+
+        <h2 style='margin: 0 0 10px; font-size:2.2em;'> STARS </h2>
+        <h3>
+            <b>22 listings</b> | 
+            4 clusters
+        </h3> 
+        <p class='text-lite'> <b>Note:</b> This host represents a corporation using the following 
+             alias accounts</p>
+             <ul style='margin:0; font-size:15px; color: white; padding-left:15px;margin-left:10px' >
+        <li>
+            <a target='_blank' href='https://www.airbnb.com/users/show/31340713'>
+                "Kama"</a> - 9 listings</li><li>
+            <a target='_blank' href='https://www.airbnb.com/users/show/266312920'>
+                "STARS Of"</a> - 13 listings</li></ul>
+    
+            
+    
+    <button id="myBtn" style='margin-top:px'>Detailed listings data
+        <i class="fa fa-external-link-square" aria-hidden="true"></i>
+    </button>
+
+    <div id="myModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+      <div class="modal-inner">
+        <span class="close">&times;</span>
+        
+        
+        <h2 style='margin-top:15px;'>
+            Host: <b>STARS</b>
+        <h2>
+        <h3>
+        <span> 22 total listings </span> | 
+        
+        <a href='/host/CorpGroup16—data.csv' download="host-CorpGroup16_listings.csv">
+                            <i class="fa fa-download" aria-hidden="true"></i>
+                            Download data as a CSV </a>
+        </h3>
+        <p>
+        <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Id</th>
+      <th>Listing<br>url</th>
+      <th>Cluster</th>
+      <th>Name</th>
+      <th>Host id</th>
+      <th>Host url</th>
+      <th>Host</th>
+      <th>Neighbourhood<br>cleansed</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+      <th>Property<br>type</th>
+      <th>Room type</th>
+      <th>Accommodates</th>
+      <th>Bedrooms</th>
+      <th>Beds</th>
+      <th>Price</th>
+      <th>Minimum<br>minimum<br>nights</th>
+      <th>Availability<br>365</th>
+      <th>Number<br>of<br>reviews</th>
+      <th>License</th>
+      <th>Host alias</th>
+      <th>Alias id</th>
+      <th>Status</th>
+      <th>Isd status</th>
+      <th>Isd<br>address</th>
+      <th>Isd<br>category</th>
+      <th>License<br>listing<br>count</th>
+      <th>License<br>cat<br>max<br>exceed</th>
+      <th>Simple<br>status</th>
+      <th>Full<br>status</th>
+      <th>Centroid<br>group<br>distance</th>
+      <th>Last<br>scraped</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>6646604</td>
+      <td><a href="https://www.airbnb.com/rooms/6646604" target="_blank">https://www.airbnb.com/rooms/6646604</a></td>
+      <td>17-4</td>
+      <td>Sunny renovated 1 bed, near BC,BU</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/31340713" target="_blank">https://www.airbnb.com/users/show/31340713</a></td>
+      <td>STARS</td>
+      <td>Brighton</td>
+      <td>42.34109</td>
+      <td>-71.14634</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>3</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>90.0</td>
+      <td>91.0</td>
+      <td>108</td>
+      <td>31</td>
+      <td>Missing</td>
+      <td>Kama</td>
+      <td>31340713.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>376.791034</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>11067772</td>
+      <td><a href="https://www.airbnb.com/rooms/11067772" target="_blank">https://www.airbnb.com/rooms/11067772</a></td>
+      <td>NaN</td>
+      <td>sunny,cozy,near BC,BU,Boston,MBTA</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/31340713" target="_blank">https://www.airbnb.com/users/show/31340713</a></td>
+      <td>STARS</td>
+      <td>Brighton</td>
+      <td>42.34212</td>
+      <td>-71.15439</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>NaN</td>
+      <td>2.0</td>
+      <td>102.0</td>
+      <td>28.0</td>
+      <td>304</td>
+      <td>45</td>
+      <td>Missing</td>
+      <td>Kama</td>
+      <td>31340713.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>14237196</td>
+      <td><a href="https://www.airbnb.com/rooms/14237196" target="_blank">https://www.airbnb.com/rooms/14237196</a></td>
+      <td>NaN</td>
+      <td>Lovely garden level studio steps to transportation</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/31340713" target="_blank">https://www.airbnb.com/users/show/31340713</a></td>
+      <td>STARS</td>
+      <td>Bay Village</td>
+      <td>42.34932</td>
+      <td>-71.06682</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>NaN</td>
+      <td>2.0</td>
+      <td>115.0</td>
+      <td>28.0</td>
+      <td>324</td>
+      <td>67</td>
+      <td>Missing</td>
+      <td>Kama</td>
+      <td>31340713.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>18170647</td>
+      <td><a href="https://www.airbnb.com/rooms/18170647" target="_blank">https://www.airbnb.com/rooms/18170647</a></td>
+      <td>17-4</td>
+      <td>Great 1 bedrm apt in Boston, Longwd Med</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/31340713" target="_blank">https://www.airbnb.com/users/show/31340713</a></td>
+      <td>STARS</td>
+      <td>Brighton</td>
+      <td>42.34006</td>
+      <td>-71.14529</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>104.0</td>
+      <td>91.0</td>
+      <td>364</td>
+      <td>3</td>
+      <td>Missing</td>
+      <td>Kama</td>
+      <td>31340713.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>158.167377</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>27634728</td>
+      <td><a href="https://www.airbnb.com/rooms/27634728" target="_blank">https://www.airbnb.com/rooms/27634728</a></td>
+      <td>17-2</td>
+      <td>Boston Condominium</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/31340713" target="_blank">https://www.airbnb.com/users/show/31340713</a></td>
+      <td>STARS</td>
+      <td>Brighton</td>
+      <td>42.33876</td>
+      <td>-71.15112</td>
+      <td>Entire condominium</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>99.0</td>
+      <td>28.0</td>
+      <td>274</td>
+      <td>14</td>
+      <td>Missing</td>
+      <td>Kama</td>
+      <td>31340713.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>67.582347</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>35605277</td>
+      <td><a href="https://www.airbnb.com/rooms/35605277" target="_blank">https://www.airbnb.com/rooms/35605277</a></td>
+      <td>17-1</td>
+      <td>Renovated Chic 1 Bed, Sleeps 4, Steps to Transit</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/266312920" target="_blank">https://www.airbnb.com/users/show/266312920</a></td>
+      <td>STARS</td>
+      <td>Brighton</td>
+      <td>42.33741</td>
+      <td>-71.15047</td>
+      <td>Entire condominium</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>99.0</td>
+      <td>28.0</td>
+      <td>345</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>STARS Of</td>
+      <td>266312920.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>40.525981</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>36621324</td>
+      <td><a href="https://www.airbnb.com/rooms/36621324" target="_blank">https://www.airbnb.com/rooms/36621324</a></td>
+      <td>NaN</td>
+      <td>Sunny and Spacious Furnished Brighton Studio</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/266312920" target="_blank">https://www.airbnb.com/users/show/266312920</a></td>
+      <td>STARS</td>
+      <td>Brighton</td>
+      <td>42.34152</td>
+      <td>-71.15477</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>NaN</td>
+      <td>2.0</td>
+      <td>102.0</td>
+      <td>28.0</td>
+      <td>304</td>
+      <td>1</td>
+      <td>022903</td>
+      <td>STARS Of</td>
+      <td>266312920.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>36621326</td>
+      <td><a href="https://www.airbnb.com/rooms/36621326" target="_blank">https://www.airbnb.com/rooms/36621326</a></td>
+      <td>NaN</td>
+      <td>Downtown Boston Bay Village Furnished Studio</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/266312920" target="_blank">https://www.airbnb.com/users/show/266312920</a></td>
+      <td>STARS</td>
+      <td>Bay Village</td>
+      <td>42.34908</td>
+      <td>-71.06799</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>NaN</td>
+      <td>2.0</td>
+      <td>102.0</td>
+      <td>28.0</td>
+      <td>324</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>STARS Of</td>
+      <td>266312920.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>36621741</td>
+      <td><a href="https://www.airbnb.com/rooms/36621741" target="_blank">https://www.airbnb.com/rooms/36621741</a></td>
+      <td>17-4</td>
+      <td>Great 1 bedrm apt in a great location</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/266312920" target="_blank">https://www.airbnb.com/users/show/266312920</a></td>
+      <td>STARS</td>
+      <td>Brighton</td>
+      <td>42.33934</td>
+      <td>-71.14689</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>185.0</td>
+      <td>91.0</td>
+      <td>271</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>STARS Of</td>
+      <td>266312920.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>395.179975</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>36621742</td>
+      <td><a href="https://www.airbnb.com/rooms/36621742" target="_blank">https://www.airbnb.com/rooms/36621742</a></td>
+      <td>17-4</td>
+      <td>Sunny, Renovated, Furnished 1-Bed</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/266312920" target="_blank">https://www.airbnb.com/users/show/266312920</a></td>
+      <td>STARS</td>
+      <td>Brighton</td>
+      <td>42.34076</td>
+      <td>-71.14537</td>
+      <td>Room in hotel</td>
+      <td>Private room</td>
+      <td>3</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>185.0</td>
+      <td>91.0</td>
+      <td>108</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>STARS Of</td>
+      <td>266312920.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>270.634265</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>39604562</td>
+      <td><a href="https://www.airbnb.com/rooms/39604562" target="_blank">https://www.airbnb.com/rooms/39604562</a></td>
+      <td>17-3</td>
+      <td>Over-sized historic one bedroom MGH,BU,MIT</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/31340713" target="_blank">https://www.airbnb.com/users/show/31340713</a></td>
+      <td>STARS</td>
+      <td>Back Bay</td>
+      <td>42.35353</td>
+      <td>-71.08058</td>
+      <td>Entire condominium</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>131.0</td>
+      <td>28.0</td>
+      <td>57</td>
+      <td>2</td>
+      <td>Missing</td>
+      <td>Kama</td>
+      <td>31340713.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>70.902628</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>39707104</td>
+      <td><a href="https://www.airbnb.com/rooms/39707104" target="_blank">https://www.airbnb.com/rooms/39707104</a></td>
+      <td>17-1</td>
+      <td>Bright, Spacious 1 Bedroom Steps to MBTA</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/31340713" target="_blank">https://www.airbnb.com/users/show/31340713</a></td>
+      <td>STARS</td>
+      <td>Brighton</td>
+      <td>42.33700</td>
+      <td>-71.15063</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>110.0</td>
+      <td>28.0</td>
+      <td>252</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>Kama</td>
+      <td>31340713.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>135.920266</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>39731053</td>
+      <td><a href="https://www.airbnb.com/rooms/39731053" target="_blank">https://www.airbnb.com/rooms/39731053</a></td>
+      <td>17-3</td>
+      <td>Beautiful, Renovated, Fully Furnished 1 Bedroom</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/266312920" target="_blank">https://www.airbnb.com/users/show/266312920</a></td>
+      <td>STARS</td>
+      <td>Back Bay</td>
+      <td>42.35373</td>
+      <td>-71.08103</td>
+      <td>Entire condominium</td>
+      <td>Entire home/apt</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>119.0</td>
+      <td>28.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>STARS Of</td>
+      <td>266312920.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>70.902546</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>39732562</td>
+      <td><a href="https://www.airbnb.com/rooms/39732562" target="_blank">https://www.airbnb.com/rooms/39732562</a></td>
+      <td>17-2</td>
+      <td>Sunny, 1 bedroom,steps to public trans,parkg avail</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/266312920" target="_blank">https://www.airbnb.com/users/show/266312920</a></td>
+      <td>STARS</td>
+      <td>Brighton</td>
+      <td>42.33892</td>
+      <td>-71.15163</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>110.0</td>
+      <td>28.0</td>
+      <td>252</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>STARS Of</td>
+      <td>266312920.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>85.520381</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>40429003</td>
+      <td><a href="https://www.airbnb.com/rooms/40429003" target="_blank">https://www.airbnb.com/rooms/40429003</a></td>
+      <td>NaN</td>
+      <td>Renovated,Fully Furnished 1 Bedroom in Back Bay</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/266312920" target="_blank">https://www.airbnb.com/users/show/266312920</a></td>
+      <td>STARS</td>
+      <td>Back Bay</td>
+      <td>42.35251</td>
+      <td>-71.08245</td>
+      <td>Entire condominium</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>110.0</td>
+      <td>28.0</td>
+      <td>57</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>STARS Of</td>
+      <td>266312920.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>40493715</td>
+      <td><a href="https://www.airbnb.com/rooms/40493715" target="_blank">https://www.airbnb.com/rooms/40493715</a></td>
+      <td>17-1</td>
+      <td>Sunny, Private, Furnished 1 Bed Condo with Porch</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/266312920" target="_blank">https://www.airbnb.com/users/show/266312920</a></td>
+      <td>STARS</td>
+      <td>Brighton</td>
+      <td>42.33739</td>
+      <td>-71.15024</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>99.0</td>
+      <td>28.0</td>
+      <td>274</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>STARS Of</td>
+      <td>266312920.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>44.578844</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>40493790</td>
+      <td><a href="https://www.airbnb.com/rooms/40493790" target="_blank">https://www.airbnb.com/rooms/40493790</a></td>
+      <td>NaN</td>
+      <td>Furnished , Newly Renovated, Spacious Studio</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/266312920" target="_blank">https://www.airbnb.com/users/show/266312920</a></td>
+      <td>STARS</td>
+      <td>Brighton</td>
+      <td>42.33697</td>
+      <td>-71.15209</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>1.0</td>
+      <td>83.0</td>
+      <td>31.0</td>
+      <td>180</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>STARS Of</td>
+      <td>266312920.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>40617998</td>
+      <td><a href="https://www.airbnb.com/rooms/40617998" target="_blank">https://www.airbnb.com/rooms/40617998</a></td>
+      <td>17-2</td>
+      <td>Modern, Newly Renovated 3Bed, 2Bath, Steps to MBTA</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/31340713" target="_blank">https://www.airbnb.com/users/show/31340713</a></td>
+      <td>STARS</td>
+      <td>Brighton</td>
+      <td>42.33869</td>
+      <td>-71.15135</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>6</td>
+      <td>3.0</td>
+      <td>3.0</td>
+      <td>181.0</td>
+      <td>28.0</td>
+      <td>267</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>Kama</td>
+      <td>31340713.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>36.721065</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>40622067</td>
+      <td><a href="https://www.airbnb.com/rooms/40622067" target="_blank">https://www.airbnb.com/rooms/40622067</a></td>
+      <td>17-1</td>
+      <td>Cozy, Modern, Newly Renovated 3Bed, 2Bath</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/266312920" target="_blank">https://www.airbnb.com/users/show/266312920</a></td>
+      <td>STARS</td>
+      <td>Brighton</td>
+      <td>42.33749</td>
+      <td>-71.15017</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>6</td>
+      <td>3.0</td>
+      <td>3.0</td>
+      <td>181.0</td>
+      <td>28.0</td>
+      <td>267</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>STARS Of</td>
+      <td>266312920.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>82.908762</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>43596487</td>
+      <td><a href="https://www.airbnb.com/rooms/43596487" target="_blank">https://www.airbnb.com/rooms/43596487</a></td>
+      <td>NaN</td>
+      <td>One Room Available in a 3Bed, 2Bath w/ Laundry</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/266312920" target="_blank">https://www.airbnb.com/users/show/266312920</a></td>
+      <td>STARS</td>
+      <td>Brighton</td>
+      <td>42.33889</td>
+      <td>-71.14990</td>
+      <td>Private room in apartment</td>
+      <td>Private room</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>52.0</td>
+      <td>28.0</td>
+      <td>167</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>STARS Of</td>
+      <td>266312920.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>44549370</td>
+      <td><a href="https://www.airbnb.com/rooms/44549370" target="_blank">https://www.airbnb.com/rooms/44549370</a></td>
+      <td>17-4</td>
+      <td>Furnished 1Bedroom with Elevator close to MBTA</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/31340713" target="_blank">https://www.airbnb.com/users/show/31340713</a></td>
+      <td>STARS</td>
+      <td>Brighton</td>
+      <td>42.33986</td>
+      <td>-71.14622</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>95.0</td>
+      <td>91.0</td>
+      <td>350</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>Kama</td>
+      <td>31340713.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>133.056627</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>45031773</td>
+      <td><a href="https://www.airbnb.com/rooms/45031773" target="_blank">https://www.airbnb.com/rooms/45031773</a></td>
+      <td>17-4</td>
+      <td>Furnished 1Bedroom with Elevator close to MBTA</td>
+      <td>CorpGroup16</td>
+      <td><a href="https://www.airbnb.com/users/show/266312920" target="_blank">https://www.airbnb.com/users/show/266312920</a></td>
+      <td>STARS</td>
+      <td>Brighton</td>
+      <td>42.33959</td>
+      <td>-71.14511</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>98.0</td>
+      <td>28.0</td>
+      <td>351</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>STARS Of</td>
+      <td>266312920.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>281.178936</td>
+      <td>2020-09-01</td>
+    </tr>
+  </tbody>
+</table>
+<p>22 rows × 32 columns</p>
+        </p>  
+      </div>
+      </div>
+
+    </div>
+    
+    
+
+    
+        <hr class='hr-lite'>
+
+        <h3>Host License Details</h3>
+        <p class='text-lite' style='font-size:.97em; margin-bottom:0'>
+             Cross-referenced with offical <a target='blank' href='https://www.boston.gov/departments/inspectional-services'>ISD</a> data
+        </p>
+
+        <table class='listings-status-legend'>
+                            
+                            <tr style='border-bottom:1px solid #9c9c9c;' >
+                                <td>  
+                                   <p class='text-lite'
+                                      style='margin-bottom:8px'>
+                                       <b>listings</b><p>
+                                </td>
+                                
+                                <td>  
+                                </td>
+                                                                
+                                <td>
+                                    <p class='text-lite'
+                                       style='margin-bottom:8px'>
+                                        <b>license</b>
+                                    </p>
+                                </td>
+                                </tr>                           
+                            <tr>
+                                
+                                <td style='text-align:right'>  
+                                    <p>
+                                    21 x</p> 
+                                </td>
+                                
+                                <td>                                      
+                                <i class='fa fa-ban'
+                                   style='color:#FF9800;
+                                   margin: 0 3px; font-size:16px'></i>
+                                </td>
+                                
+                                <td><p>
+                                    No license claimed
+                                </p></td></tr>                           
+                            <tr>
+                                
+                                <td style='text-align:right'>  
+                                    <p>
+                                    1 x</p> 
+                                </td>
+                                
+                                <td>                                      
+                                <i class='fa fa-exclamation-triangle'
+                                   style='color:#E64A19;
+                                   margin: 0 3px; font-size:16px'></i>
+                                </td>
+                                
+                                <td><p>
+                                    Not found (fabricated)
+                                </p></td></tr></table>
+        
+        <hr class='hr-lite' id='clusters'>
+
+        <h3 style='margin-bottom:18px'>Host clusters</h3>
+        
+        
+        <a href='/cluster/17-1.html'>
+        <div class='centroid-list-item'>
+            <p style='font-size:1.2em'><b>17-1</b> (4 listings)</p>
+            <p><span class='text-lite'>At or near:</span> 116 Englewood Avenue, Brighton </p>
+            <a href='/cluster/17-1.html'>View cluster listings & details &#8594;</a>
+        </div>
+        </a>
+
+        
+        <a href='/cluster/17-2.html'>
+        <div class='centroid-list-item'>
+            <p style='font-size:1.2em'><b>17-2</b> (3 listings)</p>
+            <p><span class='text-lite'>At or near:</span> 114 Strathmore Road, Brighton </p>
+            <a href='/cluster/17-2.html'>View cluster listings & details &#8594;</a>
+        </div>
+        </a>
+
+        
+        <a href='/cluster/17-3.html'>
+        <div class='centroid-list-item'>
+            <p style='font-size:1.2em'><b>17-3</b> (2 listings)</p>
+            <p><span class='text-lite'>At or near:</span> 270 Beacon Street, Back Bay </p>
+            <a href='/cluster/17-3.html'>View cluster listings & details &#8594;</a>
+        </div>
+        </a>
+
+        
+        <a href='/cluster/17-4.html'>
+        <div class='centroid-list-item'>
+            <p style='font-size:1.2em'><b>17-4</b> (6 listings)</p>
+            <p><span class='text-lite'>At or near:</span> 100 Kilsyth Road, Beaconsfield </p>
+            <a href='/cluster/17-4.html'>View cluster listings & details &#8594;</a>
+        </div>
+        </a>
+
+        
+        
+        <hr class='hr-lite' id='listings'>
+                                
+        <a id="listings-collapse-btn" style='margin:15px 0'>
+            [ + ] Show listings
+        </a>
+
+        <div id='listings-collapsed'>
+
+            <h3 style='margin:18px 0 8px'>Listings</h3>
+            <p class='text-lite' style='font-size:13px; margin: 2px 0 12px'>
+                <b>Note:</b> If a listing link redirects to the Airbnb.com
+                homepage, it indicates the host has removed the listing
+                since the last update from <a href='http://insideairbnb.com/'>InsideAirbnb</a>.</p>
+            <p style='font-size:.9em;text-align:right'>
+                        <a href='/host/CorpGroup16—data.csv' download="host-CorpGroup16_listings.csv">
+                            <i class="fa fa-download" aria-hidden="true"></i>
+                            Download host data as a CSV </a>
+        <a href='https://www.airbnb.com/rooms/6646604' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>6646604</b></p>
+                <p style='font-size:1.1em'>Sunny renovated 1 bed, near BC,BU</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    Kama</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>91</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/6646604' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/11067772' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>11067772</b></p>
+                <p style='font-size:1.1em'>sunny,cozy,near BC,BU,Boston,MBTA</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    Kama</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/11067772' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/14237196' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>14237196</b></p>
+                <p style='font-size:1.1em'>Lovely garden level studio steps to transportation</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    Kama</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/14237196' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/18170647' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>18170647</b></p>
+                <p style='font-size:1.1em'>Great 1 bedrm apt in Boston, Longwd Med</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    Kama</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>91</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/18170647' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/27634728' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>27634728</b></p>
+                <p style='font-size:1.1em'>Boston Condominium</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    Kama</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/27634728' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/35605277' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>35605277</b></p>
+                <p style='font-size:1.1em'>Renovated Chic 1 Bed, Sleeps 4, Steps to Transit</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    STARS Of</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/35605277' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/36621324' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>36621324</b></p>
+                <p style='font-size:1.1em'>Sunny and Spacious Furnished Brighton Studio</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    STARS Of</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>022903</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/36621324' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/36621326' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>36621326</b></p>
+                <p style='font-size:1.1em'>Downtown Boston Bay Village Furnished Studio</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    STARS Of</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/36621326' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/36621741' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>36621741</b></p>
+                <p style='font-size:1.1em'>Great 1 bedrm apt in a great location</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    STARS Of</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>91</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/36621741' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/36621742' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>36621742</b></p>
+                <p style='font-size:1.1em'>Sunny, Renovated, Furnished 1-Bed</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    STARS Of</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>91</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/36621742' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/39604562' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>39604562</b></p>
+                <p style='font-size:1.1em'>Over-sized historic one bedroom MGH,BU,MIT</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    Kama</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/39604562' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/39707104' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>39707104</b></p>
+                <p style='font-size:1.1em'>Bright, Spacious 1 Bedroom Steps to MBTA</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    Kama</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/39707104' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/39731053' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>39731053</b></p>
+                <p style='font-size:1.1em'>Beautiful, Renovated, Fully Furnished 1 Bedroom</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    STARS Of</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/39731053' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/39732562' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>39732562</b></p>
+                <p style='font-size:1.1em'>Sunny, 1 bedroom,steps to public trans,parkg avail</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    STARS Of</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/39732562' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/40429003' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>40429003</b></p>
+                <p style='font-size:1.1em'>Renovated,Fully Furnished 1 Bedroom in Back Bay</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    STARS Of</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/40429003' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/40493715' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>40493715</b></p>
+                <p style='font-size:1.1em'>Sunny, Private, Furnished 1 Bed Condo with Porch</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    STARS Of</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/40493715' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/40493790' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>40493790</b></p>
+                <p style='font-size:1.1em'>Furnished , Newly Renovated, Spacious Studio</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    STARS Of</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>31</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/40493790' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/40617998' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>40617998</b></p>
+                <p style='font-size:1.1em'>Modern, Newly Renovated 3Bed, 2Bath, Steps to MBTA</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    Kama</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/40617998' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/40622067' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>40622067</b></p>
+                <p style='font-size:1.1em'>Cozy, Modern, Newly Renovated 3Bed, 2Bath</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    STARS Of</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/40622067' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/43596487' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>43596487</b></p>
+                <p style='font-size:1.1em'>One Room Available in a 3Bed, 2Bath w/ Laundry</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    STARS Of</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/43596487' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/44549370' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>44549370</b></p>
+                <p style='font-size:1.1em'>Furnished 1Bedroom with Elevator close to MBTA</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    Kama</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>91</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/44549370' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/45031773' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>45031773</b></p>
+                <p style='font-size:1.1em'>Furnished 1Bedroom with Elevator close to MBTA</p>
+            
+                <p><span class='text-lite'>Alias account:</span>
+                    STARS Of</p> 
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/45031773' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+
+        </div>
+
+
+
+                
+                </div>
+                
+            </div>
+
+            <div id='map-container'>
+                <!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://rawcdn.githack.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css"/>
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_eebb6c464899440194657601cc73dab9 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+         <div style="
+         position: fixed; z-index:699; 
+         bottom: 16px; right: 0; width: auto; height: auto; 
+         background-color:white;
+         border-bottom:1px solid #DEDEDE;
+         opacity: .7;
+         padding: 3px 8px;
+         font-size:12px">
+            <span style='margin: 0px;'>
+                <a style='color: black !important' target='blank' href='insideairbnb.com'>InsideAirbnb</a>:
+                    Sep. 2020 | STR registry: Aug. 2020
+            </span>
+          </div> 
+    
+            <div class="folium-map" id="map_eebb6c464899440194657601cc73dab9" ></div>
+        
+</body>
+<script>    
+    
+            var map_eebb6c464899440194657601cc73dab9 = L.map(
+                "map_eebb6c464899440194657601cc73dab9",
+                {
+                    center: [42.345349999999996, -71.110795],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 13,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_85d8817474664166969c28019a6529e9 = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_eebb6c464899440194657601cc73dab9);
+        
+    
+            var feature_group_7b4deb7ac8f04327b98096e151b65334 = L.featureGroup(
+                {}
+            ).addTo(map_eebb6c464899440194657601cc73dab9);
+        
+    
+            var marker_197cd332bf7f402bad453a7fa2ac5dc6 = L.marker(
+                [42.34197289999999, -71.1526497],
+                {}
+            ).addTo(feature_group_7b4deb7ac8f04327b98096e151b65334);
+        
+    
+            var icon_a0537f52bede4a79af26b8448a18673f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "building", "iconColor": "#5E35B1", "markerColor": "lightgray", "prefix": "fa"}
+            );
+            marker_197cd332bf7f402bad453a7fa2ac5dc6.setIcon(icon_a0537f52bede4a79af26b8448a18673f);
+        
+    
+            marker_197cd332bf7f402bad453a7fa2ac5dc6.bindTooltip(
+                `<div>
+                     <b style='font-size:.88em'>Known STR Building</b><br><b style='font-size:1.2em; color:#5E35B1'>30 Wallingford Rd, Brighton MA 02135</b><br>Units: (unknown) | Floors: 10.0 | Source: BigBldgDB<br><b>Known operators: </b><br> &#8226; unknown<div style='height:4px'></div><span style='color:#448AFF' >Distance from cluster center: <b>1803 ft.</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_9a703b238b1f47c39dd8610559d7c064 = L.circle(
+                [42.34011666666665, -71.14586999999999],
+                {"bubblingMouseEvents": true, "color": "#448AFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.4610796177303996, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.7610796177303996, "radius": 126.49896468000001, "stroke": true, "weight": 2}
+            ).addTo(map_eebb6c464899440194657601cc73dab9);
+        
+    
+        var popup_742e1e4f516f4ce6aeddbd615e22fb30 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_253661ac29684484b765f80ea3ccbc29 = $(`<div id="html_253661ac29684484b765f80ea3ccbc29" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-4.html'>                                 <b>Cluster 17-4</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_742e1e4f516f4ce6aeddbd615e22fb30.setContent(html_253661ac29684484b765f80ea3ccbc29);
+        
+
+        circle_9a703b238b1f47c39dd8610559d7c064.bindPopup(popup_742e1e4f516f4ce6aeddbd615e22fb30)
+        ;
+
+        
+    
+    
+            circle_9a703b238b1f47c39dd8610559d7c064.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#448AFF'>
+        Cluster <b>17-4
+        </b></p>
+        <p style='font-size:1.0em; margin: 0 0 1px; color:#FF9800'><span style='color:#448AFF!important;font-size:.92em'>
+                <i class="fa fa-minus-circle"></i> 4 listings removed since Jul. 2020</span> <br> <span style='color:black!important;font-size:.95em'>
+                <b>Listings license status:</b></span><br>
+            <i class="fa fa-ban"></i> No license claimed </p>
+        Host: <b>STARS </b> | Listings: <b>6</b>
+        <br>Minimum  stay:  <b style='color:black'>
+            28 nights </b>  
+        
+        <br><span style='text-align:center; color:#448AFF'><b>Click for details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_d439a0ec0eaf465db993e19b05796d11 = L.circle(
+                [42.3373225, -71.1503775],
+                {"bubblingMouseEvents": true, "color": "#448AFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.43853694816287986, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.7385369481628798, "radius": 80.0, "stroke": true, "weight": 2}
+            ).addTo(map_eebb6c464899440194657601cc73dab9);
+        
+    
+        var popup_5ce803d0ea2547b7bedf87f1c0e7003f = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ee7d90a6ef714b1fb39415476c2f272d = $(`<div id="html_ee7d90a6ef714b1fb39415476c2f272d" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-1.html'>                                 <b>Cluster 17-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_5ce803d0ea2547b7bedf87f1c0e7003f.setContent(html_ee7d90a6ef714b1fb39415476c2f272d);
+        
+
+        circle_d439a0ec0eaf465db993e19b05796d11.bindPopup(popup_5ce803d0ea2547b7bedf87f1c0e7003f)
+        ;
+
+        
+    
+    
+            circle_d439a0ec0eaf465db993e19b05796d11.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#448AFF'>
+        Cluster <b>17-1
+        </b></p>
+        <p style='font-size:1.0em; margin: 0 0 1px; color:#FF9800'><span style='color:#448AFF!important;font-size:.92em'>
+                <i class="fa fa-plus-circle"></i> 1 listings added since Jul. 2020</span> <br> <span style='color:black!important;font-size:.95em'>
+                <b>Listings license status:</b></span><br>
+            <i class="fa fa-ban"></i> No license claimed </p>
+        Host: <b>STARS </b> | Listings: <b>4</b>
+        <br>Minimum  stay:  <b style='color:black'>
+            28 nights </b>  
+        
+        <br><span style='text-align:center; color:#448AFF'><b>Click for details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_5a8de2bf5c35463dab7e0d93716ed564 = L.circle(
+                [42.33879, -71.15136666666666],
+                {"bubblingMouseEvents": true, "color": "#448AFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.4225426695675198, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.7225426695675198, "radius": 80.0, "stroke": true, "weight": 2}
+            ).addTo(map_eebb6c464899440194657601cc73dab9);
+        
+    
+        var popup_8400b0f87337459a812b6af30789a854 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_f9bf9f98340e4fca945e429a18515265 = $(`<div id="html_f9bf9f98340e4fca945e429a18515265" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-2.html'>                                 <b>Cluster 17-2</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_8400b0f87337459a812b6af30789a854.setContent(html_f9bf9f98340e4fca945e429a18515265);
+        
+
+        circle_5a8de2bf5c35463dab7e0d93716ed564.bindPopup(popup_8400b0f87337459a812b6af30789a854)
+        ;
+
+        
+    
+    
+            circle_5a8de2bf5c35463dab7e0d93716ed564.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#448AFF'>
+        Cluster <b>17-2
+        </b></p>
+        <p style='font-size:1.0em; margin: 0 0 1px; color:#FF9800'><span style='color:black!important;font-size:.95em'>
+                <b>Listings license status:</b></span><br>
+            <i class="fa fa-ban"></i> No license claimed </p>
+        Host: <b>STARS </b> | Listings: <b>3</b>
+        <br>Minimum  stay:  <b style='color:black'>
+            28 nights </b>  
+        
+        <br><span style='text-align:center; color:#448AFF'><b>Click for details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_c23b7a59fac1479ab385a5ba446de5f7 = L.circle(
+                [42.35363, -71.080805],
+                {"bubblingMouseEvents": true, "color": "#448AFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.4, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.7, "radius": 80.0, "stroke": true, "weight": 2}
+            ).addTo(map_eebb6c464899440194657601cc73dab9);
+        
+    
+        var popup_4d6340c6462847a2a84adb6595194af4 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_786d63e1a2de4869992ce498eca2aad6 = $(`<div id="html_786d63e1a2de4869992ce498eca2aad6" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-3.html'>                                 <b>Cluster 17-3</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_4d6340c6462847a2a84adb6595194af4.setContent(html_786d63e1a2de4869992ce498eca2aad6);
+        
+
+        circle_c23b7a59fac1479ab385a5ba446de5f7.bindPopup(popup_4d6340c6462847a2a84adb6595194af4)
+        ;
+
+        
+    
+    
+            circle_c23b7a59fac1479ab385a5ba446de5f7.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#448AFF'>
+        Cluster <b>17-3
+        </b></p>
+        <p style='font-size:1.0em; margin: 0 0 1px; color:#FF9800'><span style='color:#448AFF!important;font-size:.92em'>
+                <i class="fa fa-plus-circle"></i> 1 listings added since Jul. 2020</span> <br> <span style='color:black!important;font-size:.95em'>
+                <b>Listings license status:</b></span><br>
+            <i class="fa fa-ban"></i> No license claimed </p>
+        Host: <b>STARS </b> | Listings: <b>2</b>
+        <br>Minimum  stay:  <b style='color:black'>
+            28 nights </b>  
+        
+        <br><span style='text-align:center; color:#448AFF'><b>Click for details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_fd4ea28e16e546d79ba07cd9c86ab4e9 = L.circle(
+                [42.34011666666665, -71.14586999999999],
+                {"bubblingMouseEvents": true, "color": "#448AFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#448AFF", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.7, "radius": 6, "stroke": true, "weight": 4}
+            ).addTo(map_eebb6c464899440194657601cc73dab9);
+        
+    
+        var popup_45ccdcc964e84e488aa3b54632e78147 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ffc2c69741504410aa76ebea151e6812 = $(`<div id="html_ffc2c69741504410aa76ebea151e6812" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-4.html'>                                 <b>Cluster 17-4</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_45ccdcc964e84e488aa3b54632e78147.setContent(html_ffc2c69741504410aa76ebea151e6812);
+        
+
+        circle_fd4ea28e16e546d79ba07cd9c86ab4e9.bindPopup(popup_45ccdcc964e84e488aa3b54632e78147)
+        ;
+
+        
+    
+    
+            circle_fd4ea28e16e546d79ba07cd9c86ab4e9.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#448AFF'>
+        Cluster <b>17-4
+        </b></p>
+        <p style='font-size:1.0em; margin: 0 0 1px; color:#FF9800'><span style='color:#448AFF!important;font-size:.92em'>
+                <i class="fa fa-minus-circle"></i> 4 listings removed since Jul. 2020</span> <br> <span style='color:black!important;font-size:.95em'>
+                <b>Listings license status:</b></span><br>
+            <i class="fa fa-ban"></i> No license claimed </p>
+        Host: <b>STARS </b> | Listings: <b>6</b>
+        <br>Minimum  stay:  <b style='color:black'>
+            28 nights </b>  
+        
+        <br><span style='text-align:center; color:#448AFF'><b>Click for details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_72fccc10d51a4503ade1bcb064732fdb = L.circle(
+                [42.3373225, -71.1503775],
+                {"bubblingMouseEvents": true, "color": "#448AFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#448AFF", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.7, "radius": 6, "stroke": true, "weight": 4}
+            ).addTo(map_eebb6c464899440194657601cc73dab9);
+        
+    
+        var popup_d1c37e8c09fa4852b6e35621a7d5f0b4 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_bb1425bf55244e3a8c5779b4f1e0a836 = $(`<div id="html_bb1425bf55244e3a8c5779b4f1e0a836" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-1.html'>                                 <b>Cluster 17-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_d1c37e8c09fa4852b6e35621a7d5f0b4.setContent(html_bb1425bf55244e3a8c5779b4f1e0a836);
+        
+
+        circle_72fccc10d51a4503ade1bcb064732fdb.bindPopup(popup_d1c37e8c09fa4852b6e35621a7d5f0b4)
+        ;
+
+        
+    
+    
+            circle_72fccc10d51a4503ade1bcb064732fdb.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#448AFF'>
+        Cluster <b>17-1
+        </b></p>
+        <p style='font-size:1.0em; margin: 0 0 1px; color:#FF9800'><span style='color:#448AFF!important;font-size:.92em'>
+                <i class="fa fa-plus-circle"></i> 1 listings added since Jul. 2020</span> <br> <span style='color:black!important;font-size:.95em'>
+                <b>Listings license status:</b></span><br>
+            <i class="fa fa-ban"></i> No license claimed </p>
+        Host: <b>STARS </b> | Listings: <b>4</b>
+        <br>Minimum  stay:  <b style='color:black'>
+            28 nights </b>  
+        
+        <br><span style='text-align:center; color:#448AFF'><b>Click for details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_0c99e44310e04635a5e3370d1f85483a = L.circle(
+                [42.33879, -71.15136666666666],
+                {"bubblingMouseEvents": true, "color": "#448AFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#448AFF", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.7, "radius": 6, "stroke": true, "weight": 4}
+            ).addTo(map_eebb6c464899440194657601cc73dab9);
+        
+    
+        var popup_a27a79944e184a569435b4dbeffa2edd = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ebe524519ab04e5592b174cc47dd82d2 = $(`<div id="html_ebe524519ab04e5592b174cc47dd82d2" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-2.html'>                                 <b>Cluster 17-2</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_a27a79944e184a569435b4dbeffa2edd.setContent(html_ebe524519ab04e5592b174cc47dd82d2);
+        
+
+        circle_0c99e44310e04635a5e3370d1f85483a.bindPopup(popup_a27a79944e184a569435b4dbeffa2edd)
+        ;
+
+        
+    
+    
+            circle_0c99e44310e04635a5e3370d1f85483a.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#448AFF'>
+        Cluster <b>17-2
+        </b></p>
+        <p style='font-size:1.0em; margin: 0 0 1px; color:#FF9800'><span style='color:black!important;font-size:.95em'>
+                <b>Listings license status:</b></span><br>
+            <i class="fa fa-ban"></i> No license claimed </p>
+        Host: <b>STARS </b> | Listings: <b>3</b>
+        <br>Minimum  stay:  <b style='color:black'>
+            28 nights </b>  
+        
+        <br><span style='text-align:center; color:#448AFF'><b>Click for details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_7619687efa3f47b3bf7cc16afb983eab = L.circle(
+                [42.35363, -71.080805],
+                {"bubblingMouseEvents": true, "color": "#448AFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#448AFF", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.7, "radius": 6, "stroke": true, "weight": 4}
+            ).addTo(map_eebb6c464899440194657601cc73dab9);
+        
+    
+        var popup_20bee619349f4c768fb8b48b02aa8c08 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_48a545e2461b48cb854831cbb6ddb117 = $(`<div id="html_48a545e2461b48cb854831cbb6ddb117" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-3.html'>                                 <b>Cluster 17-3</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_20bee619349f4c768fb8b48b02aa8c08.setContent(html_48a545e2461b48cb854831cbb6ddb117);
+        
+
+        circle_7619687efa3f47b3bf7cc16afb983eab.bindPopup(popup_20bee619349f4c768fb8b48b02aa8c08)
+        ;
+
+        
+    
+    
+            circle_7619687efa3f47b3bf7cc16afb983eab.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#448AFF'>
+        Cluster <b>17-3
+        </b></p>
+        <p style='font-size:1.0em; margin: 0 0 1px; color:#FF9800'><span style='color:#448AFF!important;font-size:.92em'>
+                <i class="fa fa-plus-circle"></i> 1 listings added since Jul. 2020</span> <br> <span style='color:black!important;font-size:.95em'>
+                <b>Listings license status:</b></span><br>
+            <i class="fa fa-ban"></i> No license claimed </p>
+        Host: <b>STARS </b> | Listings: <b>2</b>
+        <br>Minimum  stay:  <b style='color:black'>
+            28 nights </b>  
+        
+        <br><span style='text-align:center; color:#448AFF'><b>Click for details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var feature_group_d19e8f2218ae4957acd6a14ce21e7f2d = L.featureGroup(
+                {}
+            ).addTo(map_eebb6c464899440194657601cc73dab9);
+        
+    
+            var circle_ed85c6c8115d45ec950c808c4b95d52c = L.circle(
+                [42.34109, -71.14634000000002],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_8f6b7f832afb47e8a22a6b5b388ffc5d = L.popup({"maxWidth": "100%"});
+
+        
+            var html_16da9ee84c434004a71d0cab95aa55cc = $(`<div id="html_16da9ee84c434004a71d0cab95aa55cc" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-4.html'>                                 <b>Cluster 17-4</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_8f6b7f832afb47e8a22a6b5b388ffc5d.setContent(html_16da9ee84c434004a71d0cab95aa55cc);
+        
+
+        circle_ed85c6c8115d45ec950c808c4b95d52c.bindPopup(popup_8f6b7f832afb47e8a22a6b5b388ffc5d)
+        ;
+
+        
+    
+    
+            circle_ed85c6c8115d45ec950c808c4b95d52c.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>6646604</b></p>
+        Cluster: <span style='color:#448AFF'><b>17-4</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>Kama </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_b732402e1ca2438ca6839756085a5fe3 = L.circle(
+                [42.34212, -71.15439],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_70b9b92a38c742c7a80f57af438236d1 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_47bc1ea5d131487b99171e35463bd95c = $(`<div id="html_47bc1ea5d131487b99171e35463bd95c" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center; color:white">                                 <b style='font-size:14px'>Cluster not assigned</b>                                 <br>                                 <b style='font-size:12px'>(Not enough host listings nearby)</b>                                                     </div>                         </div>`)[0];
+            popup_70b9b92a38c742c7a80f57af438236d1.setContent(html_47bc1ea5d131487b99171e35463bd95c);
+        
+
+        circle_b732402e1ca2438ca6839756085a5fe3.bindPopup(popup_70b9b92a38c742c7a80f57af438236d1)
+        ;
+
+        
+    
+    
+            circle_b732402e1ca2438ca6839756085a5fe3.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>11067772</b></p>
+        Cluster: <span style='color:#448AFF'><b>nan</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>Kama </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b>Outlier not assigned to a cluster</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_41bdade0e0e64bd0a7bd5555842a3c54 = L.circle(
+                [42.34932, -71.06681999999998],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_5698f553a00348a5b02b8c4935787cff = L.popup({"maxWidth": "100%"});
+
+        
+            var html_cc6264855ee84c1fa795fc4a659df7e3 = $(`<div id="html_cc6264855ee84c1fa795fc4a659df7e3" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center; color:white">                                 <b style='font-size:14px'>Cluster not assigned</b>                                 <br>                                 <b style='font-size:12px'>(Not enough host listings nearby)</b>                                                     </div>                         </div>`)[0];
+            popup_5698f553a00348a5b02b8c4935787cff.setContent(html_cc6264855ee84c1fa795fc4a659df7e3);
+        
+
+        circle_41bdade0e0e64bd0a7bd5555842a3c54.bindPopup(popup_5698f553a00348a5b02b8c4935787cff)
+        ;
+
+        
+    
+    
+            circle_41bdade0e0e64bd0a7bd5555842a3c54.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>14237196</b></p>
+        Cluster: <span style='color:#448AFF'><b>nan</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>Kama </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b>Outlier not assigned to a cluster</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_40c9c03052ea4ab9aee563dc4960c30d = L.circle(
+                [42.34006, -71.14529],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_4cba53b06db54eb5bd132d98b70b5bc8 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_4e0c685c4ef14c749cf07df46585ac60 = $(`<div id="html_4e0c685c4ef14c749cf07df46585ac60" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-4.html'>                                 <b>Cluster 17-4</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_4cba53b06db54eb5bd132d98b70b5bc8.setContent(html_4e0c685c4ef14c749cf07df46585ac60);
+        
+
+        circle_40c9c03052ea4ab9aee563dc4960c30d.bindPopup(popup_4cba53b06db54eb5bd132d98b70b5bc8)
+        ;
+
+        
+    
+    
+            circle_40c9c03052ea4ab9aee563dc4960c30d.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>18170647</b></p>
+        Cluster: <span style='color:#448AFF'><b>17-4</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>Kama </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_65f63f417d9d4ed484d0fea1ca48225f = L.circle(
+                [42.33876, -71.15111999999998],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_d497633bd6dd4e34b5a8609302a781fd = L.popup({"maxWidth": "100%"});
+
+        
+            var html_a58d7f931ca644468a06e6b9be0dd5b7 = $(`<div id="html_a58d7f931ca644468a06e6b9be0dd5b7" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-2.html'>                                 <b>Cluster 17-2</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_d497633bd6dd4e34b5a8609302a781fd.setContent(html_a58d7f931ca644468a06e6b9be0dd5b7);
+        
+
+        circle_65f63f417d9d4ed484d0fea1ca48225f.bindPopup(popup_d497633bd6dd4e34b5a8609302a781fd)
+        ;
+
+        
+    
+    
+            circle_65f63f417d9d4ed484d0fea1ca48225f.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>27634728</b></p>
+        Cluster: <span style='color:#448AFF'><b>17-2</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>Kama </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_a02799cfd04a497ea4ff5e0dd9fab375 = L.circle(
+                [42.33741, -71.15047],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_1da74c4fa15848969e7925f74cdfdb60 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_4498567cd6834d01bd1c6ba96d450475 = $(`<div id="html_4498567cd6834d01bd1c6ba96d450475" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-1.html'>                                 <b>Cluster 17-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_1da74c4fa15848969e7925f74cdfdb60.setContent(html_4498567cd6834d01bd1c6ba96d450475);
+        
+
+        circle_a02799cfd04a497ea4ff5e0dd9fab375.bindPopup(popup_1da74c4fa15848969e7925f74cdfdb60)
+        ;
+
+        
+    
+    
+            circle_a02799cfd04a497ea4ff5e0dd9fab375.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>35605277</b></p>
+        Cluster: <span style='color:#448AFF'><b>17-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>STARS Of </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_6a5d706ff0c049ce91a9b6ee4bb52039 = L.circle(
+                [42.34152, -71.15477],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_a642f06261914ea795f5c1d36c429a77 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_2bc638269bb34f54a55974e599ffb99e = $(`<div id="html_2bc638269bb34f54a55974e599ffb99e" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center; color:white">                                 <b style='font-size:14px'>Cluster not assigned</b>                                 <br>                                 <b style='font-size:12px'>(Not enough host listings nearby)</b>                                                     </div>                         </div>`)[0];
+            popup_a642f06261914ea795f5c1d36c429a77.setContent(html_2bc638269bb34f54a55974e599ffb99e);
+        
+
+        circle_6a5d706ff0c049ce91a9b6ee4bb52039.bindPopup(popup_a642f06261914ea795f5c1d36c429a77)
+        ;
+
+        
+    
+    
+            circle_6a5d706ff0c049ce91a9b6ee4bb52039.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>36621324</b></p>
+        Cluster: <span style='color:#448AFF'><b>nan</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>STARS Of </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 022903</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b>Outlier not assigned to a cluster</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_ba7486ed361449d2a66f2230da6f9f32 = L.circle(
+                [42.34908, -71.06799000000002],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_95d4b0162aca40f1bb124c39effbc949 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_524abe0589e840bd98bebdb4de4af33a = $(`<div id="html_524abe0589e840bd98bebdb4de4af33a" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center; color:white">                                 <b style='font-size:14px'>Cluster not assigned</b>                                 <br>                                 <b style='font-size:12px'>(Not enough host listings nearby)</b>                                                     </div>                         </div>`)[0];
+            popup_95d4b0162aca40f1bb124c39effbc949.setContent(html_524abe0589e840bd98bebdb4de4af33a);
+        
+
+        circle_ba7486ed361449d2a66f2230da6f9f32.bindPopup(popup_95d4b0162aca40f1bb124c39effbc949)
+        ;
+
+        
+    
+    
+            circle_ba7486ed361449d2a66f2230da6f9f32.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>36621326</b></p>
+        Cluster: <span style='color:#448AFF'><b>nan</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>STARS Of </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b>Outlier not assigned to a cluster</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_188b4d7d5c674f64a6a5edc41cfb3186 = L.circle(
+                [42.33934, -71.14689],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_263aaf1d557542009cf290d29d032c79 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_f8e5ea60c767461f8db795e9f7131748 = $(`<div id="html_f8e5ea60c767461f8db795e9f7131748" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-4.html'>                                 <b>Cluster 17-4</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_263aaf1d557542009cf290d29d032c79.setContent(html_f8e5ea60c767461f8db795e9f7131748);
+        
+
+        circle_188b4d7d5c674f64a6a5edc41cfb3186.bindPopup(popup_263aaf1d557542009cf290d29d032c79)
+        ;
+
+        
+    
+    
+            circle_188b4d7d5c674f64a6a5edc41cfb3186.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>36621741</b></p>
+        Cluster: <span style='color:#448AFF'><b>17-4</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>STARS Of </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_43192120ca634214b187e4f5a15f8e94 = L.circle(
+                [42.34076, -71.14537],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_819827b77d904345b5e3e89a4692b3fd = L.popup({"maxWidth": "100%"});
+
+        
+            var html_6543b0c665af41128bce1941edf05ef6 = $(`<div id="html_6543b0c665af41128bce1941edf05ef6" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-4.html'>                                 <b>Cluster 17-4</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_819827b77d904345b5e3e89a4692b3fd.setContent(html_6543b0c665af41128bce1941edf05ef6);
+        
+
+        circle_43192120ca634214b187e4f5a15f8e94.bindPopup(popup_819827b77d904345b5e3e89a4692b3fd)
+        ;
+
+        
+    
+    
+            circle_43192120ca634214b187e4f5a15f8e94.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>36621742</b></p>
+        Cluster: <span style='color:#448AFF'><b>17-4</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>STARS Of </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_da716fe7ec5d45c894efbfd7fda3c9c4 = L.circle(
+                [42.35353, -71.08058],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_2c9efcc4fa464fe2834c30acb8331556 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_496e276e56024a7e90b105bd2a5f2b94 = $(`<div id="html_496e276e56024a7e90b105bd2a5f2b94" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-3.html'>                                 <b>Cluster 17-3</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_2c9efcc4fa464fe2834c30acb8331556.setContent(html_496e276e56024a7e90b105bd2a5f2b94);
+        
+
+        circle_da716fe7ec5d45c894efbfd7fda3c9c4.bindPopup(popup_2c9efcc4fa464fe2834c30acb8331556)
+        ;
+
+        
+    
+    
+            circle_da716fe7ec5d45c894efbfd7fda3c9c4.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>39604562</b></p>
+        Cluster: <span style='color:#448AFF'><b>17-3</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>Kama </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_b4ac83acb5b94eba90a24d39da4e7848 = L.circle(
+                [42.337, -71.15063],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_3942219a0fdb4b8db0a3f086d31ab6b7 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_8d633b925be246229191e28fd54a5f1f = $(`<div id="html_8d633b925be246229191e28fd54a5f1f" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-1.html'>                                 <b>Cluster 17-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_3942219a0fdb4b8db0a3f086d31ab6b7.setContent(html_8d633b925be246229191e28fd54a5f1f);
+        
+
+        circle_b4ac83acb5b94eba90a24d39da4e7848.bindPopup(popup_3942219a0fdb4b8db0a3f086d31ab6b7)
+        ;
+
+        
+    
+    
+            circle_b4ac83acb5b94eba90a24d39da4e7848.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>39707104</b></p>
+        Cluster: <span style='color:#448AFF'><b>17-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>Kama </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_259d31f834614eb68f01c9f442cac625 = L.circle(
+                [42.35373, -71.08103],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_7fe613a5395340a38d3fbd6452ba30c2 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_4d10ea90b9ce41f1abffbb3a5e3f0499 = $(`<div id="html_4d10ea90b9ce41f1abffbb3a5e3f0499" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-3.html'>                                 <b>Cluster 17-3</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_7fe613a5395340a38d3fbd6452ba30c2.setContent(html_4d10ea90b9ce41f1abffbb3a5e3f0499);
+        
+
+        circle_259d31f834614eb68f01c9f442cac625.bindPopup(popup_7fe613a5395340a38d3fbd6452ba30c2)
+        ;
+
+        
+    
+    
+            circle_259d31f834614eb68f01c9f442cac625.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>39731053</b></p>
+        Cluster: <span style='color:#448AFF'><b>17-3</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>STARS Of </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_fec26809ee8f440d81e4666470a26cb7 = L.circle(
+                [42.33892, -71.15163000000003],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_21dc3555495249cf9beb9b5a38d255c4 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_0064cc7206e345fa9222b2e92889b8c8 = $(`<div id="html_0064cc7206e345fa9222b2e92889b8c8" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-2.html'>                                 <b>Cluster 17-2</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_21dc3555495249cf9beb9b5a38d255c4.setContent(html_0064cc7206e345fa9222b2e92889b8c8);
+        
+
+        circle_fec26809ee8f440d81e4666470a26cb7.bindPopup(popup_21dc3555495249cf9beb9b5a38d255c4)
+        ;
+
+        
+    
+    
+            circle_fec26809ee8f440d81e4666470a26cb7.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>39732562</b></p>
+        Cluster: <span style='color:#448AFF'><b>17-2</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>STARS Of </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_d0dbebc0a0de40ffb52ddbf1b29e1b18 = L.circle(
+                [42.35251, -71.08245],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_4ae79085a3304667a61862fb3be75bb4 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ea030023830a4812b36e0f8885d2ef98 = $(`<div id="html_ea030023830a4812b36e0f8885d2ef98" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center; color:white">                                 <b style='font-size:14px'>Cluster not assigned</b>                                 <br>                                 <b style='font-size:12px'>(Not enough host listings nearby)</b>                                                     </div>                         </div>`)[0];
+            popup_4ae79085a3304667a61862fb3be75bb4.setContent(html_ea030023830a4812b36e0f8885d2ef98);
+        
+
+        circle_d0dbebc0a0de40ffb52ddbf1b29e1b18.bindPopup(popup_4ae79085a3304667a61862fb3be75bb4)
+        ;
+
+        
+    
+    
+            circle_d0dbebc0a0de40ffb52ddbf1b29e1b18.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>40429003</b></p>
+        Cluster: <span style='color:#448AFF'><b>nan</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>STARS Of </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b>Outlier not assigned to a cluster</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_f7867d4ea1f54d73883ee6dbdee297ea = L.circle(
+                [42.33739, -71.15024],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_0bb57e61f9714dd9b2e8116078e86e0d = L.popup({"maxWidth": "100%"});
+
+        
+            var html_76ec10f5caf84d86a60964262a8749c4 = $(`<div id="html_76ec10f5caf84d86a60964262a8749c4" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-1.html'>                                 <b>Cluster 17-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_0bb57e61f9714dd9b2e8116078e86e0d.setContent(html_76ec10f5caf84d86a60964262a8749c4);
+        
+
+        circle_f7867d4ea1f54d73883ee6dbdee297ea.bindPopup(popup_0bb57e61f9714dd9b2e8116078e86e0d)
+        ;
+
+        
+    
+    
+            circle_f7867d4ea1f54d73883ee6dbdee297ea.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>40493715</b></p>
+        Cluster: <span style='color:#448AFF'><b>17-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>STARS Of </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_b0ec25c60c4e4ed887991e78ae51c64a = L.circle(
+                [42.33697, -71.15209],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_854f5525ff694c6ba8210a4fb3e20c44 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_f9d44a152c5246c28d0c9f7d3a68b8f4 = $(`<div id="html_f9d44a152c5246c28d0c9f7d3a68b8f4" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center; color:white">                                 <b style='font-size:14px'>Cluster not assigned</b>                                 <br>                                 <b style='font-size:12px'>(Not enough host listings nearby)</b>                                                     </div>                         </div>`)[0];
+            popup_854f5525ff694c6ba8210a4fb3e20c44.setContent(html_f9d44a152c5246c28d0c9f7d3a68b8f4);
+        
+
+        circle_b0ec25c60c4e4ed887991e78ae51c64a.bindPopup(popup_854f5525ff694c6ba8210a4fb3e20c44)
+        ;
+
+        
+    
+    
+            circle_b0ec25c60c4e4ed887991e78ae51c64a.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>40493790</b></p>
+        Cluster: <span style='color:#448AFF'><b>nan</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>STARS Of </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b>Outlier not assigned to a cluster</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_ab67b5614282493d8aae333b4501198a = L.circle(
+                [42.33869, -71.15135],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_9d73fbc812154d498e2de1299ee9a238 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_7472833a2c16478ea2b9628f6eee16a8 = $(`<div id="html_7472833a2c16478ea2b9628f6eee16a8" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-2.html'>                                 <b>Cluster 17-2</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_9d73fbc812154d498e2de1299ee9a238.setContent(html_7472833a2c16478ea2b9628f6eee16a8);
+        
+
+        circle_ab67b5614282493d8aae333b4501198a.bindPopup(popup_9d73fbc812154d498e2de1299ee9a238)
+        ;
+
+        
+    
+    
+            circle_ab67b5614282493d8aae333b4501198a.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>40617998</b></p>
+        Cluster: <span style='color:#448AFF'><b>17-2</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>Kama </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_15d39dd5240b4776b5364c53358563b2 = L.circle(
+                [42.33749, -71.15016999999997],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_b1c54890fc264adf86df86126e3e025f = L.popup({"maxWidth": "100%"});
+
+        
+            var html_81af2f4ebfe94a79816710f1c33c9e34 = $(`<div id="html_81af2f4ebfe94a79816710f1c33c9e34" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-1.html'>                                 <b>Cluster 17-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_b1c54890fc264adf86df86126e3e025f.setContent(html_81af2f4ebfe94a79816710f1c33c9e34);
+        
+
+        circle_15d39dd5240b4776b5364c53358563b2.bindPopup(popup_b1c54890fc264adf86df86126e3e025f)
+        ;
+
+        
+    
+    
+            circle_15d39dd5240b4776b5364c53358563b2.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>40622067</b></p>
+        Cluster: <span style='color:#448AFF'><b>17-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>STARS Of </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_97d741e6c63f478db6958b7473105188 = L.circle(
+                [42.33889, -71.1499],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_f38edbbc572d4e158855cab6b3ee3bd1 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_970b53bdd9774ee3b5bf20b772ed59d3 = $(`<div id="html_970b53bdd9774ee3b5bf20b772ed59d3" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center; color:white">                                 <b style='font-size:14px'>Cluster not assigned</b>                                 <br>                                 <b style='font-size:12px'>(Not enough host listings nearby)</b>                                                     </div>                         </div>`)[0];
+            popup_f38edbbc572d4e158855cab6b3ee3bd1.setContent(html_970b53bdd9774ee3b5bf20b772ed59d3);
+        
+
+        circle_97d741e6c63f478db6958b7473105188.bindPopup(popup_f38edbbc572d4e158855cab6b3ee3bd1)
+        ;
+
+        
+    
+    
+            circle_97d741e6c63f478db6958b7473105188.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>43596487</b></p>
+        Cluster: <span style='color:#448AFF'><b>nan</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>STARS Of </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b>Outlier not assigned to a cluster</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_fba62ad0d0c64d94a5ee9101c51d16bc = L.circle(
+                [42.33986, -71.14622],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_b207565e46be4068a29f59643d1b5394 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_11a087235e3b488ab1721bacb6695caa = $(`<div id="html_11a087235e3b488ab1721bacb6695caa" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-4.html'>                                 <b>Cluster 17-4</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_b207565e46be4068a29f59643d1b5394.setContent(html_11a087235e3b488ab1721bacb6695caa);
+        
+
+        circle_fba62ad0d0c64d94a5ee9101c51d16bc.bindPopup(popup_b207565e46be4068a29f59643d1b5394)
+        ;
+
+        
+    
+    
+            circle_fba62ad0d0c64d94a5ee9101c51d16bc.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>44549370</b></p>
+        Cluster: <span style='color:#448AFF'><b>17-4</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>Kama </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_93da0045023747d5843d18a6139bd733 = L.circle(
+                [42.33959, -71.14511],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_d19e8f2218ae4957acd6a14ce21e7f2d);
+        
+    
+        var popup_904d9512c5754c1abe17945b656c1b46 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_62f236403ca74b0183fc55924abff9d5 = $(`<div id="html_62f236403ca74b0183fc55924abff9d5" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/17-4.html'>                                 <b>Cluster 17-4</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_904d9512c5754c1abe17945b656c1b46.setContent(html_62f236403ca74b0183fc55924abff9d5);
+        
+
+        circle_93da0045023747d5843d18a6139bd733.bindPopup(popup_904d9512c5754c1abe17945b656c1b46)
+        ;
+
+        
+    
+    
+            circle_93da0045023747d5843d18a6139bd733.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>45031773</b></p>
+        Cluster: <span style='color:#448AFF'><b>17-4</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>STARS </b></span>
+        
+        <br>Alias account: <span style='color:#636363'><b>STARS Of </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var layer_control_03fa2870127f41728234e68588636c4b = {
+                base_layers : {
+                },
+                overlays :  {
+                    "\u003cspan style=\u0027font-size:15px\u0027\u003e\n                        Known STR buildings near large clusters\n                        \u003ci class=\u0027fa fa-building\u0027\n                           style=\u0027color:#5E35B1; margin: 0 3px;\u0027\u003e\u003c/i\u003e\n                        \u003c/span\u003e" : feature_group_7b4deb7ac8f04327b98096e151b65334,
+                    "\u003cspan style=\u0027font-size:15px\u0027\u003e\n                        Include individual listings on map\n                        \u003ci class=\u0027fa fa-dot-circle-o\u0027\n                           style=\u0027color:red; margin: 0 3px;\u0027\u003e\u003c/i\u003e\n                    \u003c/span\u003e" : feature_group_d19e8f2218ae4957acd6a14ce21e7f2d,
+                },
+            };
+            L.control.layers(
+                layer_control_03fa2870127f41728234e68588636c4b.base_layers,
+                layer_control_03fa2870127f41728234e68588636c4b.overlays,
+                {"autoZIndex": true, "collapsed": false, "position": "topright"}
+            ).addTo(map_eebb6c464899440194657601cc73dab9);
+        
+</script>
+            </div>
+
+        </div>
+        
+        <script>
+            
+        document.getElementById("how-collapse-btn"
+            ).addEventListener("click", function() {
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight){
+              content.style.maxHeight = null;
+              this.innerHTML = "[ + ] Learn more... ";
+            } else {
+              content.style.maxHeight = content.scrollHeight + "px";
+              this.innerHTML = "[ &ndash; ] Learn less... ";
+            } 
+        });
+    </script>
+    <script>
+    
+    
+    var viewportHeight = $('.banner').outerHeight();
+    $('.banner').css({ height: viewportHeight });
+    
+    
+    if ($('body').hasClass('mobile')) {
+      var viewportHeight = $('.banner').outerHeight();
+      $('.banner').css({ height: viewportHeight });
+    }
+
+
+    </script>
+    <script>
+    
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on the button, open the modal
+        btn.onclick = function() {
+          modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+
+    </script>
+    <script>
+    
+    
+        document.getElementById("mobile-switcher"
+            ).addEventListener("click", switch_mobile_menu);
+        document.getElementById("mobile-switch-link"
+            ).addEventListener("click", switch_mobile_menu);
+        document.getElementById("mobile-menu-circle"
+            ).addEventListener("click", switch_mobile_menu);
+            
+        var mapOpen = false
+        function switch_mobile_menu() {
+
+            var navbar = document.getElementById("nav-banner");
+            var sidebar = document.getElementById("sidebar-container");
+            var map = document.getElementById("map-container");
+            var slabel = document.getElementById("mobile-switch-label");
+            var openico = document.getElementById("open-menu-icon");
+            var slink = document.getElementById("mobile-switch-link");
+            var menucir = document.getElementById("mobile-menu-circle");
+
+
+            if ( mapOpen ){
+                  sidebar.setAttribute("style","left:0") ;
+
+                  map.setAttribute("style","left:calc(100vw - 100px)") ;
+                  map.setAttribute("style","width:800px") ;
+
+                  slabel.innerHTML = "<b>Map </b> <i class='fa fa-map' aria-hidden='true'></i>";
+                  
+                  openico.setAttribute("style","visibility:hidden") ;
+                  menucir.setAttribute("style","left:-100px") ;
+                  
+                  slink.setAttribute("style","right:0") ;
+                  slink.setAttribute("style","width:30px") ;
+                  
+
+                  mapOpen = false;
+            }
+            else {
+                  sidebar.setAttribute("style","left:calc(-100vw + 40px)") ; 
+
+                  map.setAttribute("style","left:10px !important") ;
+                  map.setAttribute("style","width:calc(100vw - 10px) !important") ;
+
+                  slabel.innerHTML = "<b>Details </b> <i class='fa fa-bars' aria-hidden='true'></i>";
+                  
+                  openico.setAttribute("style","visibility:visible") ;
+                  menucir.setAttribute("style","left:-30px") ;
+
+                  slink.setAttribute("style","width:20px") ;
+                  slink.setAttribute("style","left:0px") ;
+
+                  mapOpen = true;
+            } 
+        };
+
+    
+    </script>
+    <script>
+    
+        document.getElementById("license-collapse-btn"
+            ).addEventListener("click", function() {
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight){
+              content.style.maxHeight = null;
+              this.innerHTML = "[ + ] Show license details";
+            } else {
+              content.style.maxHeight = content.scrollHeight + "px";
+              this.innerHTML = "[ &ndash; ] Hide license details";
+              setTimeout( function (){
+                      location.hash = "#licenses";
+                            }, 250);
+            } 
+            
+        });
+    </script>
+    <script>
+    
+        document.getElementById("listings-collapse-btn"
+            ).addEventListener("click", function() {
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight){
+              content.style.maxHeight = null;
+              this.innerHTML = "[ + ] Show listings";
+            } else {
+              content.style.maxHeight = content.scrollHeight + "px";
+              this.innerHTML = "[ &ndash; ] Hide listings";              
+              setTimeout( function (){
+                      location.hash = "#listings";
+                            }, 250);
+            } 
+        });
+    </script>
+    <script>
+    
+        
+    function search_res(container, value) {
+    
+        var item = container.toLowerCase().replace(/\s+/g, '');                
+        var val = value.toLowerCase().replace(/\s+/g, '');
+        var returnValue = false;
+        var pos = item.indexOf(val);
+        if (pos >= 0) {
+            returnValue = true;
+        }
+        return returnValue;
+    }
+    
+    </script>
+    <script>
+    
+    document.getElementById('searchbar').addEventListener("click",
+        function(){
+                initOpenState = "True"
+                let x = document.getElementsByClassName('search-items');
+                var counter = 0
+                for (i = 0; i < x.length; i++) { 
+                    var dt = x[i].getAttribute("data-type");
+                    if (dt=="cluster") { 
+                        counter = counter + 1
+                        x[i].style.display="list-item"; 
+                    } 
+                    if (counter == 3) {
+                         break;
+                    }
+                } 
+                document.getElementById('search-list').style.maxHeight = "400px";
+                document.getElementById('search-list').style.padding = "0 15px 15px";
+                let msg_init = document.getElementById('search-init'); 
+                msg_init.style.maxHeight = "150px";
+                msg_init.style.margin = "8px";
+                
+        }
+    )
+    
+    
+    document.getElementById('searchbar').addEventListener("focusout",
+        function(){
+            let input = document.getElementById('searchbar').value;
+            if (input=="" && initOpenState !== "True"){
+                document.getElementById('search-list').style.maxHeight = "0";
+                document.getElementById('search-list').style.padding = "0 15px";
+            
+                let x = document.getElementsByClassName('search-items');
+                for (i = 0; i < x.length; i++) {  
+                    x[i].style.display="none"; 
+                } 
+                let msg_init = document.getElementById('search-init'); 
+                msg_init.style.maxHeight = "0";
+                msg_init.style.margin = "0";
+            }
+
+        }
+    )
+
+    
+    function search_item() { 
+        initOpenState = "False";
+        
+        let sb = document.getElementById('searchbar');
+        let input = document.getElementById('searchbar').value;
+        let searchList = document.getElementById('search-list');
+        searchList.scrollTop = 0;
+
+        let x = document.getElementsByClassName('search-items'); 
+        
+        let instruct = document.getElementById('search-instruct'); 
+        let alert = document.getElementById('search-alert'); 
+        let s_init = document.getElementById('search-init'); 
+        
+        let msg_init = document.getElementById('search-init'); 
+        msg_init.style.maxHeight = "0";
+        
+        var visible = 0
+        
+        if (sb !== null && sb.value === "") {
+
+            var counter = 0
+            for (i = 0; i < 10; i++) {  
+                    var dt = x[i].getAttribute("data-type");
+                    if (dt=="cluster") { 
+                        counter = counter + 1
+                        x[i].style.display="list-item"; 
+                    } 
+                    if (counter == 3) {
+                         break;
+                    }
+            } 
+        }
+        
+        else {
+            for (i = 0; i < x.length; i++) {
+            
+                if ( search_res(x[i].getAttribute("search-data"), input) ) { 
+                    x[i].style.display="list-item"; 
+                    visible += 1
+                } 
+                else { 
+                    x[i].style.display="none";
+                } 
+             } 
+        }
+
+        if (sb.value !== "") {
+                if (visible==0) {
+                    instruct.style.maxHeight = "0";
+                    instruct.transition = ".2";
+                    instruct.style.margin = "0";
+                    s_init.style.maxHeight = "0";
+                    s_init.transition = ".2s";
+                    s_init.style.margin = "0";
+                    
+                    alert.style.maxHeight = "150px";
+                    alert.style.margin = "8px";
+                   
+                    
+                    searchList.style.padding = "0";
+                    searchList.style.maxHeight = "0";
+                    
+
+                    }
+                else {
+                    instruct.innerHTML = "<b>" + visible.toString() + "</b> results" ;
+                    instruct.style.maxHeight = "150px";
+                    instruct.transition = "0";
+                    instruct.style.margin = "8px";
+                    
+                    
+                    s_init.style.maxHeight = "0";
+                    s_init.transition = ".2s";
+                    s_init.style.margin = "0";
+                    alert.style.maxHeight = "0";
+                    alert.transition = ".2s";
+                    alert.style.margin = "0";
+                    
+                    searchList.style.padding = "0 15px 15px ";
+                    searchList.style.maxHeight = "305px";                    
+                    }
+ 
+            
+          }         
+        else {
+            for (i = 0; i < x.length; i++) {  
+                 x[i].style.display="none";
+            } 
+            instruct.style.maxHeight = "0";
+            instruct.transition = ".2s";
+            instruct.style.margin = "0"
+            alert.style.maxHeight = "0";
+            alert.transition = ".2s";
+            alert.style.margin = "0";
+            s_init.style.maxHeight = "0";
+            s_init.style.margin = "0";
+            searchList.style.maxHeight = "0";
+            searchList.style.padding = "0";
+                    }       
+        }
+
+    
+        </script>
+
+    </body>
+
+    </html>
+    

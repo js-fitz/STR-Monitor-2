@@ -1,0 +1,4607 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Temple Place - Host Overview</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+    
+    
+/* Tooltip container */
+.tooltip {
+  opacity: 1;
+  position: relative;
+  display: inline-block;
+  font-family: "Helvetica", Arial, sans-serif;
+}
+
+.tooltiptext-2 {
+    margin-top: 25px !important;
+}
+
+.tooltiptext-3 {
+    margin-top: 46px !important;
+}
+
+/* Tooltip text */
+.tooltiptext {
+  visibility: hidden;
+  width: auto;
+  color: #fff;
+  text-align: right;
+  white-space: nowrap;
+  padding: 3px 8px;
+  border-radius: 5px;
+  background-color : #424242;
+  /* Position the tooltip text */
+  margin: 3px 0 0 0 ;
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  right: 105%;
+
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.info-tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+    
+    html {
+      scroll-behavior: smooth;
+        height: -webkit-fill-available;
+
+    }
+    
+    body {
+        font-family: "Helvetica", Arial, sans-serif;
+        padding:0;
+        margin:0;
+        height:100vh;
+        max-height: -webkit-fill-available;
+        overflow: auto;
+        color: white;
+    }
+    
+    .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+        background-color:#448AFF !important;
+        }
+        
+    .leaflet-popup-close-button {
+        display: none !important
+    }
+    
+    
+        .leaflet-pane .leaflet-interactive {
+            transition: fill-opacity .1s ease-in-out;
+            transition: stroke .1s ease-in-out;
+
+        }
+
+        .leaflet-pane .leaflet-interactive:hover {
+            fill-opacity:.8 !important;
+            stroke:white !important;
+        }
+        
+    .centroid-link-btn {
+        color:white !important;
+        font-size:18px;
+        padding:15px 0;
+        line-height:1.2em
+        }
+        
+
+
+    body a {
+        color: #E3F2FD;
+        text-decoration:none;
+        transition:.1s;
+    }
+    body a:hover {
+        color: #448AFF;
+        text-decoration: underline
+    }
+    
+    body a:active {
+        color: #D4D4D4;
+    }
+
+    body h1 {
+         color: white;
+         font-size:24px;
+         margin-top:0;
+    }
+
+    body h2 {
+        color:#448AFF;
+        font-size:22px;
+        line-height:1.4em;
+        font-weight:400px;
+        margin: 8px 0 8px;
+        font-weight:bold;
+    }
+
+    body h3 {
+        color:white;
+        font-size:18px;
+        margin: 0 0 8px;
+        font-weight:400px;
+        font-weight:500px;
+    }
+
+    body h4 {
+        font-size:16px;
+        color:white;
+        margin: 0 0 10px;
+        font-weight:500px;
+    }
+
+    body p {
+        font-size:16px;
+        line-height:1.4em;
+        color:white;
+        margin: 0 0 8px;
+    }
+
+    body .text-lite {
+        color:#E0E0E0;
+        font-size: .92 em;
+    }
+
+    hr {
+        border: .6px solid white;
+        margin: 15px 0
+        style='margin:20px'
+    }
+    
+    .hr-lite {
+        border-color: #9c9c9c;
+    }
+
+
+    #page-container {
+        padding: 0;
+        display:block;
+        height: 100%;
+        width: 100vw;
+        box-sizing: border-box;
+    }
+
+    #sidebar-container {
+        position:fixed;
+        display: block;
+        height: 100vh;
+        height: -webkit-fill-available;
+        width:400px;
+        overflow:auto;
+        transition:.2s;
+        z-index: 9999;
+    }
+
+    #nav-banner {
+        position:fixed;
+        top:0;
+        left:0;
+        z-index:9;
+        margin:0;
+        width:400px;
+        background-color:#191919;
+        overflow:auto;
+        z-index: 10000;
+    }
+
+    #sidebar {
+        width:400px;
+        top: 25px;
+        position:fixed;
+        height:calc(100vh - 25px);
+          max-height: -webkit-fill-available;
+
+        display:block;
+        background-color: #2b2b2b;
+        #border: 5px solid #4a4a4a;
+        box-sizing: border-box;
+        overflow-y: auto;
+        padding:30px;
+        transition:.15s;
+    }
+    
+    #open-menu-icon {
+        visibility:hidden;
+        display:block;
+        position:fixed;
+        left:0;
+        top:48vh;
+        color:white;
+        padding:10px;
+        font-size: 1.5em;
+    }
+    
+    
+    #mobile-switcher {
+        visibility:hidden;
+        position: absolute;
+        right: 0;
+        top: 0;
+        display:inline-block;
+        padding: 5px;
+        background-color: #191919;
+        margin:0;
+        pointer:cursor;
+    }
+    
+
+    # mobile-switch-label {
+        margin: 2px 0 0;
+    }
+    
+    #mobile-switch-link {
+        display:block;
+        position:fixed;
+        top:40px;
+        right:0;
+        width:30px;
+        height: calc(100vh - 40px);
+  max-height: -webkit-fill-available;
+        z-index:99999;
+        visibility:hidden;
+        pointer:cursor;
+    }
+    
+    @media screen and (max-width: 850px){
+    
+            .modal {
+            padding:0 !important;
+
+        }
+    
+        #mobile-switcher {
+            visibility: visible;
+        }
+        #mobile-switch-link {
+            visibility: visible;
+        }
+        #nav-banner {
+            width: 100vw;
+            padding:5px;
+        }
+        #sidebar-container {
+            width:calc(100vw - 30px);
+        }
+        #sidebar-container {
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+        #sidebar {
+            width:calc(100vw - 30px);
+        }
+
+        #map-container, iframe {
+            top:40px !important;
+            height:calc(100vh - 40px)  !important;
+              max-height: -webkit-fill-available;
+
+            z-index: 9995;
+            width:calc(100vw - 30px) !important;
+        }       
+    }
+    
+    
+    @media screen and (max-width: 720px){
+
+        .leaflet-control-layers {
+            display:none;
+        }
+    
+    }
+    
+    #mobile-menu-circle {
+      height: 65px;
+      width: 65px;
+      background-color: #2b2b2b;
+      border-radius: 50%;
+      display: inline-block;
+      position: fixed;
+      text-align: right;
+      left: -100px;
+      padding: 15px 3px;
+      transition:.2s
+    }
+    
+    .mobile-menu-circle i {
+        display: table-cell;
+        width: 65px;
+        height: 65px;
+        padding: 5px;
+        border: none;
+        vertical-align: middle;
+        
+    }
+    
+    
+    #nav-banner p {
+        margin:4px 8px;
+        width:max-content;
+        padding
+    }
+
+    .listings-status-legend {
+        margin-bottom:12px;
+        padding: 0 15px
+    }
+    .listings-status-legend p {
+        margin:0;
+    }
+    .listings-status-legend td {
+        padding: 10px 5px 0;
+    }
+    
+    .listings-status-legend th {
+        font-size:1.2em;
+        padding: 10px 5px 0;
+        color: white !important
+    }
+
+    #status-icon {
+        height:15px;
+        width:15px;
+        display:inline-block;
+        border: 1.5px solid white;
+        border-radius:50%;
+        margin: 0 5px;
+    }
+
+    #map-container {
+        position:fixed;
+        top:0;
+        right:0;
+        display: block;
+        height:100vh;
+          max-height: -webkit-fill-available;
+        width: calc(100% - 400px);
+        transition:.15s;
+    }
+
+    iframe {
+        position:fixed;
+        border:none;
+        right:0;
+        top:0;
+        height:100%;
+        width: calc(100% - 400px)
+    }
+
+    #search-container {
+        height: auto;
+        margin:0 0 10px;
+        width:100%;
+        padding:0;
+        transition: .2s ease-in-out;    
+        }
+
+
+    #search-list{
+        width: 100%
+    }
+
+    #searchbar {
+            background-color:#424242;
+            width: calc(100%) !important; 
+            border-radius: 5px;
+            border: 1.5px solid #448AFF !important;
+            padding:10px;
+            margin:0;
+            font-size:18px;
+            color:white;
+        } 
+
+
+    ::placeholder {
+            font-size:18px;
+            font-weight: bold;
+            color:#82B1FF;
+            opacity: 1 !important; 
+            margin:0
+        }
+
+    #search-message-container{
+    max-width:265;
+    }
+
+    #search-list{ 
+        display:block;
+        width: 100%;
+        margin:0;
+        font-size: 16px;
+        max-height:250px;
+        list-style-type: none;
+        padding: 0 15px;
+        overflow:auto;
+        transition: .2s ease-in-out;
+       }
+
+    .search-items { 
+       display: none;
+       padding:12px 0 12px 8px;
+       cursor: pointer;
+       border-top: 1px solid white;
+       transition:.2s;
+      } 
+
+    .search-items:hover {
+        background-color: #424242 !important;
+    }
+
+    .search-items p {
+        margin-bottom:2px
+    }
+
+    #search-prompt {
+        display: block;
+        overflow: hidden;
+        max-height: 150px;
+        margin: 0px 0px 5px;
+        max-height: 150px;
+        
+        transition: .2s;
+        font-size: 0.95em;
+      }
+
+    #search-instruct {
+        overflow: hidden;
+        max-height: 0;
+        transition: .2s;
+        padding: 0 8px;
+        margin:0;
+
+      }
+    #search-alert {
+        overflow: hidden;
+        max-height: 0;
+        transition: .2s;
+        padding: 0 8px;
+        margin:0;
+
+      }
+    #search-init {
+        overflow: hidden;
+        max-height: 0;
+        transition: .2s;
+        padding: 0 8px;
+        margin:0;
+      }
+
+
+    .isd-indicator-search {
+        display:block;
+        position: relative;
+        top:0;
+        right:10px;
+        float:right;
+        color:#E0E0E0;
+    }
+
+
+
+    #how-collapse-btn {
+      background-color: transparent;
+      color: white;
+      cursor: pointer;
+      padding: 8px 0;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;  
+    }
+
+    #how-collapsed {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;
+    }
+    
+    #license-collapse-btn {
+      background-color: transparent;
+      color: white;
+      cursor: pointer;
+      padding: 12px 0;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;  
+    }
+
+    #license-collapsed {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;
+    }
+    
+    #listings-collapse-btn {
+      background-color: transparent;
+      color: white;
+      cursor: pointer;
+      padding: 12px 0;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;  
+    }
+
+    #listings-collapsed {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;
+    }
+    
+    
+    .centroid-list-item {
+        background-color: #424242;
+        margin: 10px 0;
+        border-radius:8px;
+        padding:10px;
+        cursor:pointer;
+        transition:.2s;
+        border: 1.5px solid #424242;
+
+    }
+    
+    .centroid-list-item:hover {
+        border-color: #448AFF;
+        background-color: #333333;
+    }
+    
+    .centroid-list-item b {
+        color: #448AFF;
+        margin-bottom:2px;
+    }
+    
+    .centroid-list-item p {
+        font-size: .98em;
+        margin-bottom:2px;
+    }
+    .centroid-list-item a {
+        font-size: .96em;
+        text-decoration:none !important;
+    }
+    
+    .centroid-list-item a:hover {
+    }
+    
+    .high-conf-btn {
+        background-color: #424242;
+        margin: 15px 0;
+        border-radius:8px;
+        padding:8px 15px;
+        cursor:pointer;
+        transition:.15s;
+        border: 1.5px solid #424242;
+    }
+    
+    .high-conf-btn:hover {
+        background-color: #448AFF;
+    }
+    .high-conf-btn a:hover {
+        color: white !important;
+    }
+
+    
+
+    .host-info-link {
+        color:#C5B358;
+    }
+    
+    
+    .host-info-link:hover {
+        color:#a3923e;
+    }
+    
+    .centroid-list-item a {
+        text-decoration:none !important;
+        }
+        
+        
+    .license-claim-container ul {
+        padding-left:18px; 
+        list-style: disc;
+        color: white !important;
+    }
+
+    
+    .host-license-warning ul {
+        padding-left:18px; 
+        list-style: disc;
+        font-size:14px !important;
+        color: white !important 
+    }
+    
+    .host-license-warning ul li::before {
+      content: "2";
+      color: white; 
+      font-weight: bold; 
+    }
+    
+    
+    
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 10000; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100vw; /* Full width */
+      height: 100vh; /* Full height */
+        min-height: -webkit-fill-available;
+
+      padding:40px;
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+    }
+
+    /* Modal Content/Box */
+    .modal-content {
+      background-color: #2b2b2b !important;
+      z-index: 10000; /* Sit on top */
+      padding: 0;
+      height: calc(100vh - 80px);
+        max-height: -webkit-fill-available;
+
+      width: calc(100vw - 80px);
+    }
+    .modal-inner {
+      padding: 40px;
+      box-shadow: inset -12px -12px 10px rgba(0,0,0,0.25);
+      z-index: 100001; /* Sit on top */
+      overflow:auto;
+      width: 100%;
+      height: 100%;
+      background-color:#2b2b2b !important;
+    }
+
+    /* The Close Button */
+    .close {
+      position:fixed;
+      color: white !important;
+      float: right;
+      font-size: 30px;
+      font-weight: bold;
+      opacity: 1 !important;
+      margin-top: -15px;
+      
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .dataframe {
+        border-color: #d4d4d4;
+    }
+
+    .dataframe td {
+        white-space: pre;
+        max-width:120px;
+        padding: 3px;
+        overflow:auto;
+        color:white !important;
+    }
+
+    .dataframe th {
+        max-width:120px;
+        padding: 3px;
+        color:white !important;
+    }
+
+    </style>
+
+    </head>
+    <body>
+
+        <div id='page-container'>
+            <div id='sidebar-container'>
+                    
+                    <div id='nav-banner'>
+                        <p>
+                            <a href='/'>Home</a> &#62;
+                            Hosts &#62;
+                            <span style='color:#448AFF'>Temple Place</span>
+                        </p>
+                        
+                        <div id='mobile-switch-link'></div>
+                        <div id='mobile-switcher'>
+                            <p id='mobile-switch-label'>
+                            <b>Map </b><i class="fa fa-map" aria-hidden="true"></i> 
+                            </p>
+                        </div>
+                        
+                        <div id='open-menu-icon'>
+                            <span id="mobile-menu-circle">
+                                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        
+                    </div>
+                    
+                <div id='sidebar'>
+                    
+
+        <h2 style='margin: 0 0 10px; font-size:2.2em;'> Temple Place </h2>
+        <h3>
+            <b>34 listings</b> | 
+            1 cluster
+        </h3> 
+        <p class='text-lite'> <b>Note:</b> This host represents a corporation using the following 
+             alias accounts</p>
+             <ul style='margin:0; font-size:15px; color: white; padding-left:15px;margin-left:10px' >
+        <li>
+            <a target='_blank' href='https://www.airbnb.com/users/show/205269848'>
+                "Temple Place"</a> - 34 listings</li></ul>
+        
+        <table class='text-lite' style='margin-top:8px' >
+            <tr>
+            <td style='vertical-align:top'>
+                <i class="fa fa-clone" style='color:#EF5350; font-size:1.3em; margin: 5px 10px 0 0'></i>
+            </td>
+            <td>
+            <p>
+                In all 34 listings
+                this host uses a license number also in use by another host:
+            </p>
+            </td>
+        </table>
+        
+            
+            <ul class='host-license-warning'><li>
+                        <p>
+                        <a href='/cluster/13-1.html'>390690 (used by <b>1</b> other 
+                        host)</a>
+                           </p></li></ul>
+    
+            
+    
+    <button id="myBtn" style='margin-top:px'>Detailed listings data
+        <i class="fa fa-external-link-square" aria-hidden="true"></i>
+    </button>
+
+    <div id="myModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+      <div class="modal-inner">
+        <span class="close">&times;</span>
+        
+        
+        <h2 style='margin-top:15px;'>
+            Host: <b>Temple Place</b>
+        <h2>
+        <h3>
+        <span> 34 total listings </span> | 
+        
+        <a href='/host/CorpGroup13—data.csv' download="host-CorpGroup13_listings.csv">
+                            <i class="fa fa-download" aria-hidden="true"></i>
+                            Download data as a CSV </a>
+        </h3>
+        <p>
+        <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Id</th>
+      <th>Listing<br>url</th>
+      <th>Cluster</th>
+      <th>Name</th>
+      <th>Host id</th>
+      <th>Host url</th>
+      <th>Host</th>
+      <th>Neighbourhood<br>cleansed</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+      <th>Property<br>type</th>
+      <th>Room type</th>
+      <th>Accommodates</th>
+      <th>Bedrooms</th>
+      <th>Beds</th>
+      <th>Price</th>
+      <th>Minimum<br>minimum<br>nights</th>
+      <th>Availability<br>365</th>
+      <th>Number<br>of<br>reviews</th>
+      <th>License</th>
+      <th>Host alias</th>
+      <th>Alias id</th>
+      <th>Status</th>
+      <th>Isd status</th>
+      <th>Isd<br>address</th>
+      <th>Isd<br>category</th>
+      <th>License<br>listing<br>count</th>
+      <th>License<br>cat<br>max<br>exceed</th>
+      <th>Simple<br>status</th>
+      <th>Full<br>status</th>
+      <th>Centroid<br>group<br>distance</th>
+      <th>Last<br>scraped</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>32330037</td>
+      <td><a href="https://www.airbnb.com/rooms/32330037" target="_blank">https://www.airbnb.com/rooms/32330037</a></td>
+      <td>13-1</td>
+      <td>607  True One Bedroom In Downtown Boston!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35595</td>
+      <td>-71.06137</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>3</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>152.00</td>
+      <td>2.0</td>
+      <td>233</td>
+      <td>39</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>216.533228</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32330038</td>
+      <td><a href="https://www.airbnb.com/rooms/32330038" target="_blank">https://www.airbnb.com/rooms/32330038</a></td>
+      <td>13-1</td>
+      <td>502 Low Prices, Housing For Essential Workers W/ Affordable Prices</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35581</td>
+      <td>-71.06115</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>142.14</td>
+      <td>2.0</td>
+      <td>145</td>
+      <td>25</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>202.123282</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32330132</td>
+      <td><a href="https://www.airbnb.com/rooms/32330132" target="_blank">https://www.airbnb.com/rooms/32330132</a></td>
+      <td>13-1</td>
+      <td>604 Best Location Studio In Downtown Boston</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35534</td>
+      <td>-71.06168</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>3</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>138.00</td>
+      <td>2.0</td>
+      <td>116</td>
+      <td>54</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>21.443682</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32330134</td>
+      <td><a href="https://www.airbnb.com/rooms/32330134" target="_blank">https://www.airbnb.com/rooms/32330134</a></td>
+      <td>13-1</td>
+      <td>503 Peaceful Retreat In Boston Near T, Easy Commuting!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35440</td>
+      <td>-71.06150</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>149.00</td>
+      <td>2.0</td>
+      <td>241</td>
+      <td>16</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>362.844683</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>32330185</td>
+      <td><a href="https://www.airbnb.com/rooms/32330185" target="_blank">https://www.airbnb.com/rooms/32330185</a></td>
+      <td>13-1</td>
+      <td>601 Stay Tonight, Enjoy All Boston Has To Offer</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35595</td>
+      <td>-71.06194</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>138.29</td>
+      <td>2.0</td>
+      <td>229</td>
+      <td>26</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>219.622406</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32330288</td>
+      <td><a href="https://www.airbnb.com/rooms/32330288" target="_blank">https://www.airbnb.com/rooms/32330288</a></td>
+      <td>13-1</td>
+      <td>307 Walk To Freedom Trail - Sleeps 4!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35545</td>
+      <td>-71.06085</td>
+      <td>Private room in apartment</td>
+      <td>Private room</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>118.00</td>
+      <td>2.0</td>
+      <td>152</td>
+      <td>31</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>214.328129</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32330292</td>
+      <td><a href="https://www.airbnb.com/rooms/32330292" target="_blank">https://www.airbnb.com/rooms/32330292</a></td>
+      <td>13-1</td>
+      <td>302 Ideal Location, Boston Studio, Stay Tonight!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35589</td>
+      <td>-71.06251</td>
+      <td>Private room in apartment</td>
+      <td>Private room</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>132.00</td>
+      <td>2.0</td>
+      <td>138</td>
+      <td>24</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>297.683217</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32330395</td>
+      <td><a href="https://www.airbnb.com/rooms/32330395" target="_blank">https://www.airbnb.com/rooms/32330395</a></td>
+      <td>13-1</td>
+      <td>309 Room In Boston Sleeps 3,Book Now!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35630</td>
+      <td>-71.06092</td>
+      <td>Private room in apartment</td>
+      <td>Private room</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>118.00</td>
+      <td>2.0</td>
+      <td>127</td>
+      <td>26</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>384.270600</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32330398</td>
+      <td><a href="https://www.airbnb.com/rooms/32330398" target="_blank">https://www.airbnb.com/rooms/32330398</a></td>
+      <td>13-1</td>
+      <td>308 Stay in Downtown Boston, LOW $$!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35586</td>
+      <td>-71.06159</td>
+      <td>Private room in apartment</td>
+      <td>Private room</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>132.00</td>
+      <td>2.0</td>
+      <td>148</td>
+      <td>8</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>171.685853</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32330401</td>
+      <td><a href="https://www.airbnb.com/rooms/32330401" target="_blank">https://www.airbnb.com/rooms/32330401</a></td>
+      <td>13-1</td>
+      <td>310 Downtown Boston Studio!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35575</td>
+      <td>-71.06267</td>
+      <td>Private room in apartment</td>
+      <td>Private room</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>118.00</td>
+      <td>2.0</td>
+      <td>158</td>
+      <td>32</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>308.016581</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32330465</td>
+      <td><a href="https://www.airbnb.com/rooms/32330465" target="_blank">https://www.airbnb.com/rooms/32330465</a></td>
+      <td>13-1</td>
+      <td>608 Stylish Downtown Boston Studio!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35621</td>
+      <td>-71.06108</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>3</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>138.00</td>
+      <td>2.0</td>
+      <td>213</td>
+      <td>26</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>334.747941</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32330468</td>
+      <td><a href="https://www.airbnb.com/rooms/32330468" target="_blank">https://www.airbnb.com/rooms/32330468</a></td>
+      <td>13-1</td>
+      <td>301 HEART of Downtown Boston,  Sleeps 4!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35579</td>
+      <td>-71.06262</td>
+      <td>Private room in apartment</td>
+      <td>Private room</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>118.00</td>
+      <td>2.0</td>
+      <td>242</td>
+      <td>25</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>302.584142</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32330630</td>
+      <td><a href="https://www.airbnb.com/rooms/32330630" target="_blank">https://www.airbnb.com/rooms/32330630</a></td>
+      <td>13-1</td>
+      <td>501 Near T and Area Hospitals</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35541</td>
+      <td>-71.06293</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>138.00</td>
+      <td>2.0</td>
+      <td>0</td>
+      <td>21</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>349.081873</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32330730</td>
+      <td><a href="https://www.airbnb.com/rooms/32330730" target="_blank">https://www.airbnb.com/rooms/32330730</a></td>
+      <td>13-1</td>
+      <td>Safe/Clean Studio With Everything You Need!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35395</td>
+      <td>-71.06119</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>169.00</td>
+      <td>2.0</td>
+      <td>0</td>
+      <td>35</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>538.733335</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32330935</td>
+      <td><a href="https://www.airbnb.com/rooms/32330935" target="_blank">https://www.airbnb.com/rooms/32330935</a></td>
+      <td>13-1</td>
+      <td>504 Stay Tonight In Boston's Downtown!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35605</td>
+      <td>-71.06124</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>138.00</td>
+      <td>2.0</td>
+      <td>225</td>
+      <td>24</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>263.483418</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32330936</td>
+      <td><a href="https://www.airbnb.com/rooms/32330936" target="_blank">https://www.airbnb.com/rooms/32330936</a></td>
+      <td>13-1</td>
+      <td>507 Stylish Studio in the Heart of Boston!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35429</td>
+      <td>-71.06109</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>152.00</td>
+      <td>2.0</td>
+      <td>27</td>
+      <td>39</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>427.549123</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32331040</td>
+      <td><a href="https://www.airbnb.com/rooms/32331040" target="_blank">https://www.airbnb.com/rooms/32331040</a></td>
+      <td>13-1</td>
+      <td>508 Stylish Studio in Downtown Boston!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35458</td>
+      <td>-71.06109</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>142.00</td>
+      <td>2.0</td>
+      <td>132</td>
+      <td>39</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>330.469263</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32331042</td>
+      <td><a href="https://www.airbnb.com/rooms/32331042" target="_blank">https://www.airbnb.com/rooms/32331042</a></td>
+      <td>13-1</td>
+      <td>506 Perfect Studio in Downtown Boston!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35480</td>
+      <td>-71.06174</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>138.00</td>
+      <td>2.0</td>
+      <td>228</td>
+      <td>23</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>216.856007</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32331101</td>
+      <td><a href="https://www.airbnb.com/rooms/32331101" target="_blank">https://www.airbnb.com/rooms/32331101</a></td>
+      <td>13-1</td>
+      <td>602 Stylish Downtown Boston Studio!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35453</td>
+      <td>-71.06176</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>142.00</td>
+      <td>2.0</td>
+      <td>0</td>
+      <td>42</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>315.228727</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32331103</td>
+      <td><a href="https://www.airbnb.com/rooms/32331103" target="_blank">https://www.airbnb.com/rooms/32331103</a></td>
+      <td>13-1</td>
+      <td>603 Best Location Studio In Downtown Boston</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35471</td>
+      <td>-71.06189</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>142.00</td>
+      <td>2.0</td>
+      <td>156</td>
+      <td>48</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>257.052201</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32331199</td>
+      <td><a href="https://www.airbnb.com/rooms/32331199" target="_blank">https://www.airbnb.com/rooms/32331199</a></td>
+      <td>13-1</td>
+      <td>605 Great and Affordable Place to Stay in Boston!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35591</td>
+      <td>-71.06143</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>3</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>153.00</td>
+      <td>2.0</td>
+      <td>181</td>
+      <td>26</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>197.631769</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32331200</td>
+      <td><a href="https://www.airbnb.com/rooms/32331200" target="_blank">https://www.airbnb.com/rooms/32331200</a></td>
+      <td>13-1</td>
+      <td>606 Simple Studio in the Heart of Boston!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35533</td>
+      <td>-71.06124</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>3</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>153.00</td>
+      <td>2.0</td>
+      <td>152</td>
+      <td>41</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>110.019608</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32331262</td>
+      <td><a href="https://www.airbnb.com/rooms/32331262" target="_blank">https://www.airbnb.com/rooms/32331262</a></td>
+      <td>13-1</td>
+      <td>303 Clean, Safe, Affordable Stay In Boston!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35526</td>
+      <td>-71.06115</td>
+      <td>Private room in apartment</td>
+      <td>Private room</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>118.00</td>
+      <td>2.0</td>
+      <td>0</td>
+      <td>18</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>140.403473</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32780617</td>
+      <td><a href="https://www.airbnb.com/rooms/32780617" target="_blank">https://www.airbnb.com/rooms/32780617</a></td>
+      <td>13-1</td>
+      <td>202 Perfect Studio In Downtown Boston Awaits YOU!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35414</td>
+      <td>-71.06134</td>
+      <td>Private room in apartment</td>
+      <td>Private room</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>123.43</td>
+      <td>2.0</td>
+      <td>0</td>
+      <td>35</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>462.756513</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>32834946</td>
+      <td><a href="https://www.airbnb.com/rooms/32834946" target="_blank">https://www.airbnb.com/rooms/32834946</a></td>
+      <td>13-1</td>
+      <td>207 Flexible Cancellations, Value A++, Stay now!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35547</td>
+      <td>-71.06099</td>
+      <td>Private room in apartment</td>
+      <td>Private room</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>123.00</td>
+      <td>2.0</td>
+      <td>0</td>
+      <td>49</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>177.767715</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>32834949</td>
+      <td><a href="https://www.airbnb.com/rooms/32834949" target="_blank">https://www.airbnb.com/rooms/32834949</a></td>
+      <td>13-1</td>
+      <td>201 Boston Studio, Sleeps 4,Stay Now!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35559</td>
+      <td>-71.06160</td>
+      <td>Private room in apartment</td>
+      <td>Private room</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>118.00</td>
+      <td>2.0</td>
+      <td>136</td>
+      <td>17</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>73.532750</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32834950</td>
+      <td><a href="https://www.airbnb.com/rooms/32834950" target="_blank">https://www.airbnb.com/rooms/32834950</a></td>
+      <td>13-1</td>
+      <td>203 LOW SPRING/SUMMER PRICE, Boston Studio, Stay Tonight!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35570</td>
+      <td>-71.06152</td>
+      <td>Entire place</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>118.00</td>
+      <td>2.0</td>
+      <td>0</td>
+      <td>59</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>117.348971</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32835029</td>
+      <td><a href="https://www.airbnb.com/rooms/32835029" target="_blank">https://www.airbnb.com/rooms/32835029</a></td>
+      <td>13-1</td>
+      <td>304 Room in Downtown Boston!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35590</td>
+      <td>-71.06180</td>
+      <td>Private room in apartment</td>
+      <td>Private room</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>118.00</td>
+      <td>2.0</td>
+      <td>0</td>
+      <td>32</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>190.795863</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>32835033</td>
+      <td><a href="https://www.airbnb.com/rooms/32835033" target="_blank">https://www.airbnb.com/rooms/32835033</a></td>
+      <td>13-1</td>
+      <td>305 Affordable Downtown Boston Studio!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35530</td>
+      <td>-71.06177</td>
+      <td>Private room in apartment</td>
+      <td>Private room</td>
+      <td>4</td>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>118.00</td>
+      <td>2.0</td>
+      <td>304</td>
+      <td>22</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>48.374140</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>41621247</td>
+      <td><a href="https://www.airbnb.com/rooms/41621247" target="_blank">https://www.airbnb.com/rooms/41621247</a></td>
+      <td>13-1</td>
+      <td>401 Downtown Boston Studio, Book Now!!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35625</td>
+      <td>-71.06194</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>156.00</td>
+      <td>2.0</td>
+      <td>71</td>
+      <td>16</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>323.711652</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>41838589</td>
+      <td><a href="https://www.airbnb.com/rooms/41838589" target="_blank">https://www.airbnb.com/rooms/41838589</a></td>
+      <td>13-1</td>
+      <td>402 Perfect Studio in Downtown Boston!!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35538</td>
+      <td>-71.06253</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>156.00</td>
+      <td>2.0</td>
+      <td>135</td>
+      <td>7</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>240.916335</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>41841244</td>
+      <td><a href="https://www.airbnb.com/rooms/41841244" target="_blank">https://www.airbnb.com/rooms/41841244</a></td>
+      <td>13-1</td>
+      <td>404 Book Now - Last Minute Monthly Discounts</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35396</td>
+      <td>-71.06111</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>156.00</td>
+      <td>2.0</td>
+      <td>230</td>
+      <td>6</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>540.495709</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>41842246</td>
+      <td><a href="https://www.airbnb.com/rooms/41842246" target="_blank">https://www.airbnb.com/rooms/41842246</a></td>
+      <td>13-1</td>
+      <td>403 Clean/Safe Studio For Doctors/Nurses!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35555</td>
+      <td>-71.06281</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>146.00</td>
+      <td>2.0</td>
+      <td>242</td>
+      <td>1</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>321.877266</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>43440937</td>
+      <td><a href="https://www.airbnb.com/rooms/43440937" target="_blank">https://www.airbnb.com/rooms/43440937</a></td>
+      <td>13-1</td>
+      <td>406 Stylish Studio in Downtown Boston!!</td>
+      <td>CorpGroup13</td>
+      <td><a href="https://www.airbnb.com/users/show/205269848" target="_blank">https://www.airbnb.com/users/show/205269848</a></td>
+      <td>Temple Place</td>
+      <td>Downtown</td>
+      <td>42.35651</td>
+      <td>-71.06168</td>
+      <td>Entire apartment</td>
+      <td>Entire home/apt</td>
+      <td>4</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>186.00</td>
+      <td>2.0</td>
+      <td>61</td>
+      <td>0</td>
+      <td>390690</td>
+      <td>Temple Place</td>
+      <td>205269848.0</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40.0</td>
+      <td>NaN</td>
+      <td>Not found (fabricated)</td>
+      <td>Not found (fabricated)</td>
+      <td>408.213286</td>
+      <td>2020-08-31</td>
+    </tr>
+  </tbody>
+</table>
+<p>34 rows × 32 columns</p>
+        </p>  
+      </div>
+      </div>
+
+    </div>
+    
+    
+
+    
+        <hr class='hr-lite'>
+
+        <h3>Host License Details</h3>
+        <p class='text-lite' style='font-size:.97em; margin-bottom:0'>
+             Cross-referenced with offical <a target='blank' href='https://www.boston.gov/departments/inspectional-services'>ISD</a> data
+        </p>
+
+        <table class='listings-status-legend'>
+                            
+                            <tr style='border-bottom:1px solid #9c9c9c;' >
+                                <td>  
+                                   <p class='text-lite'
+                                      style='margin-bottom:8px'>
+                                       <b>listings</b><p>
+                                </td>
+                                
+                                <td>  
+                                </td>
+                                                                
+                                <td>
+                                    <p class='text-lite'
+                                       style='margin-bottom:8px'>
+                                        <b>license</b>
+                                    </p>
+                                </td>
+                                </tr>                           
+                            <tr>
+                                
+                                <td style='text-align:right'>  
+                                    <p>
+                                    34 x</p> 
+                                </td>
+                                
+                                <td>                                      
+                                <i class='fa fa-exclamation-triangle'
+                                   style='color:#E64A19;
+                                   margin: 0 3px; font-size:16px'></i>
+                                </td>
+                                
+                                <td><p>
+                                    Not found (fabricated)
+                                </p></td></tr></table>
+        
+        <hr class='hr-lite' id='clusters'>
+
+        <h3 style='margin-bottom:18px'>Host clusters</h3>
+        
+        
+        <a href='/cluster/13-1.html'>
+        <div class='centroid-list-item'>
+            <p style='font-size:1.2em'><b>13-1</b> (34 listings)</p>
+            <p><span class='text-lite'>At or near:</span> 10 Winter Place, Financial District </p>
+            <a href='/cluster/13-1.html'>View cluster listings & details &#8594;</a>
+        </div>
+        </a>
+
+        
+        
+        <hr class='hr-lite' id='listings'>
+                                
+        <a id="listings-collapse-btn" style='margin:15px 0'>
+            [ + ] Show listings
+        </a>
+
+        <div id='listings-collapsed'>
+
+            <h3 style='margin:18px 0 8px'>Listings</h3>
+            <p class='text-lite' style='font-size:13px; margin: 2px 0 12px'>
+                <b>Note:</b> If a listing link redirects to the Airbnb.com
+                homepage, it indicates the host has removed the listing
+                since the last update from <a href='http://insideairbnb.com/'>InsideAirbnb</a>.</p>
+            <p style='font-size:.9em;text-align:right'>
+                        <a href='/host/CorpGroup13—data.csv' download="host-CorpGroup13_listings.csv">
+                            <i class="fa fa-download" aria-hidden="true"></i>
+                            Download host data as a CSV </a>
+        <a href='https://www.airbnb.com/rooms/32330037' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32330037</b></p>
+                <p style='font-size:1.1em'>607  True One Bedroom In Downtown Boston!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32330037' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32330038' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32330038</b></p>
+                <p style='font-size:1.1em'>502 Low Prices, Housing For Essential Workers W/ Affordable Prices</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32330038' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32330132' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32330132</b></p>
+                <p style='font-size:1.1em'>604 Best Location Studio In Downtown Boston</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32330132' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32330134' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32330134</b></p>
+                <p style='font-size:1.1em'>503 Peaceful Retreat In Boston Near T, Easy Commuting!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32330134' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32330185' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32330185</b></p>
+                <p style='font-size:1.1em'>601 Stay Tonight, Enjoy All Boston Has To Offer</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32330185' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32330288' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32330288</b></p>
+                <p style='font-size:1.1em'>307 Walk To Freedom Trail - Sleeps 4!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32330288' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32330292' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32330292</b></p>
+                <p style='font-size:1.1em'>302 Ideal Location, Boston Studio, Stay Tonight!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32330292' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32330395' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32330395</b></p>
+                <p style='font-size:1.1em'>309 Room In Boston Sleeps 3,Book Now!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32330395' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32330398' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32330398</b></p>
+                <p style='font-size:1.1em'>308 Stay in Downtown Boston, LOW $$!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32330398' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32330401' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32330401</b></p>
+                <p style='font-size:1.1em'>310 Downtown Boston Studio!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32330401' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32330465' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32330465</b></p>
+                <p style='font-size:1.1em'>608 Stylish Downtown Boston Studio!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32330465' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32330468' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32330468</b></p>
+                <p style='font-size:1.1em'>301 HEART of Downtown Boston,  Sleeps 4!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32330468' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32330630' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32330630</b></p>
+                <p style='font-size:1.1em'>501 Near T and Area Hospitals</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32330630' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32330730' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32330730</b></p>
+                <p style='font-size:1.1em'>Safe/Clean Studio With Everything You Need!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32330730' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32330935' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32330935</b></p>
+                <p style='font-size:1.1em'>504 Stay Tonight In Boston's Downtown!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32330935' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32330936' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32330936</b></p>
+                <p style='font-size:1.1em'>507 Stylish Studio in the Heart of Boston!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32330936' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32331040' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32331040</b></p>
+                <p style='font-size:1.1em'>508 Stylish Studio in Downtown Boston!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32331040' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32331042' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32331042</b></p>
+                <p style='font-size:1.1em'>506 Perfect Studio in Downtown Boston!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32331042' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32331101' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32331101</b></p>
+                <p style='font-size:1.1em'>602 Stylish Downtown Boston Studio!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32331101' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32331103' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32331103</b></p>
+                <p style='font-size:1.1em'>603 Best Location Studio In Downtown Boston</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32331103' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32331199' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32331199</b></p>
+                <p style='font-size:1.1em'>605 Great and Affordable Place to Stay in Boston!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32331199' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32331200' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32331200</b></p>
+                <p style='font-size:1.1em'>606 Simple Studio in the Heart of Boston!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32331200' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32331262' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32331262</b></p>
+                <p style='font-size:1.1em'>303 Clean, Safe, Affordable Stay In Boston!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32331262' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32780617' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32780617</b></p>
+                <p style='font-size:1.1em'>202 Perfect Studio In Downtown Boston Awaits YOU!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32780617' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32834946' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32834946</b></p>
+                <p style='font-size:1.1em'>207 Flexible Cancellations, Value A++, Stay now!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32834946' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32834949' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32834949</b></p>
+                <p style='font-size:1.1em'>201 Boston Studio, Sleeps 4,Stay Now!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32834949' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32834950' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32834950</b></p>
+                <p style='font-size:1.1em'>203 LOW SPRING/SUMMER PRICE, Boston Studio, Stay Tonight!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32834950' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32835029' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32835029</b></p>
+                <p style='font-size:1.1em'>304 Room in Downtown Boston!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32835029' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/32835033' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>32835033</b></p>
+                <p style='font-size:1.1em'>305 Affordable Downtown Boston Studio!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/32835033' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/41621247' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>41621247</b></p>
+                <p style='font-size:1.1em'>401 Downtown Boston Studio, Book Now!!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/41621247' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/41838589' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>41838589</b></p>
+                <p style='font-size:1.1em'>402 Perfect Studio in Downtown Boston!!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/41838589' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/41841244' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>41841244</b></p>
+                <p style='font-size:1.1em'>404 Book Now - Last Minute Monthly Discounts</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/41841244' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/41842246' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>41842246</b></p>
+                <p style='font-size:1.1em'>403 Clean/Safe Studio For Doctors/Nurses!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/41842246' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/43440937' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>43440937</b></p>
+                <p style='font-size:1.1em'>406 Stylish Studio in Downtown Boston!!</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>2</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>390690</b> (Not found (fabricated))</p>
+                    
+                <a href='https://www.airbnb.com/rooms/43440937' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+
+        </div>
+
+
+
+                
+                </div>
+                
+            </div>
+
+            <div id='map-container'>
+                <!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://rawcdn.githack.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css"/>
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_72383bc9d03f4dd5a0ff1fe3238e5912 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+         <div style="
+         position: fixed; z-index:699; 
+         bottom: 16px; right: 0; width: auto; height: auto; 
+         background-color:white;
+         border-bottom:1px solid #DEDEDE;
+         opacity: .7;
+         padding: 3px 8px;
+         font-size:12px">
+            <span style='margin: 0px;'>
+                <a style='color: black !important' target='blank' href='insideairbnb.com'>InsideAirbnb</a>:
+                    Sep. 2020 | STR registry: Aug. 2020
+            </span>
+          </div> 
+    
+            <div class="folium-map" id="map_72383bc9d03f4dd5a0ff1fe3238e5912" ></div>
+        
+</body>
+<script>    
+    
+            var map_72383bc9d03f4dd5a0ff1fe3238e5912 = L.map(
+                "map_72383bc9d03f4dd5a0ff1fe3238e5912",
+                {
+                    center: [42.35523, -71.06189],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 15,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_421b00b29969413aac7e6678b5f73a2f = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_72383bc9d03f4dd5a0ff1fe3238e5912);
+        
+    
+            var feature_group_b521eb59bc9c4bb49ac7fbec105f9c9a = L.featureGroup(
+                {}
+            ).addTo(map_72383bc9d03f4dd5a0ff1fe3238e5912);
+        
+    
+            var marker_df303e1ba0ac4d349f040558dba0ee39 = L.marker(
+                [42.35623959999999, -71.06124],
+                {}
+            ).addTo(feature_group_b521eb59bc9c4bb49ac7fbec105f9c9a);
+        
+    
+            var icon_702407646ff2480c9df110cbbe3f0f7e = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "building", "iconColor": "#5E35B1", "markerColor": "lightgray", "prefix": "fa"}
+            );
+            marker_df303e1ba0ac4d349f040558dba0ee39.setIcon(icon_702407646ff2480c9df110cbbe3f0f7e);
+        
+    
+            marker_df303e1ba0ac4d349f040558dba0ee39.bindTooltip(
+                `<div>
+                     <b style='font-size:.88em'>Known STR Building</b><br>The Conrad<br><b style='font-size:1.2em; color:#5E35B1'>6 Hamilton Place, Boston MA 02108</b><br>Units: (unknown) | Floors: 4.0 | Source: RichCorpSS<br><b>Known operators: </b><br> &#8226; Sonder<div style='height:4px'></div><span style='color:#448AFF' >Distance from cluster center: <b>168 ft.</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_d1b8093abe574853bcc3973d76356b29 = L.marker(
+                [42.3554762, -71.0615353],
+                {}
+            ).addTo(feature_group_b521eb59bc9c4bb49ac7fbec105f9c9a);
+        
+    
+            var icon_0c0d6ad87bd34d24ba4ea5cea12165e3 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "building", "iconColor": "#5E35B1", "markerColor": "lightgray", "prefix": "fa"}
+            );
+            marker_d1b8093abe574853bcc3973d76356b29.setIcon(icon_0c0d6ad87bd34d24ba4ea5cea12165e3);
+        
+    
+            marker_d1b8093abe574853bcc3973d76356b29.bindTooltip(
+                `<div>
+                     <b style='font-size:.88em'>Known STR Building</b><br>Artlab DX/Hamilton Crossing<br><b style='font-size:1.2em; color:#5E35B1'>8 Winter Street, Boston MA 02108</b><br>Units: (unknown) | Floors: 9.0 | Source: RichCorpSS<br><b>Known operators: </b><br> &#8226; Compass<br> &#8226; Seamless Transitions<div style='height:4px'></div><span style='color:#448AFF' >Distance from cluster center: <b>121 ft.</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_3015ed8c11d84cd2bc3313a54451039e = L.marker(
+                [42.3548464, -71.0618248],
+                {}
+            ).addTo(feature_group_b521eb59bc9c4bb49ac7fbec105f9c9a);
+        
+    
+            var icon_7ac3968420524ae48eb696b23b1da707 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "building", "iconColor": "#5E35B1", "markerColor": "lightgray", "prefix": "fa"}
+            );
+            marker_3015ed8c11d84cd2bc3313a54451039e.setIcon(icon_7ac3968420524ae48eb696b23b1da707);
+        
+    
+            marker_3015ed8c11d84cd2bc3313a54451039e.bindTooltip(
+                `<div>
+                     <b style='font-size:.88em'>Known STR Building</b><br><b style='font-size:1.2em; color:#5E35B1'>55 Temple Place, Boston MA 02111</b><br>Units: (unknown) | Floors: 6.0 | Source: AirBPDBjn<br><b>Known operators: </b><br> &#8226; unknown<div style='height:4px'></div><span style='color:#448AFF' >Distance from cluster center: <b>205 ft.</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_41dfb3c4aa5f435eba9b9a76b3ef3e61 = L.marker(
+                [42.3550474, -71.0622106],
+                {}
+            ).addTo(feature_group_b521eb59bc9c4bb49ac7fbec105f9c9a);
+        
+    
+            var icon_0d76e83cd1d843a7ba8457b35269ffdd = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "building", "iconColor": "#5E35B1", "markerColor": "lightgray", "prefix": "fa"}
+            );
+            marker_41dfb3c4aa5f435eba9b9a76b3ef3e61.setIcon(icon_0d76e83cd1d843a7ba8457b35269ffdd);
+        
+    
+            marker_41dfb3c4aa5f435eba9b9a76b3ef3e61.bindTooltip(
+                `<div>
+                     <b style='font-size:.88em'>Known STR Building</b><br>The Suites at Temple Place<br><b style='font-size:1.2em; color:#5E35B1'>29-35 Temple Pl, Boston MA 02111</b><br>Units: 48.0 | Floors: 6.0 | Source: AirBPDBjn<br><b>Known operators: </b><br> &#8226; O-Lodging House<div style='height:4px'></div><span style='color:#448AFF' >Distance from cluster center: <b>247 ft.</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_6bba22040a9a4db38306d4efd2fbaa81 = L.marker(
+                [42.3554762, -71.0615353],
+                {}
+            ).addTo(feature_group_b521eb59bc9c4bb49ac7fbec105f9c9a);
+        
+    
+            var icon_dd4594ab3d954bc9bf57847513b3cc79 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "building", "iconColor": "#5E35B1", "markerColor": "lightgray", "prefix": "fa"}
+            );
+            marker_6bba22040a9a4db38306d4efd2fbaa81.setIcon(icon_dd4594ab3d954bc9bf57847513b3cc79);
+        
+    
+            marker_6bba22040a9a4db38306d4efd2fbaa81.bindTooltip(
+                `<div>
+                     <b style='font-size:.88em'>Known STR Building</b><br>Artlab DX/Hamilton Crossing<br><b style='font-size:1.2em; color:#5E35B1'>8 Winter Street, Boston MA 02108</b><br>Units: (unknown) | Floors: 9.0 | Source: RichCorpSS<br><b>Known operators: </b><br> &#8226; Compass<br> &#8226; Seamless Transitions<div style='height:4px'></div><span style='color:#448AFF' >Distance from cluster center: <b>314 ft.</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_271cdc03013f45479547282c667b3d8e = L.circle(
+                [42.35539029411764, -71.0616388235294],
+                {"bubblingMouseEvents": true, "color": "#448AFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.557518343630962, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.8575183436309619, "radius": 132.300280992, "stroke": true, "weight": 2}
+            ).addTo(map_72383bc9d03f4dd5a0ff1fe3238e5912);
+        
+    
+        var popup_fbdd84c6bbbe46c189e63791a2238d0b = L.popup({"maxWidth": "100%"});
+
+        
+            var html_112edfb63dee4d75ae07d56de161e71f = $(`<div id="html_112edfb63dee4d75ae07d56de161e71f" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_fbdd84c6bbbe46c189e63791a2238d0b.setContent(html_112edfb63dee4d75ae07d56de161e71f);
+        
+
+        circle_271cdc03013f45479547282c667b3d8e.bindPopup(popup_fbdd84c6bbbe46c189e63791a2238d0b)
+        ;
+
+        
+    
+    
+            circle_271cdc03013f45479547282c667b3d8e.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#448AFF'>
+        Cluster <b>13-1
+        </b></p>
+        <p style='font-size:1.0em; margin: 0 0 1px; color:#E64A19'><span style='color:#448AFF!important;font-size:.92em'>
+                <i class="fa fa-plus-circle"></i> 1 listings added since Jul. 2020</span> <br> <span style='color:black!important;font-size:.95em'>
+                <b>Listings license status:</b></span><br>
+            <i class="fa fa-exclamation-triangle"></i> Not found (fabricated) 
+                </p><p style='font-size:.95; margin: 3px 0; color:#EF5350'>
+                    <i class="fa fa-clone" aria-hidden="true"></i>
+                    License shared by multiple hosts</p>
+        Host: <b>Temple Place </b> | Listings: <b>34</b>
+        <br>Minimum  stay:  <b style='color:#FF5722'>
+            2 nights </b>  
+        
+        <br><span style='text-align:center; color:#448AFF'><b>Click for details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_526ef9b7a5d940ec9d01f1feb524ddd3 = L.circle(
+                [42.35539029411764, -71.0616388235294],
+                {"bubblingMouseEvents": true, "color": "#448AFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#448AFF", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.7, "radius": 6, "stroke": true, "weight": 4}
+            ).addTo(map_72383bc9d03f4dd5a0ff1fe3238e5912);
+        
+    
+        var popup_0b3e2d50f88c4cb496a4e6c3fd604dfe = L.popup({"maxWidth": "100%"});
+
+        
+            var html_1c25d1cb926a44fc90de1a4959fee2de = $(`<div id="html_1c25d1cb926a44fc90de1a4959fee2de" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_0b3e2d50f88c4cb496a4e6c3fd604dfe.setContent(html_1c25d1cb926a44fc90de1a4959fee2de);
+        
+
+        circle_526ef9b7a5d940ec9d01f1feb524ddd3.bindPopup(popup_0b3e2d50f88c4cb496a4e6c3fd604dfe)
+        ;
+
+        
+    
+    
+            circle_526ef9b7a5d940ec9d01f1feb524ddd3.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#448AFF'>
+        Cluster <b>13-1
+        </b></p>
+        <p style='font-size:1.0em; margin: 0 0 1px; color:#E64A19'><span style='color:#448AFF!important;font-size:.92em'>
+                <i class="fa fa-plus-circle"></i> 1 listings added since Jul. 2020</span> <br> <span style='color:black!important;font-size:.95em'>
+                <b>Listings license status:</b></span><br>
+            <i class="fa fa-exclamation-triangle"></i> Not found (fabricated) 
+                </p><p style='font-size:.95; margin: 3px 0; color:#EF5350'>
+                    <i class="fa fa-clone" aria-hidden="true"></i>
+                    License shared by multiple hosts</p>
+        Host: <b>Temple Place </b> | Listings: <b>34</b>
+        <br>Minimum  stay:  <b style='color:#FF5722'>
+            2 nights </b>  
+        
+        <br><span style='text-align:center; color:#448AFF'><b>Click for details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var feature_group_e0dd998480cd4c3fb3e5ff00c2324c91 = L.featureGroup(
+                {}
+            ).addTo(map_72383bc9d03f4dd5a0ff1fe3238e5912);
+        
+    
+            var circle_f6df5e7bee0b442d8e6eddac10104775 = L.circle(
+                [42.35595, -71.06137],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_a1d06dec93294dde9d357b97cdca82b0 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_1678edac1ad040e7a4deef0acb5894e6 = $(`<div id="html_1678edac1ad040e7a4deef0acb5894e6" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_a1d06dec93294dde9d357b97cdca82b0.setContent(html_1678edac1ad040e7a4deef0acb5894e6);
+        
+
+        circle_f6df5e7bee0b442d8e6eddac10104775.bindPopup(popup_a1d06dec93294dde9d357b97cdca82b0)
+        ;
+
+        
+    
+    
+            circle_f6df5e7bee0b442d8e6eddac10104775.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32330037</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_0826fd551fe94ae69e24b1866a10dda2 = L.circle(
+                [42.35581, -71.06115],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_b45cba1655604225948acb1037b00e3a = L.popup({"maxWidth": "100%"});
+
+        
+            var html_f5fef48561fb4997ae2760f5b0460156 = $(`<div id="html_f5fef48561fb4997ae2760f5b0460156" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_b45cba1655604225948acb1037b00e3a.setContent(html_f5fef48561fb4997ae2760f5b0460156);
+        
+
+        circle_0826fd551fe94ae69e24b1866a10dda2.bindPopup(popup_b45cba1655604225948acb1037b00e3a)
+        ;
+
+        
+    
+    
+            circle_0826fd551fe94ae69e24b1866a10dda2.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32330038</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_e9fb53bdd6cb456d86ed1c8e1856dd41 = L.circle(
+                [42.35534000000001, -71.06168000000002],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_c0b0b43adb8c454a90a074a48fc2fcb7 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_1db6fdc19e1143cf8aa76f7d838b7d8e = $(`<div id="html_1db6fdc19e1143cf8aa76f7d838b7d8e" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_c0b0b43adb8c454a90a074a48fc2fcb7.setContent(html_1db6fdc19e1143cf8aa76f7d838b7d8e);
+        
+
+        circle_e9fb53bdd6cb456d86ed1c8e1856dd41.bindPopup(popup_c0b0b43adb8c454a90a074a48fc2fcb7)
+        ;
+
+        
+    
+    
+            circle_e9fb53bdd6cb456d86ed1c8e1856dd41.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32330132</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_7789fb3867f84cc89a1293f858785989 = L.circle(
+                [42.3544, -71.0615],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_fedde96f3bb64ed78fa6436034878564 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_02fbd531131843419362ab747331625a = $(`<div id="html_02fbd531131843419362ab747331625a" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_fedde96f3bb64ed78fa6436034878564.setContent(html_02fbd531131843419362ab747331625a);
+        
+
+        circle_7789fb3867f84cc89a1293f858785989.bindPopup(popup_fedde96f3bb64ed78fa6436034878564)
+        ;
+
+        
+    
+    
+            circle_7789fb3867f84cc89a1293f858785989.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32330134</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_90d88ef54c0c4c33b7e678f3b61cac45 = L.circle(
+                [42.35595, -71.06194],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_bc330d455d024afa8c8c3c172d8eea8d = L.popup({"maxWidth": "100%"});
+
+        
+            var html_edae298ca92547378883d76f03a0758f = $(`<div id="html_edae298ca92547378883d76f03a0758f" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_bc330d455d024afa8c8c3c172d8eea8d.setContent(html_edae298ca92547378883d76f03a0758f);
+        
+
+        circle_90d88ef54c0c4c33b7e678f3b61cac45.bindPopup(popup_bc330d455d024afa8c8c3c172d8eea8d)
+        ;
+
+        
+    
+    
+            circle_90d88ef54c0c4c33b7e678f3b61cac45.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32330185</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_25ed052ffa594027a88b2e2209c1e0a7 = L.circle(
+                [42.35545, -71.06085],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_5ee95cd230ff4235948ce5dc0c9fc14e = L.popup({"maxWidth": "100%"});
+
+        
+            var html_df6c457b6a5e428ba49a8a080b6e3c47 = $(`<div id="html_df6c457b6a5e428ba49a8a080b6e3c47" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_5ee95cd230ff4235948ce5dc0c9fc14e.setContent(html_df6c457b6a5e428ba49a8a080b6e3c47);
+        
+
+        circle_25ed052ffa594027a88b2e2209c1e0a7.bindPopup(popup_5ee95cd230ff4235948ce5dc0c9fc14e)
+        ;
+
+        
+    
+    
+            circle_25ed052ffa594027a88b2e2209c1e0a7.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32330288</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_5c0e1e647fcd4361bd943b10b5253cef = L.circle(
+                [42.35589, -71.06251],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_0aa86a13f0bb4960bf6f047b405e29b2 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_367c0c4e111b4e6d8ac091b6489db0ca = $(`<div id="html_367c0c4e111b4e6d8ac091b6489db0ca" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_0aa86a13f0bb4960bf6f047b405e29b2.setContent(html_367c0c4e111b4e6d8ac091b6489db0ca);
+        
+
+        circle_5c0e1e647fcd4361bd943b10b5253cef.bindPopup(popup_0aa86a13f0bb4960bf6f047b405e29b2)
+        ;
+
+        
+    
+    
+            circle_5c0e1e647fcd4361bd943b10b5253cef.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32330292</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_77cea5a13ea544c690d5c1575cbd7ecb = L.circle(
+                [42.3563, -71.06092],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_27a9b7917abb47df8a50a000fdb213f4 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_e64a905ab81f48f599386d96b262a338 = $(`<div id="html_e64a905ab81f48f599386d96b262a338" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_27a9b7917abb47df8a50a000fdb213f4.setContent(html_e64a905ab81f48f599386d96b262a338);
+        
+
+        circle_77cea5a13ea544c690d5c1575cbd7ecb.bindPopup(popup_27a9b7917abb47df8a50a000fdb213f4)
+        ;
+
+        
+    
+    
+            circle_77cea5a13ea544c690d5c1575cbd7ecb.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32330395</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_bb5f6bb334984d918c5ab69e476e2b81 = L.circle(
+                [42.35586, -71.06159],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_e2cb20611a6c4643a250d6642ac990ce = L.popup({"maxWidth": "100%"});
+
+        
+            var html_f75a4331fddc46b9b6549b95c9a7b1a3 = $(`<div id="html_f75a4331fddc46b9b6549b95c9a7b1a3" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_e2cb20611a6c4643a250d6642ac990ce.setContent(html_f75a4331fddc46b9b6549b95c9a7b1a3);
+        
+
+        circle_bb5f6bb334984d918c5ab69e476e2b81.bindPopup(popup_e2cb20611a6c4643a250d6642ac990ce)
+        ;
+
+        
+    
+    
+            circle_bb5f6bb334984d918c5ab69e476e2b81.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32330398</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_eb2c9fef03d34289aaf850cdcdb1eb58 = L.circle(
+                [42.35575, -71.06267],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_9f144915f0524dc99140a2a0e883d7ca = L.popup({"maxWidth": "100%"});
+
+        
+            var html_b3e45984472344489248b01a66b8778e = $(`<div id="html_b3e45984472344489248b01a66b8778e" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_9f144915f0524dc99140a2a0e883d7ca.setContent(html_b3e45984472344489248b01a66b8778e);
+        
+
+        circle_eb2c9fef03d34289aaf850cdcdb1eb58.bindPopup(popup_9f144915f0524dc99140a2a0e883d7ca)
+        ;
+
+        
+    
+    
+            circle_eb2c9fef03d34289aaf850cdcdb1eb58.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32330401</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_833a3f3c765e46f7822472a9beb681ae = L.circle(
+                [42.35621, -71.06108],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_b9561c5565454968a11c7da668b722ba = L.popup({"maxWidth": "100%"});
+
+        
+            var html_47e3938e82bb419ba471ef2193b2333a = $(`<div id="html_47e3938e82bb419ba471ef2193b2333a" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_b9561c5565454968a11c7da668b722ba.setContent(html_47e3938e82bb419ba471ef2193b2333a);
+        
+
+        circle_833a3f3c765e46f7822472a9beb681ae.bindPopup(popup_b9561c5565454968a11c7da668b722ba)
+        ;
+
+        
+    
+    
+            circle_833a3f3c765e46f7822472a9beb681ae.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32330465</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_3792bb9b49e64e7a98e744fdad78fe9d = L.circle(
+                [42.35579, -71.06262],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_d5a5583c89594afaaa6ef25981a6fe41 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_d172297d2f8a4311b1ef07c0d4f3ef5b = $(`<div id="html_d172297d2f8a4311b1ef07c0d4f3ef5b" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_d5a5583c89594afaaa6ef25981a6fe41.setContent(html_d172297d2f8a4311b1ef07c0d4f3ef5b);
+        
+
+        circle_3792bb9b49e64e7a98e744fdad78fe9d.bindPopup(popup_d5a5583c89594afaaa6ef25981a6fe41)
+        ;
+
+        
+    
+    
+            circle_3792bb9b49e64e7a98e744fdad78fe9d.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32330468</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_e81b38847bb543a1baa41fe628adafbf = L.circle(
+                [42.35541, -71.06293000000002],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_1ed1b8e5974f44a6bb9381c32a3a8810 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_2c343c71ac644012b19fa0e9bb03b0bd = $(`<div id="html_2c343c71ac644012b19fa0e9bb03b0bd" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_1ed1b8e5974f44a6bb9381c32a3a8810.setContent(html_2c343c71ac644012b19fa0e9bb03b0bd);
+        
+
+        circle_e81b38847bb543a1baa41fe628adafbf.bindPopup(popup_1ed1b8e5974f44a6bb9381c32a3a8810)
+        ;
+
+        
+    
+    
+            circle_e81b38847bb543a1baa41fe628adafbf.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32330630</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_8bf14b92943c4e26b98b74af1f2ce754 = L.circle(
+                [42.35395, -71.06119],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_c70f16cb1f33488686c4a3a5f599b60e = L.popup({"maxWidth": "100%"});
+
+        
+            var html_7c5af10900a647b686c1159ee414a1df = $(`<div id="html_7c5af10900a647b686c1159ee414a1df" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_c70f16cb1f33488686c4a3a5f599b60e.setContent(html_7c5af10900a647b686c1159ee414a1df);
+        
+
+        circle_8bf14b92943c4e26b98b74af1f2ce754.bindPopup(popup_c70f16cb1f33488686c4a3a5f599b60e)
+        ;
+
+        
+    
+    
+            circle_8bf14b92943c4e26b98b74af1f2ce754.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32330730</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_96c8d22dccc345a78ece46f1244ddddf = L.circle(
+                [42.35605, -71.06124],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_2d64058129094d9bbfa7ecd0a1bcc639 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_1509fcb8c5644b2f8c3b8525278560d3 = $(`<div id="html_1509fcb8c5644b2f8c3b8525278560d3" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_2d64058129094d9bbfa7ecd0a1bcc639.setContent(html_1509fcb8c5644b2f8c3b8525278560d3);
+        
+
+        circle_96c8d22dccc345a78ece46f1244ddddf.bindPopup(popup_2d64058129094d9bbfa7ecd0a1bcc639)
+        ;
+
+        
+    
+    
+            circle_96c8d22dccc345a78ece46f1244ddddf.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32330935</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_1b362d9d0a644ff680330c4319742360 = L.circle(
+                [42.35429, -71.06109000000002],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_89ff5978ac5d4559b8627c9cc3edecdf = L.popup({"maxWidth": "100%"});
+
+        
+            var html_31d9bb3facb04232bb240ca5e9253377 = $(`<div id="html_31d9bb3facb04232bb240ca5e9253377" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_89ff5978ac5d4559b8627c9cc3edecdf.setContent(html_31d9bb3facb04232bb240ca5e9253377);
+        
+
+        circle_1b362d9d0a644ff680330c4319742360.bindPopup(popup_89ff5978ac5d4559b8627c9cc3edecdf)
+        ;
+
+        
+    
+    
+            circle_1b362d9d0a644ff680330c4319742360.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32330936</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_02567be30c084e9a801d3a5fc519b05e = L.circle(
+                [42.35458, -71.06109000000002],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_dab9080b50ce4015be8a7d8701b75892 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_1d2605bb2bda4aa781576b3ec1b031c6 = $(`<div id="html_1d2605bb2bda4aa781576b3ec1b031c6" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_dab9080b50ce4015be8a7d8701b75892.setContent(html_1d2605bb2bda4aa781576b3ec1b031c6);
+        
+
+        circle_02567be30c084e9a801d3a5fc519b05e.bindPopup(popup_dab9080b50ce4015be8a7d8701b75892)
+        ;
+
+        
+    
+    
+            circle_02567be30c084e9a801d3a5fc519b05e.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32331040</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_34013bb086cd44e1bda4f969061d0464 = L.circle(
+                [42.3548, -71.06174],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_a3079abc95074d24a6e299662963882b = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ee66c9f7dc8b4977b117ff0dba70526a = $(`<div id="html_ee66c9f7dc8b4977b117ff0dba70526a" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_a3079abc95074d24a6e299662963882b.setContent(html_ee66c9f7dc8b4977b117ff0dba70526a);
+        
+
+        circle_34013bb086cd44e1bda4f969061d0464.bindPopup(popup_a3079abc95074d24a6e299662963882b)
+        ;
+
+        
+    
+    
+            circle_34013bb086cd44e1bda4f969061d0464.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32331042</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_fa88afbcd3c74618a7bfc0cf8c2ac4fa = L.circle(
+                [42.35453, -71.06175999999998],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_e8f9b30bf00c48f2afe2dc63d0b0390b = L.popup({"maxWidth": "100%"});
+
+        
+            var html_00870f6b0ef2467abd8e4b28d9a87a45 = $(`<div id="html_00870f6b0ef2467abd8e4b28d9a87a45" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_e8f9b30bf00c48f2afe2dc63d0b0390b.setContent(html_00870f6b0ef2467abd8e4b28d9a87a45);
+        
+
+        circle_fa88afbcd3c74618a7bfc0cf8c2ac4fa.bindPopup(popup_e8f9b30bf00c48f2afe2dc63d0b0390b)
+        ;
+
+        
+    
+    
+            circle_fa88afbcd3c74618a7bfc0cf8c2ac4fa.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32331101</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_1d8079a8d6ea41d180e9604e3415bcd1 = L.circle(
+                [42.35471, -71.06189],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_e940171adfca40229422c66553b17a96 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_0e06907aa49f481b8fe88df0430f5dc2 = $(`<div id="html_0e06907aa49f481b8fe88df0430f5dc2" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_e940171adfca40229422c66553b17a96.setContent(html_0e06907aa49f481b8fe88df0430f5dc2);
+        
+
+        circle_1d8079a8d6ea41d180e9604e3415bcd1.bindPopup(popup_e940171adfca40229422c66553b17a96)
+        ;
+
+        
+    
+    
+            circle_1d8079a8d6ea41d180e9604e3415bcd1.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32331103</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_17c60d0bc0be4a9baa4795d110eb3987 = L.circle(
+                [42.35591, -71.06143],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_41e35347aabf4b479866a2695c85a25e = L.popup({"maxWidth": "100%"});
+
+        
+            var html_406f326d71ae429aaa3147042f52585a = $(`<div id="html_406f326d71ae429aaa3147042f52585a" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_41e35347aabf4b479866a2695c85a25e.setContent(html_406f326d71ae429aaa3147042f52585a);
+        
+
+        circle_17c60d0bc0be4a9baa4795d110eb3987.bindPopup(popup_41e35347aabf4b479866a2695c85a25e)
+        ;
+
+        
+    
+    
+            circle_17c60d0bc0be4a9baa4795d110eb3987.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32331199</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_a2a5c5b9e77c47adbce04382e19dc98e = L.circle(
+                [42.35533, -71.06124],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_d17baa5f77e5426ea19b2ed629e56894 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_0fe72f014d4b4cbcaa7d3c20c2f29d6e = $(`<div id="html_0fe72f014d4b4cbcaa7d3c20c2f29d6e" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_d17baa5f77e5426ea19b2ed629e56894.setContent(html_0fe72f014d4b4cbcaa7d3c20c2f29d6e);
+        
+
+        circle_a2a5c5b9e77c47adbce04382e19dc98e.bindPopup(popup_d17baa5f77e5426ea19b2ed629e56894)
+        ;
+
+        
+    
+    
+            circle_a2a5c5b9e77c47adbce04382e19dc98e.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32331200</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_b71a064d77414e849acec4fe9b85088b = L.circle(
+                [42.35526, -71.06115],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_93509efc653046aeab865724df40f1c2 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_9973cb4f6cc445008f7be2d13a5668b7 = $(`<div id="html_9973cb4f6cc445008f7be2d13a5668b7" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_93509efc653046aeab865724df40f1c2.setContent(html_9973cb4f6cc445008f7be2d13a5668b7);
+        
+
+        circle_b71a064d77414e849acec4fe9b85088b.bindPopup(popup_93509efc653046aeab865724df40f1c2)
+        ;
+
+        
+    
+    
+            circle_b71a064d77414e849acec4fe9b85088b.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32331262</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_d8fc005ba0534bbb9fb94f49e3a321a1 = L.circle(
+                [42.35414, -71.06134],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_907a411340cb48b4afce3249d2a0b15a = L.popup({"maxWidth": "100%"});
+
+        
+            var html_ec11a0b40ee34dc890681dd03d1d8ea3 = $(`<div id="html_ec11a0b40ee34dc890681dd03d1d8ea3" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_907a411340cb48b4afce3249d2a0b15a.setContent(html_ec11a0b40ee34dc890681dd03d1d8ea3);
+        
+
+        circle_d8fc005ba0534bbb9fb94f49e3a321a1.bindPopup(popup_907a411340cb48b4afce3249d2a0b15a)
+        ;
+
+        
+    
+    
+            circle_d8fc005ba0534bbb9fb94f49e3a321a1.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32780617</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_2e38f65ce3254306beaf1c3faf0386ef = L.circle(
+                [42.35547, -71.06099],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_d0d7c4b76d714cbea86d3ec21da65089 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_f8cc848c9e274e05aa4853066921c4a9 = $(`<div id="html_f8cc848c9e274e05aa4853066921c4a9" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_d0d7c4b76d714cbea86d3ec21da65089.setContent(html_f8cc848c9e274e05aa4853066921c4a9);
+        
+
+        circle_2e38f65ce3254306beaf1c3faf0386ef.bindPopup(popup_d0d7c4b76d714cbea86d3ec21da65089)
+        ;
+
+        
+    
+    
+            circle_2e38f65ce3254306beaf1c3faf0386ef.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32834946</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_8d52593f5acd489c964657a68d3d2d41 = L.circle(
+                [42.35559, -71.0616],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_e3675ab84ebc46379b9a5b44a6f587f2 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_5cf5211dd5d74847a5392db7828ac1ec = $(`<div id="html_5cf5211dd5d74847a5392db7828ac1ec" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_e3675ab84ebc46379b9a5b44a6f587f2.setContent(html_5cf5211dd5d74847a5392db7828ac1ec);
+        
+
+        circle_8d52593f5acd489c964657a68d3d2d41.bindPopup(popup_e3675ab84ebc46379b9a5b44a6f587f2)
+        ;
+
+        
+    
+    
+            circle_8d52593f5acd489c964657a68d3d2d41.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32834949</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_e74eb987a5d84d4884403626290a008a = L.circle(
+                [42.3557, -71.06152],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_b1e8c32263b94c7b8e134e7608b4beaf = L.popup({"maxWidth": "100%"});
+
+        
+            var html_db77cd13d4db40acabc0b57002c69907 = $(`<div id="html_db77cd13d4db40acabc0b57002c69907" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_b1e8c32263b94c7b8e134e7608b4beaf.setContent(html_db77cd13d4db40acabc0b57002c69907);
+        
+
+        circle_e74eb987a5d84d4884403626290a008a.bindPopup(popup_b1e8c32263b94c7b8e134e7608b4beaf)
+        ;
+
+        
+    
+    
+            circle_e74eb987a5d84d4884403626290a008a.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32834950</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_a85dad7abc1e4ee2b8e1bbdeb31fd01d = L.circle(
+                [42.3559, -71.0618],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_d9218b5919714fce8825a96426f3afc2 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_f084f2fc370d4ab480142ece3c820993 = $(`<div id="html_f084f2fc370d4ab480142ece3c820993" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_d9218b5919714fce8825a96426f3afc2.setContent(html_f084f2fc370d4ab480142ece3c820993);
+        
+
+        circle_a85dad7abc1e4ee2b8e1bbdeb31fd01d.bindPopup(popup_d9218b5919714fce8825a96426f3afc2)
+        ;
+
+        
+    
+    
+            circle_a85dad7abc1e4ee2b8e1bbdeb31fd01d.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32835029</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_912365f5215048b28e2c04ee6cedf572 = L.circle(
+                [42.3553, -71.06177],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_d4be765d919d48ea985eb6eea6dd7223 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_29d6894b48574acbbb5665e1322da81f = $(`<div id="html_29d6894b48574acbbb5665e1322da81f" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_d4be765d919d48ea985eb6eea6dd7223.setContent(html_29d6894b48574acbbb5665e1322da81f);
+        
+
+        circle_912365f5215048b28e2c04ee6cedf572.bindPopup(popup_d4be765d919d48ea985eb6eea6dd7223)
+        ;
+
+        
+    
+    
+            circle_912365f5215048b28e2c04ee6cedf572.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>32835033</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_f955983710d345a6807b4278b96d7ddc = L.circle(
+                [42.35625, -71.06194],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_f59ded3175fe4fc7856aef0bd36a8877 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_070936c59a9e4c36adca8e6a6a26a4ab = $(`<div id="html_070936c59a9e4c36adca8e6a6a26a4ab" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_f59ded3175fe4fc7856aef0bd36a8877.setContent(html_070936c59a9e4c36adca8e6a6a26a4ab);
+        
+
+        circle_f955983710d345a6807b4278b96d7ddc.bindPopup(popup_f59ded3175fe4fc7856aef0bd36a8877)
+        ;
+
+        
+    
+    
+            circle_f955983710d345a6807b4278b96d7ddc.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>41621247</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_81a6e7beb160419f98e67756a41db0ff = L.circle(
+                [42.35538, -71.06253000000002],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_9533f2db73a9427eadccc22c3465c458 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_37ee8a982f0949749f9d52d111d0e26b = $(`<div id="html_37ee8a982f0949749f9d52d111d0e26b" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_9533f2db73a9427eadccc22c3465c458.setContent(html_37ee8a982f0949749f9d52d111d0e26b);
+        
+
+        circle_81a6e7beb160419f98e67756a41db0ff.bindPopup(popup_9533f2db73a9427eadccc22c3465c458)
+        ;
+
+        
+    
+    
+            circle_81a6e7beb160419f98e67756a41db0ff.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>41838589</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_240b9e0b202947a99ce0d28fc3d07dc7 = L.circle(
+                [42.35396, -71.06111],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_282d4b04cb3c418fb93b0866a3e285f4 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_362c4bdb8b0e4ea38cde96c3c8fb2e02 = $(`<div id="html_362c4bdb8b0e4ea38cde96c3c8fb2e02" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_282d4b04cb3c418fb93b0866a3e285f4.setContent(html_362c4bdb8b0e4ea38cde96c3c8fb2e02);
+        
+
+        circle_240b9e0b202947a99ce0d28fc3d07dc7.bindPopup(popup_282d4b04cb3c418fb93b0866a3e285f4)
+        ;
+
+        
+    
+    
+            circle_240b9e0b202947a99ce0d28fc3d07dc7.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>41841244</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_14747d47d07c4f81b4289ea8d1714fc8 = L.circle(
+                [42.35555, -71.06281],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_89acfd521c0b4557875862f8d428c12c = L.popup({"maxWidth": "100%"});
+
+        
+            var html_0a4aff525a3f49a78c5597606599d5a0 = $(`<div id="html_0a4aff525a3f49a78c5597606599d5a0" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_89acfd521c0b4557875862f8d428c12c.setContent(html_0a4aff525a3f49a78c5597606599d5a0);
+        
+
+        circle_14747d47d07c4f81b4289ea8d1714fc8.bindPopup(popup_89acfd521c0b4557875862f8d428c12c)
+        ;
+
+        
+    
+    
+            circle_14747d47d07c4f81b4289ea8d1714fc8.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>41842246</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_d88c146f12534de2befd171eece31ef7 = L.circle(
+                [42.35651, -71.06168000000002],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#E64A19", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_e0dd998480cd4c3fb3e5ff00c2324c91);
+        
+    
+        var popup_84c7dd95423b4580910a8960bffce95a = L.popup({"maxWidth": "100%"});
+
+        
+            var html_eb120cfaf5814ed2955f4482cb3937f8 = $(`<div id="html_eb120cfaf5814ed2955f4482cb3937f8" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/13-1.html'>                                 <b>Cluster 13-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_84c7dd95423b4580910a8960bffce95a.setContent(html_eb120cfaf5814ed2955f4482cb3937f8);
+        
+
+        circle_d88c146f12534de2befd171eece31ef7.bindPopup(popup_84c7dd95423b4580910a8960bffce95a)
+        ;
+
+        
+    
+    
+            circle_d88c146f12534de2befd171eece31ef7.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>43440937</b></p>
+        Cluster: <span style='color:#448AFF'><b>13-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Temple Place </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#E64A19';
+                       class='fa fa-file-text'></i>
+                <b> 390690</b>
+        <br>License: <span style='color:#E64A19'> <b>Not found (fabricated)</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var layer_control_0d20026c19b742e19891b4517d25c253 = {
+                base_layers : {
+                },
+                overlays :  {
+                    "\u003cspan style=\u0027font-size:15px\u0027\u003e\n                        Known STR buildings near large clusters\n                        \u003ci class=\u0027fa fa-building\u0027\n                           style=\u0027color:#5E35B1; margin: 0 3px;\u0027\u003e\u003c/i\u003e\n                        \u003c/span\u003e" : feature_group_b521eb59bc9c4bb49ac7fbec105f9c9a,
+                    "\u003cspan style=\u0027font-size:15px\u0027\u003e\n                        Include individual listings on map\n                        \u003ci class=\u0027fa fa-dot-circle-o\u0027\n                           style=\u0027color:red; margin: 0 3px;\u0027\u003e\u003c/i\u003e\n                    \u003c/span\u003e" : feature_group_e0dd998480cd4c3fb3e5ff00c2324c91,
+                },
+            };
+            L.control.layers(
+                layer_control_0d20026c19b742e19891b4517d25c253.base_layers,
+                layer_control_0d20026c19b742e19891b4517d25c253.overlays,
+                {"autoZIndex": true, "collapsed": false, "position": "topright"}
+            ).addTo(map_72383bc9d03f4dd5a0ff1fe3238e5912);
+        
+</script>
+            </div>
+
+        </div>
+        
+        <script>
+            
+        document.getElementById("how-collapse-btn"
+            ).addEventListener("click", function() {
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight){
+              content.style.maxHeight = null;
+              this.innerHTML = "[ + ] Learn more... ";
+            } else {
+              content.style.maxHeight = content.scrollHeight + "px";
+              this.innerHTML = "[ &ndash; ] Learn less... ";
+            } 
+        });
+    </script>
+    <script>
+    
+    
+    var viewportHeight = $('.banner').outerHeight();
+    $('.banner').css({ height: viewportHeight });
+    
+    
+    if ($('body').hasClass('mobile')) {
+      var viewportHeight = $('.banner').outerHeight();
+      $('.banner').css({ height: viewportHeight });
+    }
+
+
+    </script>
+    <script>
+    
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on the button, open the modal
+        btn.onclick = function() {
+          modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+
+    </script>
+    <script>
+    
+    
+        document.getElementById("mobile-switcher"
+            ).addEventListener("click", switch_mobile_menu);
+        document.getElementById("mobile-switch-link"
+            ).addEventListener("click", switch_mobile_menu);
+        document.getElementById("mobile-menu-circle"
+            ).addEventListener("click", switch_mobile_menu);
+            
+        var mapOpen = false
+        function switch_mobile_menu() {
+
+            var navbar = document.getElementById("nav-banner");
+            var sidebar = document.getElementById("sidebar-container");
+            var map = document.getElementById("map-container");
+            var slabel = document.getElementById("mobile-switch-label");
+            var openico = document.getElementById("open-menu-icon");
+            var slink = document.getElementById("mobile-switch-link");
+            var menucir = document.getElementById("mobile-menu-circle");
+
+
+            if ( mapOpen ){
+                  sidebar.setAttribute("style","left:0") ;
+
+                  map.setAttribute("style","left:calc(100vw - 100px)") ;
+                  map.setAttribute("style","width:800px") ;
+
+                  slabel.innerHTML = "<b>Map </b> <i class='fa fa-map' aria-hidden='true'></i>";
+                  
+                  openico.setAttribute("style","visibility:hidden") ;
+                  menucir.setAttribute("style","left:-100px") ;
+                  
+                  slink.setAttribute("style","right:0") ;
+                  slink.setAttribute("style","width:30px") ;
+                  
+
+                  mapOpen = false;
+            }
+            else {
+                  sidebar.setAttribute("style","left:calc(-100vw + 40px)") ; 
+
+                  map.setAttribute("style","left:10px !important") ;
+                  map.setAttribute("style","width:calc(100vw - 10px) !important") ;
+
+                  slabel.innerHTML = "<b>Details </b> <i class='fa fa-bars' aria-hidden='true'></i>";
+                  
+                  openico.setAttribute("style","visibility:visible") ;
+                  menucir.setAttribute("style","left:-30px") ;
+
+                  slink.setAttribute("style","width:20px") ;
+                  slink.setAttribute("style","left:0px") ;
+
+                  mapOpen = true;
+            } 
+        };
+
+    
+    </script>
+    <script>
+    
+        document.getElementById("license-collapse-btn"
+            ).addEventListener("click", function() {
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight){
+              content.style.maxHeight = null;
+              this.innerHTML = "[ + ] Show license details";
+            } else {
+              content.style.maxHeight = content.scrollHeight + "px";
+              this.innerHTML = "[ &ndash; ] Hide license details";
+              setTimeout( function (){
+                      location.hash = "#licenses";
+                            }, 250);
+            } 
+            
+        });
+    </script>
+    <script>
+    
+        document.getElementById("listings-collapse-btn"
+            ).addEventListener("click", function() {
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight){
+              content.style.maxHeight = null;
+              this.innerHTML = "[ + ] Show listings";
+            } else {
+              content.style.maxHeight = content.scrollHeight + "px";
+              this.innerHTML = "[ &ndash; ] Hide listings";              
+              setTimeout( function (){
+                      location.hash = "#listings";
+                            }, 250);
+            } 
+        });
+    </script>
+    <script>
+    
+        
+    function search_res(container, value) {
+    
+        var item = container.toLowerCase().replace(/\s+/g, '');                
+        var val = value.toLowerCase().replace(/\s+/g, '');
+        var returnValue = false;
+        var pos = item.indexOf(val);
+        if (pos >= 0) {
+            returnValue = true;
+        }
+        return returnValue;
+    }
+    
+    </script>
+    <script>
+    
+    document.getElementById('searchbar').addEventListener("click",
+        function(){
+                initOpenState = "True"
+                let x = document.getElementsByClassName('search-items');
+                var counter = 0
+                for (i = 0; i < x.length; i++) { 
+                    var dt = x[i].getAttribute("data-type");
+                    if (dt=="cluster") { 
+                        counter = counter + 1
+                        x[i].style.display="list-item"; 
+                    } 
+                    if (counter == 3) {
+                         break;
+                    }
+                } 
+                document.getElementById('search-list').style.maxHeight = "400px";
+                document.getElementById('search-list').style.padding = "0 15px 15px";
+                let msg_init = document.getElementById('search-init'); 
+                msg_init.style.maxHeight = "150px";
+                msg_init.style.margin = "8px";
+                
+        }
+    )
+    
+    
+    document.getElementById('searchbar').addEventListener("focusout",
+        function(){
+            let input = document.getElementById('searchbar').value;
+            if (input=="" && initOpenState !== "True"){
+                document.getElementById('search-list').style.maxHeight = "0";
+                document.getElementById('search-list').style.padding = "0 15px";
+            
+                let x = document.getElementsByClassName('search-items');
+                for (i = 0; i < x.length; i++) {  
+                    x[i].style.display="none"; 
+                } 
+                let msg_init = document.getElementById('search-init'); 
+                msg_init.style.maxHeight = "0";
+                msg_init.style.margin = "0";
+            }
+
+        }
+    )
+
+    
+    function search_item() { 
+        initOpenState = "False";
+        
+        let sb = document.getElementById('searchbar');
+        let input = document.getElementById('searchbar').value;
+        let searchList = document.getElementById('search-list');
+        searchList.scrollTop = 0;
+
+        let x = document.getElementsByClassName('search-items'); 
+        
+        let instruct = document.getElementById('search-instruct'); 
+        let alert = document.getElementById('search-alert'); 
+        let s_init = document.getElementById('search-init'); 
+        
+        let msg_init = document.getElementById('search-init'); 
+        msg_init.style.maxHeight = "0";
+        
+        var visible = 0
+        
+        if (sb !== null && sb.value === "") {
+
+            var counter = 0
+            for (i = 0; i < 10; i++) {  
+                    var dt = x[i].getAttribute("data-type");
+                    if (dt=="cluster") { 
+                        counter = counter + 1
+                        x[i].style.display="list-item"; 
+                    } 
+                    if (counter == 3) {
+                         break;
+                    }
+            } 
+        }
+        
+        else {
+            for (i = 0; i < x.length; i++) {
+            
+                if ( search_res(x[i].getAttribute("search-data"), input) ) { 
+                    x[i].style.display="list-item"; 
+                    visible += 1
+                } 
+                else { 
+                    x[i].style.display="none";
+                } 
+             } 
+        }
+
+        if (sb.value !== "") {
+                if (visible==0) {
+                    instruct.style.maxHeight = "0";
+                    instruct.transition = ".2";
+                    instruct.style.margin = "0";
+                    s_init.style.maxHeight = "0";
+                    s_init.transition = ".2s";
+                    s_init.style.margin = "0";
+                    
+                    alert.style.maxHeight = "150px";
+                    alert.style.margin = "8px";
+                   
+                    
+                    searchList.style.padding = "0";
+                    searchList.style.maxHeight = "0";
+                    
+
+                    }
+                else {
+                    instruct.innerHTML = "<b>" + visible.toString() + "</b> results" ;
+                    instruct.style.maxHeight = "150px";
+                    instruct.transition = "0";
+                    instruct.style.margin = "8px";
+                    
+                    
+                    s_init.style.maxHeight = "0";
+                    s_init.transition = ".2s";
+                    s_init.style.margin = "0";
+                    alert.style.maxHeight = "0";
+                    alert.transition = ".2s";
+                    alert.style.margin = "0";
+                    
+                    searchList.style.padding = "0 15px 15px ";
+                    searchList.style.maxHeight = "305px";                    
+                    }
+ 
+            
+          }         
+        else {
+            for (i = 0; i < x.length; i++) {  
+                 x[i].style.display="none";
+            } 
+            instruct.style.maxHeight = "0";
+            instruct.transition = ".2s";
+            instruct.style.margin = "0"
+            alert.style.maxHeight = "0";
+            alert.transition = ".2s";
+            alert.style.margin = "0";
+            s_init.style.maxHeight = "0";
+            s_init.style.margin = "0";
+            searchList.style.maxHeight = "0";
+            searchList.style.padding = "0";
+                    }       
+        }
+
+    
+        </script>
+
+    </body>
+
+    </html>
+    

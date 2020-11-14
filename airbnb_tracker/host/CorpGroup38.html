@@ -1,0 +1,2509 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Jihane - Host Overview</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+    
+    
+/* Tooltip container */
+.tooltip {
+  opacity: 1;
+  position: relative;
+  display: inline-block;
+  font-family: "Helvetica", Arial, sans-serif;
+}
+
+.tooltiptext-2 {
+    margin-top: 25px !important;
+}
+
+.tooltiptext-3 {
+    margin-top: 46px !important;
+}
+
+/* Tooltip text */
+.tooltiptext {
+  visibility: hidden;
+  width: auto;
+  color: #fff;
+  text-align: right;
+  white-space: nowrap;
+  padding: 3px 8px;
+  border-radius: 5px;
+  background-color : #424242;
+  /* Position the tooltip text */
+  margin: 3px 0 0 0 ;
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  right: 105%;
+
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.info-tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+    
+    html {
+      scroll-behavior: smooth;
+        height: -webkit-fill-available;
+
+    }
+    
+    body {
+        font-family: "Helvetica", Arial, sans-serif;
+        padding:0;
+        margin:0;
+        height:100vh;
+        max-height: -webkit-fill-available;
+        overflow: auto;
+        color: white;
+    }
+    
+    .leaflet-popup-content-wrapper, .leaflet-popup-tip {
+        background-color:#448AFF !important;
+        }
+        
+    .leaflet-popup-close-button {
+        display: none !important
+    }
+    
+    
+        .leaflet-pane .leaflet-interactive {
+            transition: fill-opacity .1s ease-in-out;
+            transition: stroke .1s ease-in-out;
+
+        }
+
+        .leaflet-pane .leaflet-interactive:hover {
+            fill-opacity:.8 !important;
+            stroke:white !important;
+        }
+        
+    .centroid-link-btn {
+        color:white !important;
+        font-size:18px;
+        padding:15px 0;
+        line-height:1.2em
+        }
+        
+
+
+    body a {
+        color: #E3F2FD;
+        text-decoration:none;
+        transition:.1s;
+    }
+    body a:hover {
+        color: #448AFF;
+        text-decoration: underline
+    }
+    
+    body a:active {
+        color: #D4D4D4;
+    }
+
+    body h1 {
+         color: white;
+         font-size:24px;
+         margin-top:0;
+    }
+
+    body h2 {
+        color:#448AFF;
+        font-size:22px;
+        line-height:1.4em;
+        font-weight:400px;
+        margin: 8px 0 8px;
+        font-weight:bold;
+    }
+
+    body h3 {
+        color:white;
+        font-size:18px;
+        margin: 0 0 8px;
+        font-weight:400px;
+        font-weight:500px;
+    }
+
+    body h4 {
+        font-size:16px;
+        color:white;
+        margin: 0 0 10px;
+        font-weight:500px;
+    }
+
+    body p {
+        font-size:16px;
+        line-height:1.4em;
+        color:white;
+        margin: 0 0 8px;
+    }
+
+    body .text-lite {
+        color:#E0E0E0;
+        font-size: .92 em;
+    }
+
+    hr {
+        border: .6px solid white;
+        margin: 15px 0
+        style='margin:20px'
+    }
+    
+    .hr-lite {
+        border-color: #9c9c9c;
+    }
+
+
+    #page-container {
+        padding: 0;
+        display:block;
+        height: 100%;
+        width: 100vw;
+        box-sizing: border-box;
+    }
+
+    #sidebar-container {
+        position:fixed;
+        display: block;
+        height: 100vh;
+        height: -webkit-fill-available;
+        width:400px;
+        overflow:auto;
+        transition:.2s;
+        z-index: 9999;
+    }
+
+    #nav-banner {
+        position:fixed;
+        top:0;
+        left:0;
+        z-index:9;
+        margin:0;
+        width:400px;
+        background-color:#191919;
+        overflow:auto;
+        z-index: 10000;
+    }
+
+    #sidebar {
+        width:400px;
+        top: 25px;
+        position:fixed;
+        height:calc(100vh - 25px);
+          max-height: -webkit-fill-available;
+
+        display:block;
+        background-color: #2b2b2b;
+        #border: 5px solid #4a4a4a;
+        box-sizing: border-box;
+        overflow-y: auto;
+        padding:30px;
+        transition:.15s;
+    }
+    
+    #open-menu-icon {
+        visibility:hidden;
+        display:block;
+        position:fixed;
+        left:0;
+        top:48vh;
+        color:white;
+        padding:10px;
+        font-size: 1.5em;
+    }
+    
+    
+    #mobile-switcher {
+        visibility:hidden;
+        position: absolute;
+        right: 0;
+        top: 0;
+        display:inline-block;
+        padding: 5px;
+        background-color: #191919;
+        margin:0;
+        pointer:cursor;
+    }
+    
+
+    # mobile-switch-label {
+        margin: 2px 0 0;
+    }
+    
+    #mobile-switch-link {
+        display:block;
+        position:fixed;
+        top:40px;
+        right:0;
+        width:30px;
+        height: calc(100vh - 40px);
+  max-height: -webkit-fill-available;
+        z-index:99999;
+        visibility:hidden;
+        pointer:cursor;
+    }
+    
+    @media screen and (max-width: 850px){
+    
+            .modal {
+            padding:0 !important;
+
+        }
+    
+        #mobile-switcher {
+            visibility: visible;
+        }
+        #mobile-switch-link {
+            visibility: visible;
+        }
+        #nav-banner {
+            width: 100vw;
+            padding:5px;
+        }
+        #sidebar-container {
+            width:calc(100vw - 30px);
+        }
+        #sidebar-container {
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+        #sidebar {
+            width:calc(100vw - 30px);
+        }
+
+        #map-container, iframe {
+            top:40px !important;
+            height:calc(100vh - 40px)  !important;
+              max-height: -webkit-fill-available;
+
+            z-index: 9995;
+            width:calc(100vw - 30px) !important;
+        }       
+    }
+    
+    
+    @media screen and (max-width: 720px){
+
+        .leaflet-control-layers {
+            display:none;
+        }
+    
+    }
+    
+    #mobile-menu-circle {
+      height: 65px;
+      width: 65px;
+      background-color: #2b2b2b;
+      border-radius: 50%;
+      display: inline-block;
+      position: fixed;
+      text-align: right;
+      left: -100px;
+      padding: 15px 3px;
+      transition:.2s
+    }
+    
+    .mobile-menu-circle i {
+        display: table-cell;
+        width: 65px;
+        height: 65px;
+        padding: 5px;
+        border: none;
+        vertical-align: middle;
+        
+    }
+    
+    
+    #nav-banner p {
+        margin:4px 8px;
+        width:max-content;
+        padding
+    }
+
+    .listings-status-legend {
+        margin-bottom:12px;
+        padding: 0 15px
+    }
+    .listings-status-legend p {
+        margin:0;
+    }
+    .listings-status-legend td {
+        padding: 10px 5px 0;
+    }
+    
+    .listings-status-legend th {
+        font-size:1.2em;
+        padding: 10px 5px 0;
+        color: white !important
+    }
+
+    #status-icon {
+        height:15px;
+        width:15px;
+        display:inline-block;
+        border: 1.5px solid white;
+        border-radius:50%;
+        margin: 0 5px;
+    }
+
+    #map-container {
+        position:fixed;
+        top:0;
+        right:0;
+        display: block;
+        height:100vh;
+          max-height: -webkit-fill-available;
+        width: calc(100% - 400px);
+        transition:.15s;
+    }
+
+    iframe {
+        position:fixed;
+        border:none;
+        right:0;
+        top:0;
+        height:100%;
+        width: calc(100% - 400px)
+    }
+
+    #search-container {
+        height: auto;
+        margin:0 0 10px;
+        width:100%;
+        padding:0;
+        transition: .2s ease-in-out;    
+        }
+
+
+    #search-list{
+        width: 100%
+    }
+
+    #searchbar {
+            background-color:#424242;
+            width: calc(100%) !important; 
+            border-radius: 5px;
+            border: 1.5px solid #448AFF !important;
+            padding:10px;
+            margin:0;
+            font-size:18px;
+            color:white;
+        } 
+
+
+    ::placeholder {
+            font-size:18px;
+            font-weight: bold;
+            color:#82B1FF;
+            opacity: 1 !important; 
+            margin:0
+        }
+
+    #search-message-container{
+    max-width:265;
+    }
+
+    #search-list{ 
+        display:block;
+        width: 100%;
+        margin:0;
+        font-size: 16px;
+        max-height:250px;
+        list-style-type: none;
+        padding: 0 15px;
+        overflow:auto;
+        transition: .2s ease-in-out;
+       }
+
+    .search-items { 
+       display: none;
+       padding:12px 0 12px 8px;
+       cursor: pointer;
+       border-top: 1px solid white;
+       transition:.2s;
+      } 
+
+    .search-items:hover {
+        background-color: #424242 !important;
+    }
+
+    .search-items p {
+        margin-bottom:2px
+    }
+
+    #search-prompt {
+        display: block;
+        overflow: hidden;
+        max-height: 150px;
+        margin: 0px 0px 5px;
+        max-height: 150px;
+        
+        transition: .2s;
+        font-size: 0.95em;
+      }
+
+    #search-instruct {
+        overflow: hidden;
+        max-height: 0;
+        transition: .2s;
+        padding: 0 8px;
+        margin:0;
+
+      }
+    #search-alert {
+        overflow: hidden;
+        max-height: 0;
+        transition: .2s;
+        padding: 0 8px;
+        margin:0;
+
+      }
+    #search-init {
+        overflow: hidden;
+        max-height: 0;
+        transition: .2s;
+        padding: 0 8px;
+        margin:0;
+      }
+
+
+    .isd-indicator-search {
+        display:block;
+        position: relative;
+        top:0;
+        right:10px;
+        float:right;
+        color:#E0E0E0;
+    }
+
+
+
+    #how-collapse-btn {
+      background-color: transparent;
+      color: white;
+      cursor: pointer;
+      padding: 8px 0;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;  
+    }
+
+    #how-collapsed {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;
+    }
+    
+    #license-collapse-btn {
+      background-color: transparent;
+      color: white;
+      cursor: pointer;
+      padding: 12px 0;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;  
+    }
+
+    #license-collapsed {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;
+    }
+    
+    #listings-collapse-btn {
+      background-color: transparent;
+      color: white;
+      cursor: pointer;
+      padding: 12px 0;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;  
+    }
+
+    #listings-collapsed {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;
+    }
+    
+    
+    .centroid-list-item {
+        background-color: #424242;
+        margin: 10px 0;
+        border-radius:8px;
+        padding:10px;
+        cursor:pointer;
+        transition:.2s;
+        border: 1.5px solid #424242;
+
+    }
+    
+    .centroid-list-item:hover {
+        border-color: #448AFF;
+        background-color: #333333;
+    }
+    
+    .centroid-list-item b {
+        color: #448AFF;
+        margin-bottom:2px;
+    }
+    
+    .centroid-list-item p {
+        font-size: .98em;
+        margin-bottom:2px;
+    }
+    .centroid-list-item a {
+        font-size: .96em;
+        text-decoration:none !important;
+    }
+    
+    .centroid-list-item a:hover {
+    }
+    
+    .high-conf-btn {
+        background-color: #424242;
+        margin: 15px 0;
+        border-radius:8px;
+        padding:8px 15px;
+        cursor:pointer;
+        transition:.15s;
+        border: 1.5px solid #424242;
+    }
+    
+    .high-conf-btn:hover {
+        background-color: #448AFF;
+    }
+    .high-conf-btn a:hover {
+        color: white !important;
+    }
+
+    
+
+    .host-info-link {
+        color:#C5B358;
+    }
+    
+    
+    .host-info-link:hover {
+        color:#a3923e;
+    }
+    
+    .centroid-list-item a {
+        text-decoration:none !important;
+        }
+        
+        
+    .license-claim-container ul {
+        padding-left:18px; 
+        list-style: disc;
+        color: white !important;
+    }
+
+    
+    .host-license-warning ul {
+        padding-left:18px; 
+        list-style: disc;
+        font-size:14px !important;
+        color: white !important 
+    }
+    
+    .host-license-warning ul li::before {
+      content: "2";
+      color: white; 
+      font-weight: bold; 
+    }
+    
+    
+    
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 10000; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100vw; /* Full width */
+      height: 100vh; /* Full height */
+        min-height: -webkit-fill-available;
+
+      padding:40px;
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+    }
+
+    /* Modal Content/Box */
+    .modal-content {
+      background-color: #2b2b2b !important;
+      z-index: 10000; /* Sit on top */
+      padding: 0;
+      height: calc(100vh - 80px);
+        max-height: -webkit-fill-available;
+
+      width: calc(100vw - 80px);
+    }
+    .modal-inner {
+      padding: 40px;
+      box-shadow: inset -12px -12px 10px rgba(0,0,0,0.25);
+      z-index: 100001; /* Sit on top */
+      overflow:auto;
+      width: 100%;
+      height: 100%;
+      background-color:#2b2b2b !important;
+    }
+
+    /* The Close Button */
+    .close {
+      position:fixed;
+      color: white !important;
+      float: right;
+      font-size: 30px;
+      font-weight: bold;
+      opacity: 1 !important;
+      margin-top: -15px;
+      
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .dataframe {
+        border-color: #d4d4d4;
+    }
+
+    .dataframe td {
+        white-space: pre;
+        max-width:120px;
+        padding: 3px;
+        overflow:auto;
+        color:white !important;
+    }
+
+    .dataframe th {
+        max-width:120px;
+        padding: 3px;
+        color:white !important;
+    }
+
+    </style>
+
+    </head>
+    <body>
+
+        <div id='page-container'>
+            <div id='sidebar-container'>
+                    
+                    <div id='nav-banner'>
+                        <p>
+                            <a href='/'>Home</a> &#62;
+                            Hosts &#62;
+                            <span style='color:#448AFF'>Jihane</span>
+                        </p>
+                        
+                        <div id='mobile-switch-link'></div>
+                        <div id='mobile-switcher'>
+                            <p id='mobile-switch-label'>
+                            <b>Map </b><i class="fa fa-map" aria-hidden="true"></i> 
+                            </p>
+                        </div>
+                        
+                        <div id='open-menu-icon'>
+                            <span id="mobile-menu-circle">
+                                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                        
+                    </div>
+                    
+                <div id='sidebar'>
+                    
+
+        <h2 style='margin: 0 0 10px; font-size:2.2em;'> Jihane </h2>
+        <h3>
+            <b>10 listings</b> | 
+            3 clusters
+        </h3> 
+        <p class='text-lite'> <b>Note:</b> This host represents a corporation using the following 
+             alias accounts</p>
+             <ul style='margin:0; font-size:15px; color: white; padding-left:15px;margin-left:10px' >
+        <li>
+            <a target='_blank' href='https://www.airbnb.com/users/show/293373619'>
+                "Jihane"</a> - 10 listings</li></ul>
+    
+            
+    
+    <button id="myBtn" style='margin-top:px'>Detailed listings data
+        <i class="fa fa-external-link-square" aria-hidden="true"></i>
+    </button>
+
+    <div id="myModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+      <div class="modal-inner">
+        <span class="close">&times;</span>
+        
+        
+        <h2 style='margin-top:15px;'>
+            Host: <b>Jihane</b>
+        <h2>
+        <h3>
+        <span> 10 total listings </span> | 
+        
+        <a href='/host/CorpGroup38—data.csv' download="host-CorpGroup38_listings.csv">
+                            <i class="fa fa-download" aria-hidden="true"></i>
+                            Download data as a CSV </a>
+        </h3>
+        <p>
+        <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Id</th>
+      <th>Listing<br>url</th>
+      <th>Cluster</th>
+      <th>Name</th>
+      <th>Host id</th>
+      <th>Host url</th>
+      <th>Host</th>
+      <th>Neighbourhood<br>cleansed</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+      <th>Property<br>type</th>
+      <th>Room type</th>
+      <th>Accommodates</th>
+      <th>Bedrooms</th>
+      <th>Beds</th>
+      <th>Price</th>
+      <th>Minimum<br>minimum<br>nights</th>
+      <th>Availability<br>365</th>
+      <th>Number<br>of<br>reviews</th>
+      <th>License</th>
+      <th>Host alias</th>
+      <th>Alias id</th>
+      <th>Status</th>
+      <th>Isd status</th>
+      <th>Isd<br>address</th>
+      <th>Isd<br>category</th>
+      <th>License<br>listing<br>count</th>
+      <th>License<br>cat<br>max<br>exceed</th>
+      <th>Simple<br>status</th>
+      <th>Full<br>status</th>
+      <th>Centroid<br>group<br>distance</th>
+      <th>Last<br>scraped</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>38478429</td>
+      <td><a href="https://www.airbnb.com/rooms/38478429" target="_blank">https://www.airbnb.com/rooms/38478429</a></td>
+      <td>38-3</td>
+      <td>Nice bedroom Brighton close to T ,BC,Downtown</td>
+      <td>CorpGroup38</td>
+      <td><a href="https://www.airbnb.com/users/show/293373619" target="_blank">https://www.airbnb.com/users/show/293373619</a></td>
+      <td>Jihane</td>
+      <td>Brighton</td>
+      <td>42.34208</td>
+      <td>-71.15436</td>
+      <td>Private room in bed and breakfast</td>
+      <td>Private room</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>42.00</td>
+      <td>28.0</td>
+      <td>364</td>
+      <td>1</td>
+      <td>Missing</td>
+      <td>Jihane</td>
+      <td>293373619.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>116.280611</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>38843864</td>
+      <td><a href="https://www.airbnb.com/rooms/38843864" target="_blank">https://www.airbnb.com/rooms/38843864</a></td>
+      <td>38-1</td>
+      <td>Great Room Brighton BC Green T</td>
+      <td>CorpGroup38</td>
+      <td><a href="https://www.airbnb.com/users/show/293373619" target="_blank">https://www.airbnb.com/users/show/293373619</a></td>
+      <td>Jihane</td>
+      <td>Brighton</td>
+      <td>42.34418</td>
+      <td>-71.15440</td>
+      <td>Private room in bed and breakfast</td>
+      <td>Private room</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>43.00</td>
+      <td>28.0</td>
+      <td>333</td>
+      <td>2</td>
+      <td>Missing</td>
+      <td>Jihane</td>
+      <td>293373619.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>106.197933</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>40258908</td>
+      <td><a href="https://www.airbnb.com/rooms/40258908" target="_blank">https://www.airbnb.com/rooms/40258908</a></td>
+      <td>38-3</td>
+      <td>Spacious bedroom</td>
+      <td>CorpGroup38</td>
+      <td><a href="https://www.airbnb.com/users/show/293373619" target="_blank">https://www.airbnb.com/users/show/293373619</a></td>
+      <td>Jihane</td>
+      <td>Brighton</td>
+      <td>42.34251</td>
+      <td>-71.15373</td>
+      <td>Private room in apartment</td>
+      <td>Private room</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>48.00</td>
+      <td>91.0</td>
+      <td>253</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>Jihane</td>
+      <td>293373619.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>128.335046</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>40483415</td>
+      <td><a href="https://www.airbnb.com/rooms/40483415" target="_blank">https://www.airbnb.com/rooms/40483415</a></td>
+      <td>38-3</td>
+      <td>Nice rm on Green T 10 mins wlk to BC sumer discont</td>
+      <td>CorpGroup38</td>
+      <td><a href="https://www.airbnb.com/users/show/293373619" target="_blank">https://www.airbnb.com/users/show/293373619</a></td>
+      <td>Jihane</td>
+      <td>Brighton</td>
+      <td>42.34202</td>
+      <td>-71.15380</td>
+      <td>Private room in bed and breakfast</td>
+      <td>Private room</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>41.00</td>
+      <td>28.0</td>
+      <td>305</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>Jihane</td>
+      <td>293373619.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>80.087380</td>
+      <td>2020-08-31</td>
+    </tr>
+    <tr>
+      <td>40540038</td>
+      <td><a href="https://www.airbnb.com/rooms/40540038" target="_blank">https://www.airbnb.com/rooms/40540038</a></td>
+      <td>38-1</td>
+      <td>spacious rm 10 min walkTo Bc 3min greenT &Elz hosp</td>
+      <td>CorpGroup38</td>
+      <td><a href="https://www.airbnb.com/users/show/293373619" target="_blank">https://www.airbnb.com/users/show/293373619</a></td>
+      <td>Jihane</td>
+      <td>Brighton</td>
+      <td>42.34405</td>
+      <td>-71.15407</td>
+      <td>Private room in bed and breakfast</td>
+      <td>Private room</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>48.29</td>
+      <td>28.0</td>
+      <td>365</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>Jihane</td>
+      <td>293373619.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>17.854601</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>40973792</td>
+      <td><a href="https://www.airbnb.com/rooms/40973792" target="_blank">https://www.airbnb.com/rooms/40973792</a></td>
+      <td>38-2</td>
+      <td>Spacious room near BC and green T</td>
+      <td>CorpGroup38</td>
+      <td><a href="https://www.airbnb.com/users/show/293373619" target="_blank">https://www.airbnb.com/users/show/293373619</a></td>
+      <td>Jihane</td>
+      <td>Brighton</td>
+      <td>42.34387</td>
+      <td>-71.15268</td>
+      <td>Private room in bed and breakfast</td>
+      <td>Private room</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>55.00</td>
+      <td>28.0</td>
+      <td>356</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>Jihane</td>
+      <td>293373619.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>50.900315</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>40988554</td>
+      <td><a href="https://www.airbnb.com/rooms/40988554" target="_blank">https://www.airbnb.com/rooms/40988554</a></td>
+      <td>38-2</td>
+      <td>Very spacious room near green T and BC</td>
+      <td>CorpGroup38</td>
+      <td><a href="https://www.airbnb.com/users/show/293373619" target="_blank">https://www.airbnb.com/users/show/293373619</a></td>
+      <td>Jihane</td>
+      <td>Brighton</td>
+      <td>42.34343</td>
+      <td>-71.15251</td>
+      <td>Private room in bed and breakfast</td>
+      <td>Private room</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>53.00</td>
+      <td>28.0</td>
+      <td>255</td>
+      <td>2</td>
+      <td>Missing</td>
+      <td>Jihane</td>
+      <td>293373619.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>123.251351</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>41745395</td>
+      <td><a href="https://www.airbnb.com/rooms/41745395" target="_blank">https://www.airbnb.com/rooms/41745395</a></td>
+      <td>38-1</td>
+      <td>Spacious Br in Brighton 2 min walk greenT & 10 BC</td>
+      <td>CorpGroup38</td>
+      <td><a href="https://www.airbnb.com/users/show/293373619" target="_blank">https://www.airbnb.com/users/show/293373619</a></td>
+      <td>Jihane</td>
+      <td>Brighton</td>
+      <td>42.34388</td>
+      <td>-71.15382</td>
+      <td>Private room in bed and breakfast</td>
+      <td>Private room</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>49.00</td>
+      <td>28.0</td>
+      <td>365</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>Jihane</td>
+      <td>293373619.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>94.156332</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>42307264</td>
+      <td><a href="https://www.airbnb.com/rooms/42307264" target="_blank">https://www.airbnb.com/rooms/42307264</a></td>
+      <td>38-1</td>
+      <td>Nice location 10 mins Bc and 3 min to green T</td>
+      <td>CorpGroup38</td>
+      <td><a href="https://www.airbnb.com/users/show/293373619" target="_blank">https://www.airbnb.com/users/show/293373619</a></td>
+      <td>Jihane</td>
+      <td>Brighton</td>
+      <td>42.34424</td>
+      <td>-71.15382</td>
+      <td>Private room in bed and breakfast</td>
+      <td>Private room</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>57.00</td>
+      <td>28.0</td>
+      <td>365</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>Jihane</td>
+      <td>293373619.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>78.966409</td>
+      <td>2020-09-01</td>
+    </tr>
+    <tr>
+      <td>43610374</td>
+      <td><a href="https://www.airbnb.com/rooms/43610374" target="_blank">https://www.airbnb.com/rooms/43610374</a></td>
+      <td>38-2</td>
+      <td>Cozy rm 2 min to grn T & 15 mns walk BC & ELz hosp</td>
+      <td>CorpGroup38</td>
+      <td><a href="https://www.airbnb.com/users/show/293373619" target="_blank">https://www.airbnb.com/users/show/293373619</a></td>
+      <td>Jihane</td>
+      <td>Brighton</td>
+      <td>42.34400</td>
+      <td>-71.15247</td>
+      <td>Private room in bed and breakfast</td>
+      <td>Private room</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>38.00</td>
+      <td>28.0</td>
+      <td>280</td>
+      <td>0</td>
+      <td>Missing</td>
+      <td>Jihane</td>
+      <td>293373619.0</td>
+      <td>No license claimed</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>No license claimed</td>
+      <td>No license claimed</td>
+      <td>87.968833</td>
+      <td>2020-09-01</td>
+    </tr>
+  </tbody>
+</table>
+<p>10 rows × 32 columns</p>
+        </p>  
+      </div>
+      </div>
+
+    </div>
+    
+    
+
+    
+        <hr class='hr-lite'>
+
+        <h3>Host License Details</h3>
+        <p class='text-lite' style='font-size:.97em; margin-bottom:0'>
+             Cross-referenced with offical <a target='blank' href='https://www.boston.gov/departments/inspectional-services'>ISD</a> data
+        </p>
+
+        <table class='listings-status-legend'>
+                            
+                            <tr style='border-bottom:1px solid #9c9c9c;' >
+                                <td>  
+                                   <p class='text-lite'
+                                      style='margin-bottom:8px'>
+                                       <b>listings</b><p>
+                                </td>
+                                
+                                <td>  
+                                </td>
+                                                                
+                                <td>
+                                    <p class='text-lite'
+                                       style='margin-bottom:8px'>
+                                        <b>license</b>
+                                    </p>
+                                </td>
+                                </tr>                           
+                            <tr>
+                                
+                                <td style='text-align:right'>  
+                                    <p>
+                                    10 x</p> 
+                                </td>
+                                
+                                <td>                                      
+                                <i class='fa fa-ban'
+                                   style='color:#FF9800;
+                                   margin: 0 3px; font-size:16px'></i>
+                                </td>
+                                
+                                <td><p>
+                                    No license claimed
+                                </p></td></tr></table>
+        
+        <hr class='hr-lite' id='clusters'>
+
+        <h3 style='margin-bottom:18px'>Host clusters</h3>
+        
+        
+        <a href='/cluster/38-1.html'>
+        <div class='centroid-list-item'>
+            <p style='font-size:1.2em'><b>38-1</b> (4 listings)</p>
+            <p><span class='text-lite'>At or near:</span> 99 Chestnut Hill Avenue, Brighton </p>
+            <a href='/cluster/38-1.html'>View cluster listings & details &#8594;</a>
+        </div>
+        </a>
+
+        
+        <a href='/cluster/38-2.html'>
+        <div class='centroid-list-item'>
+            <p style='font-size:1.2em'><b>38-2</b> (3 listings)</p>
+            <p><span class='text-lite'>At or near:</span> 98 Ledgemere Road, Brighton </p>
+            <a href='/cluster/38-2.html'>View cluster listings & details &#8594;</a>
+        </div>
+        </a>
+
+        
+        <a href='/cluster/38-3.html'>
+        <div class='centroid-list-item'>
+            <p style='font-size:1.2em'><b>38-3</b> (3 listings)</p>
+            <p><span class='text-lite'>At or near:</span> 148 Chestnut Hill Avenue, Brighton </p>
+            <a href='/cluster/38-3.html'>View cluster listings & details &#8594;</a>
+        </div>
+        </a>
+
+        
+        
+        <hr class='hr-lite' id='listings'>
+                                
+        <a id="listings-collapse-btn" style='margin:15px 0'>
+            [ + ] Show listings
+        </a>
+
+        <div id='listings-collapsed'>
+
+            <h3 style='margin:18px 0 8px'>Listings</h3>
+            <p class='text-lite' style='font-size:13px; margin: 2px 0 12px'>
+                <b>Note:</b> If a listing link redirects to the Airbnb.com
+                homepage, it indicates the host has removed the listing
+                since the last update from <a href='http://insideairbnb.com/'>InsideAirbnb</a>.</p>
+            <p style='font-size:.9em;text-align:right'>
+                        <a href='/host/CorpGroup38—data.csv' download="host-CorpGroup38_listings.csv">
+                            <i class="fa fa-download" aria-hidden="true"></i>
+                            Download host data as a CSV </a>
+        <a href='https://www.airbnb.com/rooms/38478429' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>38478429</b></p>
+                <p style='font-size:1.1em'>Nice bedroom Brighton close to T ,BC,Downtown</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/38478429' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/38843864' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>38843864</b></p>
+                <p style='font-size:1.1em'>Great Room Brighton BC Green T</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/38843864' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/40258908' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>40258908</b></p>
+                <p style='font-size:1.1em'>Spacious bedroom</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>91</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/40258908' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/40483415' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>40483415</b></p>
+                <p style='font-size:1.1em'>Nice rm on Green T 10 mins wlk to BC sumer discont</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/40483415' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/40540038' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>40540038</b></p>
+                <p style='font-size:1.1em'>spacious rm 10 min walkTo Bc 3min greenT &Elz hosp</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/40540038' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/40973792' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>40973792</b></p>
+                <p style='font-size:1.1em'>Spacious room near BC and green T</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/40973792' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/40988554' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>40988554</b></p>
+                <p style='font-size:1.1em'>Very spacious room near green T and BC</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/40988554' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/41745395' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>41745395</b></p>
+                <p style='font-size:1.1em'>Spacious Br in Brighton 2 min walk greenT & 10 BC</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/41745395' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/42307264' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>42307264</b></p>
+                <p style='font-size:1.1em'>Nice location 10 mins Bc and 3 min to green T</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/42307264' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+        <a href='https://www.airbnb.com/rooms/43610374' target='_blank'>
+        <div class='centroid-list-item'>
+            
+                <p style='font-size:1em'><b>43610374</b></p>
+                <p style='font-size:1.1em'>Cozy rm 2 min to grn T & 15 mns walk BC & ELz hosp</p>
+            
+                <p> <span class='text-lite'>Minimum nights per stay:</span>
+                    <b>28</b></p>
+                <p> <span class='text-lite'>License:</span>
+                    <b>Missing</b> (No license claimed)</p>
+                    
+                <a href='https://www.airbnb.com/rooms/43610374' target='_blank'>View listing photos &#8594;</a>
+            
+        </div>
+        </a>
+
+        
+
+        </div>
+
+
+
+                
+                </div>
+                
+            </div>
+
+            <div id='map-container'>
+                <!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://rawcdn.githack.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css"/>
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_65bf7ca2d14446eea7803710763751fa {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+         <div style="
+         position: fixed; z-index:699; 
+         bottom: 16px; right: 0; width: auto; height: auto; 
+         background-color:white;
+         border-bottom:1px solid #DEDEDE;
+         opacity: .7;
+         padding: 3px 8px;
+         font-size:12px">
+            <span style='margin: 0px;'>
+                <a style='color: black !important' target='blank' href='insideairbnb.com'>InsideAirbnb</a>:
+                    Sep. 2020 | STR registry: Aug. 2020
+            </span>
+          </div> 
+    
+            <div class="folium-map" id="map_65bf7ca2d14446eea7803710763751fa" ></div>
+        
+</body>
+<script>    
+    
+            var map_65bf7ca2d14446eea7803710763751fa = L.map(
+                "map_65bf7ca2d14446eea7803710763751fa",
+                {
+                    center: [42.34313, -71.153435],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 15,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_ff318acbacd8414d867767369fdf9c40 = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_65bf7ca2d14446eea7803710763751fa);
+        
+    
+            var feature_group_178d3a94a53745bdae097f05cdeed71c = L.featureGroup(
+                {}
+            ).addTo(map_65bf7ca2d14446eea7803710763751fa);
+        
+    
+            var marker_f940f1ffd4b94b87b208dae9c9a64ac4 = L.marker(
+                [42.34197289999999, -71.1526497],
+                {}
+            ).addTo(feature_group_178d3a94a53745bdae097f05cdeed71c);
+        
+    
+            var icon_03cef25efcc7461fa9cb8cbc6835f233 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "building", "iconColor": "#5E35B1", "markerColor": "lightgray", "prefix": "fa"}
+            );
+            marker_f940f1ffd4b94b87b208dae9c9a64ac4.setIcon(icon_03cef25efcc7461fa9cb8cbc6835f233);
+        
+    
+            marker_f940f1ffd4b94b87b208dae9c9a64ac4.bindTooltip(
+                `<div>
+                     <b style='font-size:.88em'>Known STR Building</b><br><b style='font-size:1.2em; color:#5E35B1'>30 Wallingford Rd, Brighton MA 02135</b><br>Units: (unknown) | Floors: 10.0 | Source: BigBldgDB<br><b>Known operators: </b><br> &#8226; unknown<div style='height:4px'></div><span style='color:#448AFF' >Distance from cluster center: <b>856 ft.</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_6f453321a2e04d02b2bb3d27dc19a3d9 = L.circle(
+                [42.3440875, -71.1540275],
+                {"bubblingMouseEvents": true, "color": "#448AFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.43853694816287986, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.7385369481628798, "radius": 80.0, "stroke": true, "weight": 2}
+            ).addTo(map_65bf7ca2d14446eea7803710763751fa);
+        
+    
+        var popup_6d8428cbeaa84c3295a2582b7f3e1756 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_822a0af423c54dc89b552554030eb30d = $(`<div id="html_822a0af423c54dc89b552554030eb30d" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/38-1.html'>                                 <b>Cluster 38-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_6d8428cbeaa84c3295a2582b7f3e1756.setContent(html_822a0af423c54dc89b552554030eb30d);
+        
+
+        circle_6f453321a2e04d02b2bb3d27dc19a3d9.bindPopup(popup_6d8428cbeaa84c3295a2582b7f3e1756)
+        ;
+
+        
+    
+    
+            circle_6f453321a2e04d02b2bb3d27dc19a3d9.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#448AFF'>
+        Cluster <b>38-1
+        </b></p>
+        <p style='font-size:1.0em; margin: 0 0 1px; color:#FF9800'><span style='color:black!important;font-size:.95em'>
+                <b>Listings license status:</b></span><br>
+            <i class="fa fa-ban"></i> No license claimed </p>
+        Host: <b>Jihane </b> | Listings: <b>4</b>
+        <br>Minimum  stay:  <b style='color:black'>
+            28 nights </b>  
+        
+        <br><span style='text-align:center; color:#448AFF'><b>Click for details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_4957a59d17a045028e92667c9244287c = L.circle(
+                [42.34220333333332, -71.15396333333331],
+                {"bubblingMouseEvents": true, "color": "#448AFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.4225426695675198, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.7225426695675198, "radius": 80.0, "stroke": true, "weight": 2}
+            ).addTo(map_65bf7ca2d14446eea7803710763751fa);
+        
+    
+        var popup_97224dc8d63f4a27b95b791138506deb = L.popup({"maxWidth": "100%"});
+
+        
+            var html_844cfc534eac45d9b8e8b94d82377741 = $(`<div id="html_844cfc534eac45d9b8e8b94d82377741" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/38-3.html'>                                 <b>Cluster 38-3</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_97224dc8d63f4a27b95b791138506deb.setContent(html_844cfc534eac45d9b8e8b94d82377741);
+        
+
+        circle_4957a59d17a045028e92667c9244287c.bindPopup(popup_97224dc8d63f4a27b95b791138506deb)
+        ;
+
+        
+    
+    
+            circle_4957a59d17a045028e92667c9244287c.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#448AFF'>
+        Cluster <b>38-3
+        </b></p>
+        <p style='font-size:1.0em; margin: 0 0 1px; color:#FF9800'><span style='color:black!important;font-size:.95em'>
+                <b>Listings license status:</b></span><br>
+            <i class="fa fa-ban"></i> No license claimed </p>
+        Host: <b>Jihane </b> | Listings: <b>3</b>
+        <br>Minimum  stay:  <b style='color:black'>
+            28 nights </b>  
+        
+        <br><span style='text-align:center; color:#448AFF'><b>Click for details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_1d1a084739cc427b97505a3c4a68c579 = L.circle(
+                [42.34376666666665, -71.15255333333333],
+                {"bubblingMouseEvents": true, "color": "#448AFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.4225426695675198, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.7225426695675198, "radius": 80.0, "stroke": true, "weight": 2}
+            ).addTo(map_65bf7ca2d14446eea7803710763751fa);
+        
+    
+        var popup_9787fa5818f042a78531cc654903865d = L.popup({"maxWidth": "100%"});
+
+        
+            var html_afdecdc43b6f411a80afb16c1c1f1eda = $(`<div id="html_afdecdc43b6f411a80afb16c1c1f1eda" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/38-2.html'>                                 <b>Cluster 38-2</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_9787fa5818f042a78531cc654903865d.setContent(html_afdecdc43b6f411a80afb16c1c1f1eda);
+        
+
+        circle_1d1a084739cc427b97505a3c4a68c579.bindPopup(popup_9787fa5818f042a78531cc654903865d)
+        ;
+
+        
+    
+    
+            circle_1d1a084739cc427b97505a3c4a68c579.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#448AFF'>
+        Cluster <b>38-2
+        </b></p>
+        <p style='font-size:1.0em; margin: 0 0 1px; color:#FF9800'><span style='color:black!important;font-size:.95em'>
+                <b>Listings license status:</b></span><br>
+            <i class="fa fa-ban"></i> No license claimed </p>
+        Host: <b>Jihane </b> | Listings: <b>3</b>
+        <br>Minimum  stay:  <b style='color:black'>
+            28 nights </b>  
+        
+        <br><span style='text-align:center; color:#448AFF'><b>Click for details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_703eab31bd4c43b595eb9251d93215e5 = L.circle(
+                [42.3440875, -71.1540275],
+                {"bubblingMouseEvents": true, "color": "#448AFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#448AFF", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.7, "radius": 6, "stroke": true, "weight": 4}
+            ).addTo(map_65bf7ca2d14446eea7803710763751fa);
+        
+    
+        var popup_333878b452b54822a00f635aa1e200eb = L.popup({"maxWidth": "100%"});
+
+        
+            var html_54535776de454a5480ec3ef0ee88c7e2 = $(`<div id="html_54535776de454a5480ec3ef0ee88c7e2" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/38-1.html'>                                 <b>Cluster 38-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_333878b452b54822a00f635aa1e200eb.setContent(html_54535776de454a5480ec3ef0ee88c7e2);
+        
+
+        circle_703eab31bd4c43b595eb9251d93215e5.bindPopup(popup_333878b452b54822a00f635aa1e200eb)
+        ;
+
+        
+    
+    
+            circle_703eab31bd4c43b595eb9251d93215e5.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#448AFF'>
+        Cluster <b>38-1
+        </b></p>
+        <p style='font-size:1.0em; margin: 0 0 1px; color:#FF9800'><span style='color:black!important;font-size:.95em'>
+                <b>Listings license status:</b></span><br>
+            <i class="fa fa-ban"></i> No license claimed </p>
+        Host: <b>Jihane </b> | Listings: <b>4</b>
+        <br>Minimum  stay:  <b style='color:black'>
+            28 nights </b>  
+        
+        <br><span style='text-align:center; color:#448AFF'><b>Click for details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_91bd50eb7baa4227be0f5ea1c5985067 = L.circle(
+                [42.34220333333332, -71.15396333333331],
+                {"bubblingMouseEvents": true, "color": "#448AFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#448AFF", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.7, "radius": 6, "stroke": true, "weight": 4}
+            ).addTo(map_65bf7ca2d14446eea7803710763751fa);
+        
+    
+        var popup_57db4e612dd4415e85d10982eaafeca0 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_94f784c13682489abb713da9654a449e = $(`<div id="html_94f784c13682489abb713da9654a449e" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/38-3.html'>                                 <b>Cluster 38-3</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_57db4e612dd4415e85d10982eaafeca0.setContent(html_94f784c13682489abb713da9654a449e);
+        
+
+        circle_91bd50eb7baa4227be0f5ea1c5985067.bindPopup(popup_57db4e612dd4415e85d10982eaafeca0)
+        ;
+
+        
+    
+    
+            circle_91bd50eb7baa4227be0f5ea1c5985067.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#448AFF'>
+        Cluster <b>38-3
+        </b></p>
+        <p style='font-size:1.0em; margin: 0 0 1px; color:#FF9800'><span style='color:black!important;font-size:.95em'>
+                <b>Listings license status:</b></span><br>
+            <i class="fa fa-ban"></i> No license claimed </p>
+        Host: <b>Jihane </b> | Listings: <b>3</b>
+        <br>Minimum  stay:  <b style='color:black'>
+            28 nights </b>  
+        
+        <br><span style='text-align:center; color:#448AFF'><b>Click for details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_d5a2ecbf38fd4fd48148b3f3f132c9e8 = L.circle(
+                [42.34376666666665, -71.15255333333333],
+                {"bubblingMouseEvents": true, "color": "#448AFF", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#448AFF", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.7, "radius": 6, "stroke": true, "weight": 4}
+            ).addTo(map_65bf7ca2d14446eea7803710763751fa);
+        
+    
+        var popup_636578d744924c3bb43311282532ffe9 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_c64ca09125eb4b9d948efe9c37c95a04 = $(`<div id="html_c64ca09125eb4b9d948efe9c37c95a04" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/38-2.html'>                                 <b>Cluster 38-2</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_636578d744924c3bb43311282532ffe9.setContent(html_c64ca09125eb4b9d948efe9c37c95a04);
+        
+
+        circle_d5a2ecbf38fd4fd48148b3f3f132c9e8.bindPopup(popup_636578d744924c3bb43311282532ffe9)
+        ;
+
+        
+    
+    
+            circle_d5a2ecbf38fd4fd48148b3f3f132c9e8.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#448AFF'>
+        Cluster <b>38-2
+        </b></p>
+        <p style='font-size:1.0em; margin: 0 0 1px; color:#FF9800'><span style='color:black!important;font-size:.95em'>
+                <b>Listings license status:</b></span><br>
+            <i class="fa fa-ban"></i> No license claimed </p>
+        Host: <b>Jihane </b> | Listings: <b>3</b>
+        <br>Minimum  stay:  <b style='color:black'>
+            28 nights </b>  
+        
+        <br><span style='text-align:center; color:#448AFF'><b>Click for details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var feature_group_4146e99aa636402baad8e96645ab0579 = L.featureGroup(
+                {}
+            ).addTo(map_65bf7ca2d14446eea7803710763751fa);
+        
+    
+            var circle_578d58d235184fd3993e1b9403d7abf6 = L.circle(
+                [42.34208, -71.15436],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_4146e99aa636402baad8e96645ab0579);
+        
+    
+        var popup_f0e05f827a9245e4ad787bde90ed7a8f = L.popup({"maxWidth": "100%"});
+
+        
+            var html_094954febedc47038362d58f824a4d88 = $(`<div id="html_094954febedc47038362d58f824a4d88" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/38-3.html'>                                 <b>Cluster 38-3</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_f0e05f827a9245e4ad787bde90ed7a8f.setContent(html_094954febedc47038362d58f824a4d88);
+        
+
+        circle_578d58d235184fd3993e1b9403d7abf6.bindPopup(popup_f0e05f827a9245e4ad787bde90ed7a8f)
+        ;
+
+        
+    
+    
+            circle_578d58d235184fd3993e1b9403d7abf6.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>38478429</b></p>
+        Cluster: <span style='color:#448AFF'><b>38-3</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Jihane </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_f47432a777b94a7ebadc120296976cd0 = L.circle(
+                [42.34418, -71.1544],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_4146e99aa636402baad8e96645ab0579);
+        
+    
+        var popup_89fa7d30b7ec4d2b99d02defeba3939b = L.popup({"maxWidth": "100%"});
+
+        
+            var html_06282484312c45d18279a792f46ee91a = $(`<div id="html_06282484312c45d18279a792f46ee91a" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/38-1.html'>                                 <b>Cluster 38-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_89fa7d30b7ec4d2b99d02defeba3939b.setContent(html_06282484312c45d18279a792f46ee91a);
+        
+
+        circle_f47432a777b94a7ebadc120296976cd0.bindPopup(popup_89fa7d30b7ec4d2b99d02defeba3939b)
+        ;
+
+        
+    
+    
+            circle_f47432a777b94a7ebadc120296976cd0.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>38843864</b></p>
+        Cluster: <span style='color:#448AFF'><b>38-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Jihane </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_365d917159be4240a52e4450c694ea8f = L.circle(
+                [42.34251, -71.15373000000002],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_4146e99aa636402baad8e96645ab0579);
+        
+    
+        var popup_5542e0d25fec42659bcfb2b5d978cc7c = L.popup({"maxWidth": "100%"});
+
+        
+            var html_666bbbdda4e444c5a1d64b5ab6fef952 = $(`<div id="html_666bbbdda4e444c5a1d64b5ab6fef952" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/38-3.html'>                                 <b>Cluster 38-3</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_5542e0d25fec42659bcfb2b5d978cc7c.setContent(html_666bbbdda4e444c5a1d64b5ab6fef952);
+        
+
+        circle_365d917159be4240a52e4450c694ea8f.bindPopup(popup_5542e0d25fec42659bcfb2b5d978cc7c)
+        ;
+
+        
+    
+    
+            circle_365d917159be4240a52e4450c694ea8f.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>40258908</b></p>
+        Cluster: <span style='color:#448AFF'><b>38-3</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Jihane </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_594c11a0ac38415baa88f80dfae17774 = L.circle(
+                [42.34202, -71.1538],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_4146e99aa636402baad8e96645ab0579);
+        
+    
+        var popup_72488ae836e64d18bd5145895f5d6055 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_f875dcd8a73442b1b02667755961b0ad = $(`<div id="html_f875dcd8a73442b1b02667755961b0ad" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/38-3.html'>                                 <b>Cluster 38-3</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_72488ae836e64d18bd5145895f5d6055.setContent(html_f875dcd8a73442b1b02667755961b0ad);
+        
+
+        circle_594c11a0ac38415baa88f80dfae17774.bindPopup(popup_72488ae836e64d18bd5145895f5d6055)
+        ;
+
+        
+    
+    
+            circle_594c11a0ac38415baa88f80dfae17774.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>40483415</b></p>
+        Cluster: <span style='color:#448AFF'><b>38-3</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Jihane </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_6f74e827e8c54fb0b34a238a481f6cff = L.circle(
+                [42.34405, -71.15406999999998],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_4146e99aa636402baad8e96645ab0579);
+        
+    
+        var popup_45e3838d2a6d4eefb0311c8eafd66ab1 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_3f21a97887564e29a01c6e7639a02099 = $(`<div id="html_3f21a97887564e29a01c6e7639a02099" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/38-1.html'>                                 <b>Cluster 38-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_45e3838d2a6d4eefb0311c8eafd66ab1.setContent(html_3f21a97887564e29a01c6e7639a02099);
+        
+
+        circle_6f74e827e8c54fb0b34a238a481f6cff.bindPopup(popup_45e3838d2a6d4eefb0311c8eafd66ab1)
+        ;
+
+        
+    
+    
+            circle_6f74e827e8c54fb0b34a238a481f6cff.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>40540038</b></p>
+        Cluster: <span style='color:#448AFF'><b>38-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Jihane </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_5668a50a2a5e4d1e82b66bec9c923464 = L.circle(
+                [42.34387, -71.15268],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_4146e99aa636402baad8e96645ab0579);
+        
+    
+        var popup_a00ab84d7e75434f863367a4ceba4843 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_e5039e6542864d2f927da824bd6f6669 = $(`<div id="html_e5039e6542864d2f927da824bd6f6669" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/38-2.html'>                                 <b>Cluster 38-2</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_a00ab84d7e75434f863367a4ceba4843.setContent(html_e5039e6542864d2f927da824bd6f6669);
+        
+
+        circle_5668a50a2a5e4d1e82b66bec9c923464.bindPopup(popup_a00ab84d7e75434f863367a4ceba4843)
+        ;
+
+        
+    
+    
+            circle_5668a50a2a5e4d1e82b66bec9c923464.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>40973792</b></p>
+        Cluster: <span style='color:#448AFF'><b>38-2</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Jihane </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_0f8b460c2e1f475288f38707f1ebd579 = L.circle(
+                [42.34343, -71.15250999999998],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_4146e99aa636402baad8e96645ab0579);
+        
+    
+        var popup_4884611779274598b9af6df952ba6b75 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_98e7a1e4fbbd452db296d533bb2865ae = $(`<div id="html_98e7a1e4fbbd452db296d533bb2865ae" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/38-2.html'>                                 <b>Cluster 38-2</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_4884611779274598b9af6df952ba6b75.setContent(html_98e7a1e4fbbd452db296d533bb2865ae);
+        
+
+        circle_0f8b460c2e1f475288f38707f1ebd579.bindPopup(popup_4884611779274598b9af6df952ba6b75)
+        ;
+
+        
+    
+    
+            circle_0f8b460c2e1f475288f38707f1ebd579.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>40988554</b></p>
+        Cluster: <span style='color:#448AFF'><b>38-2</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Jihane </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_b3caf084cf2346dfbe8568e92a3259f0 = L.circle(
+                [42.34388, -71.15382],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_4146e99aa636402baad8e96645ab0579);
+        
+    
+        var popup_4feb62681cfb4c01a19542f26fe3fb28 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_929e58797b9943978a51598ffa74c85b = $(`<div id="html_929e58797b9943978a51598ffa74c85b" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/38-1.html'>                                 <b>Cluster 38-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_4feb62681cfb4c01a19542f26fe3fb28.setContent(html_929e58797b9943978a51598ffa74c85b);
+        
+
+        circle_b3caf084cf2346dfbe8568e92a3259f0.bindPopup(popup_4feb62681cfb4c01a19542f26fe3fb28)
+        ;
+
+        
+    
+    
+            circle_b3caf084cf2346dfbe8568e92a3259f0.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>41745395</b></p>
+        Cluster: <span style='color:#448AFF'><b>38-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Jihane </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_6885e7afc5374069af5b4a70045672e6 = L.circle(
+                [42.34424, -71.15382],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_4146e99aa636402baad8e96645ab0579);
+        
+    
+        var popup_61bc65e56c804cadab971019ca52d1f1 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_caf2163552c84fa38cd52abb8f6f1f5a = $(`<div id="html_caf2163552c84fa38cd52abb8f6f1f5a" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/38-1.html'>                                 <b>Cluster 38-1</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_61bc65e56c804cadab971019ca52d1f1.setContent(html_caf2163552c84fa38cd52abb8f6f1f5a);
+        
+
+        circle_6885e7afc5374069af5b4a70045672e6.bindPopup(popup_61bc65e56c804cadab971019ca52d1f1)
+        ;
+
+        
+    
+    
+            circle_6885e7afc5374069af5b4a70045672e6.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>42307264</b></p>
+        Cluster: <span style='color:#448AFF'><b>38-1</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Jihane </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_60005e2590514fcebde35d31df289239 = L.circle(
+                [42.344, -71.15247],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF9800", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_4146e99aa636402baad8e96645ab0579);
+        
+    
+        var popup_4e04f4a19f924a78adea5fe5cf9e1e2d = L.popup({"maxWidth": "100%"});
+
+        
+            var html_5775b656c6354582833a3e4479573caa = $(`<div id="html_5775b656c6354582833a3e4479573caa" style="width: 100.0%; height: 100.0%;"><div style="white-space: nowrap; text-align:center">                             <a class='centroid-link-btn'                                href='/cluster/38-2.html'>                                 <b>Cluster 38-2</b> |                                 Details <i class="fa fa-arrow-right" aria-hidden="true"></i>                                                      </div>                         </div>`)[0];
+            popup_4e04f4a19f924a78adea5fe5cf9e1e2d.setContent(html_5775b656c6354582833a3e4479573caa);
+        
+
+        circle_60005e2590514fcebde35d31df289239.bindPopup(popup_4e04f4a19f924a78adea5fe5cf9e1e2d)
+        ;
+
+        
+    
+    
+            circle_60005e2590514fcebde35d31df289239.bindTooltip(
+                `<div>
+                     
+        <p style='font-size:1.25em; margin:0; color:#BF0000'>Listing <b>43610374</b></p>
+        Cluster: <span style='color:#448AFF'><b>38-2</b></span> | 
+        
+        Host: <span style='color:#665c2c'><b>Jihane </b></span>
+        
+        <br>License:
+                 <i style='font-size:.9em; color:#FF9800';
+                       class='fa fa-file-text'></i>
+                <b> Missing</b>
+        <br>License: <span style='color:#FF9800'> <b>No license claimed</b> </span>
+        
+                    <br><b style='color:#448AFF'>Click or see cluster for more details</b></span>
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var layer_control_0b701ae6076b474ebc62c97dc35b8288 = {
+                base_layers : {
+                },
+                overlays :  {
+                    "\u003cspan style=\u0027font-size:15px\u0027\u003e\n                        Known STR buildings near large clusters\n                        \u003ci class=\u0027fa fa-building\u0027\n                           style=\u0027color:#5E35B1; margin: 0 3px;\u0027\u003e\u003c/i\u003e\n                        \u003c/span\u003e" : feature_group_178d3a94a53745bdae097f05cdeed71c,
+                    "\u003cspan style=\u0027font-size:15px\u0027\u003e\n                        Include individual listings on map\n                        \u003ci class=\u0027fa fa-dot-circle-o\u0027\n                           style=\u0027color:red; margin: 0 3px;\u0027\u003e\u003c/i\u003e\n                    \u003c/span\u003e" : feature_group_4146e99aa636402baad8e96645ab0579,
+                },
+            };
+            L.control.layers(
+                layer_control_0b701ae6076b474ebc62c97dc35b8288.base_layers,
+                layer_control_0b701ae6076b474ebc62c97dc35b8288.overlays,
+                {"autoZIndex": true, "collapsed": false, "position": "topright"}
+            ).addTo(map_65bf7ca2d14446eea7803710763751fa);
+        
+</script>
+            </div>
+
+        </div>
+        
+        <script>
+            
+        document.getElementById("how-collapse-btn"
+            ).addEventListener("click", function() {
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight){
+              content.style.maxHeight = null;
+              this.innerHTML = "[ + ] Learn more... ";
+            } else {
+              content.style.maxHeight = content.scrollHeight + "px";
+              this.innerHTML = "[ &ndash; ] Learn less... ";
+            } 
+        });
+    </script>
+    <script>
+    
+    
+    var viewportHeight = $('.banner').outerHeight();
+    $('.banner').css({ height: viewportHeight });
+    
+    
+    if ($('body').hasClass('mobile')) {
+      var viewportHeight = $('.banner').outerHeight();
+      $('.banner').css({ height: viewportHeight });
+    }
+
+
+    </script>
+    <script>
+    
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on the button, open the modal
+        btn.onclick = function() {
+          modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+
+    </script>
+    <script>
+    
+    
+        document.getElementById("mobile-switcher"
+            ).addEventListener("click", switch_mobile_menu);
+        document.getElementById("mobile-switch-link"
+            ).addEventListener("click", switch_mobile_menu);
+        document.getElementById("mobile-menu-circle"
+            ).addEventListener("click", switch_mobile_menu);
+            
+        var mapOpen = false
+        function switch_mobile_menu() {
+
+            var navbar = document.getElementById("nav-banner");
+            var sidebar = document.getElementById("sidebar-container");
+            var map = document.getElementById("map-container");
+            var slabel = document.getElementById("mobile-switch-label");
+            var openico = document.getElementById("open-menu-icon");
+            var slink = document.getElementById("mobile-switch-link");
+            var menucir = document.getElementById("mobile-menu-circle");
+
+
+            if ( mapOpen ){
+                  sidebar.setAttribute("style","left:0") ;
+
+                  map.setAttribute("style","left:calc(100vw - 100px)") ;
+                  map.setAttribute("style","width:800px") ;
+
+                  slabel.innerHTML = "<b>Map </b> <i class='fa fa-map' aria-hidden='true'></i>";
+                  
+                  openico.setAttribute("style","visibility:hidden") ;
+                  menucir.setAttribute("style","left:-100px") ;
+                  
+                  slink.setAttribute("style","right:0") ;
+                  slink.setAttribute("style","width:30px") ;
+                  
+
+                  mapOpen = false;
+            }
+            else {
+                  sidebar.setAttribute("style","left:calc(-100vw + 40px)") ; 
+
+                  map.setAttribute("style","left:10px !important") ;
+                  map.setAttribute("style","width:calc(100vw - 10px) !important") ;
+
+                  slabel.innerHTML = "<b>Details </b> <i class='fa fa-bars' aria-hidden='true'></i>";
+                  
+                  openico.setAttribute("style","visibility:visible") ;
+                  menucir.setAttribute("style","left:-30px") ;
+
+                  slink.setAttribute("style","width:20px") ;
+                  slink.setAttribute("style","left:0px") ;
+
+                  mapOpen = true;
+            } 
+        };
+
+    
+    </script>
+    <script>
+    
+        document.getElementById("license-collapse-btn"
+            ).addEventListener("click", function() {
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight){
+              content.style.maxHeight = null;
+              this.innerHTML = "[ + ] Show license details";
+            } else {
+              content.style.maxHeight = content.scrollHeight + "px";
+              this.innerHTML = "[ &ndash; ] Hide license details";
+              setTimeout( function (){
+                      location.hash = "#licenses";
+                            }, 250);
+            } 
+            
+        });
+    </script>
+    <script>
+    
+        document.getElementById("listings-collapse-btn"
+            ).addEventListener("click", function() {
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight){
+              content.style.maxHeight = null;
+              this.innerHTML = "[ + ] Show listings";
+            } else {
+              content.style.maxHeight = content.scrollHeight + "px";
+              this.innerHTML = "[ &ndash; ] Hide listings";              
+              setTimeout( function (){
+                      location.hash = "#listings";
+                            }, 250);
+            } 
+        });
+    </script>
+    <script>
+    
+        
+    function search_res(container, value) {
+    
+        var item = container.toLowerCase().replace(/\s+/g, '');                
+        var val = value.toLowerCase().replace(/\s+/g, '');
+        var returnValue = false;
+        var pos = item.indexOf(val);
+        if (pos >= 0) {
+            returnValue = true;
+        }
+        return returnValue;
+    }
+    
+    </script>
+    <script>
+    
+    document.getElementById('searchbar').addEventListener("click",
+        function(){
+                initOpenState = "True"
+                let x = document.getElementsByClassName('search-items');
+                var counter = 0
+                for (i = 0; i < x.length; i++) { 
+                    var dt = x[i].getAttribute("data-type");
+                    if (dt=="cluster") { 
+                        counter = counter + 1
+                        x[i].style.display="list-item"; 
+                    } 
+                    if (counter == 3) {
+                         break;
+                    }
+                } 
+                document.getElementById('search-list').style.maxHeight = "400px";
+                document.getElementById('search-list').style.padding = "0 15px 15px";
+                let msg_init = document.getElementById('search-init'); 
+                msg_init.style.maxHeight = "150px";
+                msg_init.style.margin = "8px";
+                
+        }
+    )
+    
+    
+    document.getElementById('searchbar').addEventListener("focusout",
+        function(){
+            let input = document.getElementById('searchbar').value;
+            if (input=="" && initOpenState !== "True"){
+                document.getElementById('search-list').style.maxHeight = "0";
+                document.getElementById('search-list').style.padding = "0 15px";
+            
+                let x = document.getElementsByClassName('search-items');
+                for (i = 0; i < x.length; i++) {  
+                    x[i].style.display="none"; 
+                } 
+                let msg_init = document.getElementById('search-init'); 
+                msg_init.style.maxHeight = "0";
+                msg_init.style.margin = "0";
+            }
+
+        }
+    )
+
+    
+    function search_item() { 
+        initOpenState = "False";
+        
+        let sb = document.getElementById('searchbar');
+        let input = document.getElementById('searchbar').value;
+        let searchList = document.getElementById('search-list');
+        searchList.scrollTop = 0;
+
+        let x = document.getElementsByClassName('search-items'); 
+        
+        let instruct = document.getElementById('search-instruct'); 
+        let alert = document.getElementById('search-alert'); 
+        let s_init = document.getElementById('search-init'); 
+        
+        let msg_init = document.getElementById('search-init'); 
+        msg_init.style.maxHeight = "0";
+        
+        var visible = 0
+        
+        if (sb !== null && sb.value === "") {
+
+            var counter = 0
+            for (i = 0; i < 10; i++) {  
+                    var dt = x[i].getAttribute("data-type");
+                    if (dt=="cluster") { 
+                        counter = counter + 1
+                        x[i].style.display="list-item"; 
+                    } 
+                    if (counter == 3) {
+                         break;
+                    }
+            } 
+        }
+        
+        else {
+            for (i = 0; i < x.length; i++) {
+            
+                if ( search_res(x[i].getAttribute("search-data"), input) ) { 
+                    x[i].style.display="list-item"; 
+                    visible += 1
+                } 
+                else { 
+                    x[i].style.display="none";
+                } 
+             } 
+        }
+
+        if (sb.value !== "") {
+                if (visible==0) {
+                    instruct.style.maxHeight = "0";
+                    instruct.transition = ".2";
+                    instruct.style.margin = "0";
+                    s_init.style.maxHeight = "0";
+                    s_init.transition = ".2s";
+                    s_init.style.margin = "0";
+                    
+                    alert.style.maxHeight = "150px";
+                    alert.style.margin = "8px";
+                   
+                    
+                    searchList.style.padding = "0";
+                    searchList.style.maxHeight = "0";
+                    
+
+                    }
+                else {
+                    instruct.innerHTML = "<b>" + visible.toString() + "</b> results" ;
+                    instruct.style.maxHeight = "150px";
+                    instruct.transition = "0";
+                    instruct.style.margin = "8px";
+                    
+                    
+                    s_init.style.maxHeight = "0";
+                    s_init.transition = ".2s";
+                    s_init.style.margin = "0";
+                    alert.style.maxHeight = "0";
+                    alert.transition = ".2s";
+                    alert.style.margin = "0";
+                    
+                    searchList.style.padding = "0 15px 15px ";
+                    searchList.style.maxHeight = "305px";                    
+                    }
+ 
+            
+          }         
+        else {
+            for (i = 0; i < x.length; i++) {  
+                 x[i].style.display="none";
+            } 
+            instruct.style.maxHeight = "0";
+            instruct.transition = ".2s";
+            instruct.style.margin = "0"
+            alert.style.maxHeight = "0";
+            alert.transition = ".2s";
+            alert.style.margin = "0";
+            s_init.style.maxHeight = "0";
+            s_init.style.margin = "0";
+            searchList.style.maxHeight = "0";
+            searchList.style.padding = "0";
+                    }       
+        }
+
+    
+        </script>
+
+    </body>
+
+    </html>
+    
