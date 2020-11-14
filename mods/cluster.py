@@ -91,8 +91,11 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
     # Parse & verify license numbers...
     print(f"  > Parsing license numbers")
     
+    # SEPTEMBER 2018: new data has a different price format
     if not config.old:
         listings.price = listings.price.apply(lambda x: float(''.join(x.replace(',', '').split('$')[1])))
+    
+    # encode claimed licenses (using keyword indicators)
     def parse_str_num(l): # from listings data
         license = str(l).lower()
         if 'hospital' in license:
@@ -101,42 +104,42 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
             return 'STRES'
         if 'hotel' in license:
             return 'STRLH/STRBB'
-        if 'str' in license:
+        if 'str' in license: # if numeric, use regex to return the license number
             return ''.join(re.findall('\d{6}', license))
         elif 'C0' in license:
             return license.upper().split('\n')[0]
        
         # probably either a number or missing:
-        if license!='nan': 
+        if license!='nan': # this would be a number without 'str' in front of it
             try: return ''.join(re.findall('\d{6}', license))
-            except: pass
+            except: pass # no number found, will result in nan
             
-        else: return 'Missing' # none claimed
-        
-        
+        else: return 'Missing' # none claimed  
     listings.license = listings.license.apply(parse_str_num)
+    
+    # log
     print(f"    > Imported + licenses parsed")
     print(' ', '—'*30)
     print("  > Importing ISD registry data...")
     
-    # load ISD data (to get license statuses)
+    # load ISD data (official license registry from the city)
+    isd = pd.read_csv('data_raw/ISD data.csv')
     def parse_license_num(l):
         return (''.join(re.findall('[\d]*', str(l).split('\n')[0]))) or 0
-    # get license status
-    isd = pd.read_csv('data_raw/ISD data.csv')
     isd['license_num'] = isd['License #'].apply(parse_license_num).astype(str)
     print("    > Imported + licenses parsed")
     
-    
-    
-    # most recent first, to index with .values[0] in verification
+   
+    # sort ISD data for most recent results first (by indexing .values[0] inside the loop)
+    # so if a license has multiple entries, we take the latest
     isd['issued'] = pd.to_datetime(isd['Issued Date'].fillna('2019-01-01'))
     isd.sort_values('issued', ascending=False)
     
+    # define legal details for each license type category with standard LT abbreviations
     license_cat_dict = {
     'HS':{'name':'Home Share Unit',
           'maxbeds':5,
-          'maxguests':10},
+          'maxguests':10}, - # legal limit given license type
     'LS':{'name':'Limited Share Unit',
           'maxbeds':3,
           'maxguests':6},
@@ -145,7 +148,7 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
           'maxguests':10},
     'STRES':{'name':'Exempt: Executive Suite',
           'maxbeds':9999,
-          'maxguests':999},
+          'maxguests':999}, # 999 <= (unknown legal limit for exemptions)
     'STRLH':{'name':'Exempt: Lodging House',
           'maxbeds':999,
           'maxguests':999},
@@ -158,16 +161,16 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
           'maxguests':999},
     }
     
-    # LONG LOOP: get given license status...
-    config.isd = isd
+    # LONG LOOP: for a given license claimed in the airbnb data, define the license status...
     print(' ', '—'*30)
     print('  > Parsing license statuses...')
-    for license in tqdm(listings.license.unique()): # iter claimed licenses
+    config.isd = isd # make global
+    for license in tqdm(listings.license.unique()): # iterate claimed licenses
         
         listings_license_data = listings[listings.license==license].copy()
-        full_status, simple_status = False, False
+        full_status, simple_status = False, False # these MAY get overwritten during the loop
         
-        # NO LICENSE, CLAIMED, JUST EXEMPT OR MISSING
+        # NO LICENSE CLAIMED, EXEMPT, OR MISSING
         if 'STR' in license or 'Missing' in license:
             ISD_address = np.nan
             ISD_status = np.nan
@@ -181,25 +184,29 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
                 ISD_category = np.nan
                 status = 'No license claimed' 
 
-        # LICENSE FOUND!   
+        # license number CLAIMED in airbnb listing
         else:    
             count_listings = len(listings_license_data)
             
-            if license in isd['license_num'].values:  # license found in ISD data:
+            # license number FOUND in ISD DATA:
+            if license in isd['license_num'].values:  
                 isd_license_data = isd[isd.license_num==license]
                 
+                # get license info from ISD
                 found_status = isd_license_data['Status'].values[0]
                 address = isd_license_data['Address'].values[0]
                 cat = isd_license_data['Category'].values[0]
                 category_dict = license_cat_dict[cat]
                 ISD_category = category_dict['name']
       
-    
-    # CHECK FOR EXCEEDED LIMIT OF LISTINGS OR ACCODMODATIONS:
-    # based on license type and number of accoms/listings using the license
+                # CHECK FOR EXCEEDED LIMIT OF LISTINGS OR ACCOMMODATIONS:
+                # based on license type and the number of accoms/listings using this license
                 
-                # #   ""  Occupancy shall be limited to five bedrooms or ten   ""
-                # #   ""  guests in a Home Share Unit, whichever is less.      "" from ordinance
+                # from the City Ordinance:
+                #   "Occupancy shall be limited to five bedrooms or ten
+                #           guests in a Home Share Unit,
+                #                WICHEVER IS LESS."
+                # so check if the lesser of accomms or n_listings exceeds the license limit:
                 count_accomms = listings_license_data.accommodates.sum()
                 license_cat_max_exceed = np.nan
                 if count_listings <= count_accomms:
@@ -212,27 +219,24 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
                         license_cat_max_exceed = 'guest'
                 
                 
-                # get given license status
+                # [still on 'ISD FOUND'] — define full details of license status
                 if 'Active' in found_status:   
                     ISD_status = found_status
                     ISD_address = address
-                    
                     if 'Exempt' in ISD_category:
                         status = simple_status = "Exempt (verified)"
                         full_status = f"{status}: {ISD_category.split(': ')[1]}"
-                    
                     elif str(license_cat_max_exceed)!='nan':
                         status = simple_status = full_status = 'Active (limit exceeded)'
-                    else:
-                        status = 'Active'
+                    else: status = 'Active'
+                
                 else:
                     status = 'Expired/Void/Revoked' # group these for simple version
                     full_status = found_status
                     ISD_status = found_status
                     ISD_address = np.nan
                     
-            
-            # all ISD licenses searched, no match found:
+            # NO MATCH FOUND IN ISD FOR CLAIMED LICENSE NUMBER:
             else: 
                 status = 'Not found (fabricated)' 
                 ISD_status = status
@@ -240,8 +244,9 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
                 ISD_category = np.nan
                 license_cat_max_exceed = np.nan
                 
-    # ----- v still iterating through one license! v ---- assign defined license details back to listings
+    # ----- (still iterating through this license...)
         
+        # assign custom-defined license details back to all listings using this license
         listings.loc[listings_license_data.index, 'status'] = status
         listings.loc[listings_license_data.index, 'ISD_status'] = ISD_status
         listings.loc[listings_license_data.index, 'ISD_address'] = ISD_address
@@ -249,31 +254,28 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
         listings.loc[listings_license_data.index, 'license_listing_count'] = count_listings
         listings.loc[listings_license_data.index, 'license_cat_max_exceed'] = license_cat_max_exceed
 
-        # multiple versions of "status" to display in different parts of site (simple vs. full)
+        # define multiple versions of "status" to display in different parts of the site (simple vs. full)
         if simple_status:
             listings.loc[listings_license_data.index, 'simple_status'] = simple_status
         else: simple_status = status
         if full_status:
             listings.loc[listings_license_data.index, 'full_status'] = full_status
-            
         listings.loc[listings_license_data.index, 'simple_status'] = simple_status
 
-        
     #——————— END LOOP OVER THIS LICENSE
     
-    
-    # use simple status where no full status found
+    # use simple status where no full status was found:
     listings.full_status = listings.full_status.fillna(listings.simple_status)
     print(f"    > Matched {listings.ISD_address.notna().sum()} to ISD data")
 
-    # log active pct count
+    # log active licensed listings percent:
     pct_active = round(listings.status.value_counts(normalize=True)['Active']*100)
     print(f"  >>> {int(pct_active)}% of total listings have an Active license")
     print(' ', '—'*30)
     
+    # check if license numbers are used by multiple hosts
+    # this function has a lot of redundancy but still finished fairly quickly 
     print("  > Searching for license details of listings in ISD data...")  
-
-    # check if license number is used by other hosts
     def find_shared_licenses(listings):
         for host in tqdm(set(listings.host_id)): # isolate data for each host 
             host_data = listings[listings.host_id==host]
@@ -283,16 +285,14 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
                 if 'STR' not in license and 'Missing' not in license:
                     all_hosts = set(listings[listings.license==license].host_id.unique())
                     if len(all_hosts)>1: # more than one host using this license
-                        all_hosts.remove(host)
+                        all_hosts.remove(host) # [should assign to all hosts using this license...]
                         listings.loc[group_idx, 'other_hosts'] = ', '.join([str(h) for h in all_hosts])     
                 else: listings.loc[group_idx, 'other_hosts'] = np.nan
         return listings
     print('  > Defining licenses used by multiple hosts ')
-    
     listings = find_shared_licenses(listings)
     
-    
-    # Make shared index between listings and ISD dataframes:
+    # establish a common index for the airbnb data and the ISD data:
     def get_isd_index(listings):
         print('Mapping exact index back to listings dataframe...') # not currently needed / used, but interesting
         isd_match_idx = {}
@@ -305,9 +305,12 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
                     matches+=str(isd_idx)+' '
 
             listings.loc[list_idx, 'isd_index'] = matches
-        
+
+    # will be typing this a lot.
     listings = listings.rename(columns={'host_name':'host'})
     print('—'*60)
+    
+    # drop lots of unecessary information
     keep_cols = ['id', 'listing_url', 'name', 'host_id', 'host_url',
        'host', 'neighbourhood', 'neighbourhood_cleansed', 'last_scraped',
        'neighbourhood_group_cleansed', 'latitude', 'longitude',
@@ -319,14 +322,13 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
        'host_alias', 'alias_id', 'status', 'ISD_status', 'ISD_address',
        'ISD_category', 'license_listing_count', 'license_cat_max_exceed', 'simple_status',
        'full_status', 'other_hosts']
-    
     for c in listings.columns:
         if c not in keep_cols:
             listings.drop(columns=[c], inplace=True)
     
+    
+    # DONE LOADING & PARSING LISTINGS.
     return listings
-
-
 
 
 
@@ -334,21 +336,27 @@ def load_parsed_listings(file='listings.csv', sample_test=False):
 # # # # # # # #  CLUSTER  # # # # # # # #
 
 
-# converts DBSCAN epsilon value from feet to lat/long (approximately) 
+# convert DBSCAN epsilon value from feet to lat/long (approximately) 
+# used for setting a dynamic DBSCAN epsilon value
 def eps_calc(desired_ft):
     # (epsilon will shift slightly from geodesic distances)
     cal = [ (42.354304, -71.069223),  # 500 ft calibration
             (42.353843, -71.070958) ]
+    # these values custom-defined for 500ft using Google Maps measuring tape tool in the Boston public garden
     
+    # using calibration, calculate foot-factor
     x_diff = (cal[0][0] - cal[1][0])**2
     y_diff = (cal[0][1] - cal[1][1])**2
     ft_factor = np.sqrt(x_diff + y_diff) / 500 # calibration
     
-    epsilon = round(desired_ft*ft_factor, 8) 
+    epsilon = round(desired_ft*ft_factor, 8)  # convert using calculated foot-conversion factor
+    
     return epsilon
 
 
-# explodes layer into sub-clusters
+# explode the initial listings into sub-clusters, separated by host and claimed license
+# AKA find listing sub-clusters within host-license groups
+
 def create_sub_layer(listings, epsilon, min_samples, feature, sub_feature, epsilon2=False, min_samples2=False, verb=False):
     
     # log
@@ -358,6 +366,7 @@ def create_sub_layer(listings, epsilon, min_samples, feature, sub_feature, epsil
     recognized_centroids = 0
     new_centroids = 0
     
+    # USE CACHE TO MAINTAIN THE SAME HOST NUMBER ACROSS MUTLIPLE SCRAPES (over time)
     # get static host name index for top layer (so hosts always have the same apparent #)
     fname = f'{feature}_index.cache'
     if feature=='host_id' and fname in os.listdir('cache'):
@@ -371,31 +380,33 @@ def create_sub_layer(listings, epsilon, min_samples, feature, sub_feature, epsil
     print(f'  > {len(feat_index)} {feature} index names found in cache')
     
 
-    # iterate top layer groups
+    # start iterating over top-layer groups
     print(f'  > DBSCANning with {min_samples} min_samples | epsilon = {epsilon} ft.')
     found = 0
     new_hosts = 0
     
-    key_order = listings[feature].value_counts().index    
+    key_order = listings[feature].value_counts().index # start with the biggest groups. 
     for unique_parent in tqdm(key_order):
         
-        # get static host ID for top layer
+        # don't sub-scan outlier clusters
         if 'sub' in sub_feature:
-            if '-1' in str(unique_parent): # don't sub-scan outlier clusters
+            if '-1' in str(unique_parent): 
                 continue
             static_index = unique_parent
             
-        else: # take host id from cache
+        # get static host ID for top layer
+        else:       # take host id from cache
             if str(unique_parent) in feat_index.keys():
                 static_index = feat_index[str(unique_parent)]['static_index']
                 found += 1
-            else:
+            else:   # create new host id on top of cache
                 new_hosts += 1
                 static_index = static_indexer
                 feat_index[str(unique_parent)] = { # save to cache
                     'static_index': static_indexer }                
                 static_indexer += 1
                         
+        # define data of target group
         parent_group = listings[listings[feature]==unique_parent]
         # for main host-license groups
         if 'host' in feature:
@@ -410,16 +421,14 @@ def create_sub_layer(listings, epsilon, min_samples, feature, sub_feature, epsil
                         algorithm='auto',
                         leaf_size=30,
                         p=2,)[1]
-                
-                # to check for overlapping groups (multi-license centroids) - after loop
-                # WHY? listings.loc[parent_license_data.index, 'temp_class'] = classes
-                
-            # name found centroids:
+                                
+            # name found centroids using static index technique:
                 # reindex found classes for all license groups in this host
                 new_classes = classes.copy()
                 dbscan_found = list(set(classes))
-                if -1 in dbscan_found:
-                    dbscan_found.remove(-1) # leave all outliers as -1
+                
+                if -1 in dbscan_found:  # leave outliers as -1
+                    dbscan_found.remove(-1)
                     
                 already_found_centers = {}
                 for c in dbscan_found: # for each class, iterate host centroids counter
